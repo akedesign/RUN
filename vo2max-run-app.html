@@ -1,0 +1,1864 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>VO2max Run — 8 Week Program</title>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+:root {
+  --lime: #C8F135;
+  --lime-dim: rgba(200,241,53,0.12);
+  --lime-border: rgba(200,241,53,0.25);
+  --dark: #0d0d0d;
+  --dark2: #161616;
+  --dark3: #1e1e1e;
+  --surface: #f7f6f2;
+  --surface2: #eeede8;
+  --white: #ffffff;
+  --muted: rgba(255,255,255,0.4);
+  --muted2: rgba(255,255,255,0.12);
+  --text-dark: #0d0d0d;
+  --text-mid: #555;
+  --text-light: #999;
+  --border-light: #e8e7e2;
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; overflow: hidden; background: var(--dark); }
+body { font-family: 'Prompt', sans-serif; line-height: 1.6; letter-spacing: 0.01em; }
+
+/* ─── SCREEN ROUTER ─── */
+.screen { display: none; height: 100vh; overflow: hidden; flex-direction: column; }
+.screen.active { display: flex; }
+
+/* ─── HOME / OVERVIEW ─── */
+#homeScreen { background: var(--dark); }
+.home-scroll { flex: 1; overflow-y: auto; padding-bottom: calc(80px + var(--safe-bottom)); }
+.home-scroll::-webkit-scrollbar { display: none; }
+
+.home-header { padding: 52px 22px 0; }
+.home-greeting { font-size: 13px; color: var(--muted); letter-spacing: 0.06em; margin-bottom: 4px; }
+.home-title { font-family: 'Prompt', sans-serif; font-size: 30px; color: #fff; line-height: 1.1; margin-bottom: 6px; font-weight: 700; letter-spacing: -0.5px; }
+.home-title span { color: var(--lime); }
+
+/* Progress ring */
+.progress-hero { display: flex; align-items: center; gap: 20px; background: var(--dark3); border: 1px solid rgba(255,255,255,0.07); border-radius: 22px; padding: 20px; margin: 0 22px 20px; }
+.ring-wrap { position: relative; width: 80px; height: 80px; flex-shrink: 0; }
+.ring-wrap svg { transform: rotate(-90deg); }
+.ring-bg { fill: none; stroke: rgba(255,255,255,0.06); stroke-width: 6; }
+.ring-fg { fill: none; stroke: var(--lime); stroke-width: 6; stroke-linecap: round; transition: stroke-dashoffset 0.6s ease; }
+.ring-label { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.ring-pct { font-size: 16px; font-weight: 700; color: var(--lime); line-height: 1; }
+.ring-sub { font-size: 9px; color: var(--muted); margin-top: 2px; letter-spacing: 0.04em; }
+.progress-info { flex: 1; }
+.pi-title { font-size: 16px; font-weight: 600; color: #fff; margin-bottom: 6px; }
+.pi-row { display: flex; gap: 16px; }
+.pi-stat { }
+.pi-val { font-size: 22px; font-weight: 700; color: var(--lime); line-height: 1; }
+.pi-lbl { font-size: 10px; color: var(--muted); letter-spacing: 0.05em; margin-top: 2px; }
+
+/* Week selector */
+.week-scroll-wrap { padding: 0 22px; margin-bottom: 6px; }
+.week-scroll-label { font-size: 11px; color: var(--muted); letter-spacing: 0.08em; margin-bottom: 10px; }
+.week-chips { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
+.week-chips::-webkit-scrollbar { display: none; }
+.wchip { flex-shrink: 0; padding: 8px 16px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); background: transparent; font-family: 'Prompt', sans-serif; font-size: 13px; font-weight: 500; color: var(--muted); cursor: pointer; transition: all 0.18s; }
+.wchip.active { background: var(--lime); border-color: var(--lime); color: var(--dark); }
+.wchip.has-progress { border-color: rgba(200,241,53,0.35); color: rgba(200,241,53,0.8); }
+
+/* Session cards */
+.sessions-list { padding: 12px 22px 0; }
+.session-card { background: var(--dark3); border: 1px solid rgba(255,255,255,0.06); border-radius: 18px; padding: 16px; margin-bottom: 10px; cursor: pointer; transition: border-color 0.18s, transform 0.12s; position: relative; overflow: hidden; }
+.session-card:active { transform: scale(0.98); }
+.session-card.done { border-color: rgba(200,241,53,0.2); }
+.session-card.rest-card { opacity: 0.6; cursor: default; }
+.session-card.rest-card:active { transform: none; }
+.sc-accent { position: absolute; left: 0; top: 0; bottom: 0; width: 3px; border-radius: 3px 0 0 3px; }
+.sc-top { display: flex; align-items: flex-start; gap: 12px; }
+.sc-check { width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; transition: all 0.2s; }
+.sc-check.done { background: var(--lime); border-color: var(--lime); }
+.sc-check.done i { color: var(--dark); }
+.sc-check i { font-size: 13px; color: transparent; }
+.sc-info { flex: 1; }
+.sc-day { font-size: 11px; color: var(--muted); letter-spacing: 0.06em; margin-bottom: 3px; }
+.sc-name { font-size: 24px; font-weight: 700; color: #fff; line-height: 1.2; margin-bottom: 4px; }
+.sc-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.sc-pill { font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 8px; letter-spacing: 0.04em; }
+.pill-hard { background: rgba(232,74,74,0.15); color: #f09595; }
+.pill-easy { background: rgba(99,153,34,0.15); color: #97C459; }
+.pill-mod  { background: rgba(55,138,221,0.15); color: #85B7EB; }
+.pill-rest { background: rgba(255,255,255,0.07); color: var(--muted); }
+.sc-dur { font-size: 12px; color: var(--muted); }
+
+/* bottom nav */
+.bottom-nav { height: calc(64px + var(--safe-bottom)); border-top: 1px solid rgba(255,255,255,0.06); background: var(--dark2); display: flex; align-items: center; padding: 0 8px; padding-bottom: var(--safe-bottom); flex-shrink: 0; }
+.nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 10px 0; cursor: pointer; opacity: 0.4; transition: opacity 0.18s; }
+.nav-btn.active { opacity: 1; }
+.nav-btn i { font-size: 22px; color: #fff; }
+.nav-btn.active i { color: var(--lime); }
+.nav-label { font-size: 10px; color: #fff; letter-spacing: 0.04em; }
+
+/* ─── WORKOUT DETAIL SCREEN ─── */
+#workoutScreen { background: var(--dark); }
+.workout-scroll { flex: 1; overflow-y: auto; }
+.workout-scroll::-webkit-scrollbar { display: none; }
+
+.workout-hero { padding: 48px 22px 0; position: relative; overflow: hidden; }
+.workout-hero-circle { position: absolute; top: -60px; right: -60px; width: 220px; height: 220px; border-radius: 50%; background: var(--lime); opacity: 0.05; pointer-events: none; }
+.workout-hero-circle2 { position: absolute; top: 30px; right: 10px; width: 90px; height: 90px; border-radius: 50%; background: var(--lime); opacity: 0.04; pointer-events: none; }
+.wh-topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.wh-back { width: 38px; height: 38px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; cursor: pointer; color: rgba(255,255,255,0.7); font-size: 17px; }
+.wh-week-pill { background: var(--lime-dim); border: 1px solid var(--lime-border); border-radius: 20px; padding: 6px 14px; font-size: 12px; color: var(--lime); letter-spacing: 0.06em; font-weight: 600; }
+.wh-badges { display: flex; gap: 8px; align-items: center; margin-bottom: 14px; }
+.wh-date { font-size: 11px; color: var(--muted); letter-spacing: 0.07em; font-weight: 500; }
+.wh-type-badge { border-radius: 10px; padding: 3px 10px; font-size: 11px; font-weight: 700; letter-spacing: 0.04em; }
+.wh-title { font-family: 'Prompt', sans-serif; font-size: 34px; line-height: 1.05; color: #fff; margin-bottom: 8px; font-weight: 700; letter-spacing: -0.5px; }
+.wh-subtitle { font-size: 13px; color: var(--muted); margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+.wh-subtitle .dot { width: 3px; height: 3px; border-radius: 50%; background: rgba(255,255,255,0.25); }
+
+/* meta strip */
+.meta-strip { display: flex; border-radius: 16px; overflow: hidden; border: 1px solid rgba(255,255,255,0.07); margin-bottom: 22px; }
+.meta-item { flex: 1; padding: 13px 8px; background: rgba(255,255,255,0.03); text-align: center; border-right: 1px solid rgba(255,255,255,0.05); }
+.meta-item:last-child { border-right: none; }
+.meta-val { font-size: 17px; font-weight: 700; color: var(--lime); line-height: 1; }
+.meta-lbl { font-size: 9px; color: var(--muted); margin-top: 4px; letter-spacing: 0.07em; text-transform: uppercase; }
+
+/* action buttons */
+.action-row { display: flex; gap: 8px; margin-bottom: 24px; }
+.act-btn { flex: 1; padding: 11px 4px; border-radius: 13px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.04); display: flex; flex-direction: column; align-items: center; gap: 5px; cursor: pointer; transition: all 0.18s; }
+.act-btn.on { border-color: rgba(200,241,53,0.45); background: rgba(200,241,53,0.1); }
+.act-btn i { font-size: 18px; color: rgba(255,255,255,0.45); }
+.act-btn.on i { color: var(--lime); }
+.act-btn-label { font-size: 9px; color: rgba(255,255,255,0.35); letter-spacing: 0.04em; text-align: center; line-height: 1.3; font-weight: 500; }
+.act-btn.on .act-btn-label { color: var(--lime); }
+
+/* workout body */
+.workout-body { background: var(--dark2); border-radius: 28px 28px 0 0; padding: 24px 20px; border-top: 1px solid rgba(255,255,255,0.07); }
+.wb-section-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.wb-section-title { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.7); letter-spacing: 0.08em; text-transform: uppercase; }
+.wb-section-sub { font-size: 12px; color: var(--muted); }
+
+.block { border-radius: 16px; overflow: hidden; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.06); }
+.block-header { padding: 13px 16px; display: flex; align-items: center; gap: 10px; }
+.bh-dark { background: #111; }
+.bh-lime { background: var(--lime); }
+.bh-icon { width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+.bh-dark .bh-icon { background: rgba(255,255,255,0.08); color: var(--lime); }
+.bh-lime .bh-icon { background: rgba(0,0,0,0.1); color: var(--dark); }
+.bh-text { flex: 1; }
+.bh-title { font-size: 14px; font-weight: 700; color: #fff; line-height: 1; }
+.bh-lime .bh-title { color: var(--dark); }
+.bh-sub { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 2px; }
+.bh-lime .bh-sub { color: rgba(0,0,0,0.45); }
+.bh-badge { font-size: 9px; font-weight: 700; padding: 4px 8px; border-radius: 7px; letter-spacing: 0.05em; flex-shrink: 0; }
+.bh-dark .bh-badge { background: var(--lime-dim); color: var(--lime); border: 1px solid var(--lime-border); }
+.bh-lime .bh-badge { background: rgba(0,0,0,0.1); color: var(--dark); }
+
+.step-row { background: var(--dark3); padding: 13px 16px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+.step-row:last-child { border-bottom: none; }
+.step-num { width: 26px; height: 26px; border-radius: 50%; background: rgba(255,255,255,0.06); font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.4); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.step-info { flex: 1; }
+.step-main { font-size: 13px; font-weight: 500; color: #fff; line-height: 1.35; }
+.step-type { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 3px; display: flex; align-items: center; gap: 4px; }
+.step-type i { font-size: 13px; }
+
+/* start btn */
+.cta-wrap { padding: 20px 0 6px; }
+.start-btn { width: 100%; padding: 18px; border-radius: 18px; background: var(--dark); border: none; font-family: 'Prompt', sans-serif; font-size: 16px; font-weight: 700; color: var(--lime); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; letter-spacing: 0.03em; transition: opacity 0.15s; }
+.start-btn:active { opacity: 0.82; }
+.start-btn i { font-size: 20px; }
+.start-btn.completed { background: rgba(200,241,53,0.12); border: 1px solid rgba(200,241,53,0.3); color: var(--lime); }
+
+/* coach card */
+.coach-card { display: flex; align-items: center; gap: 12px; margin-top: 12px; padding: 13px 16px; background: var(--dark3); border-radius: 14px; border: 1px solid rgba(255,255,255,0.07); }
+.coach-ava { width: 38px; height: 38px; border-radius: 50%; background: var(--lime); display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; color: var(--dark); flex-shrink: 0; }
+.coach-info { flex: 1; }
+.coach-name { font-size: 13px; font-weight: 600; color: #fff; }
+.coach-msg { font-size: 11px; color: rgba(255,255,255,0.45); margin-top: 2px; line-height: 1.4; font-style: italic; }
+.coach-arr { color: rgba(255,255,255,0.2); font-size: 16px; }
+
+/* tip box */
+.tip-box { display: flex; align-items: flex-start; gap: 10px; background: rgba(200,241,53,0.07); border: 1px solid rgba(200,241,53,0.18); border-radius: 12px; padding: 12px 14px; margin-bottom: 14px; }
+.tip-box i { font-size: 16px; color: var(--lime); flex-shrink: 0; margin-top: 1px; }
+.tip-text { font-size: 12px; color: rgba(200,241,53,0.85); line-height: 1.5; }
+
+/* ─── STATS SCREEN ─── */
+#statsScreen { background: var(--dark); }
+.stats-scroll { flex: 1; overflow-y: auto; padding: 52px 22px calc(80px + var(--safe-bottom)); }
+.stats-scroll::-webkit-scrollbar { display: none; }
+.stats-title { font-family: 'Prompt', sans-serif; font-size: 28px; color: #fff; margin-bottom: 6px; font-weight: 700; letter-spacing: -0.5px; }
+.stats-sub { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
+
+.stat-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-bottom: 20px; }
+.stat-box { background: var(--dark3); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 16px; }
+.stat-box-val { font-size: 28px; font-weight: 700; color: var(--lime); line-height: 1; }
+.stat-box-lbl { font-size: 11px; color: var(--muted); margin-top: 6px; letter-spacing: 0.05em; }
+.stat-box-sub { font-size: 11px; color: rgba(200,241,53,0.5); margin-top: 3px; }
+
+/* week progress bars */
+.week-bars { background: var(--dark3); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 16px; margin-bottom: 20px; }
+.week-bars-title { font-size: 13px; font-weight: 600; color: #fff; margin-bottom: 14px; }
+.wbar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.wbar-label { font-size: 12px; color: var(--muted); width: 18px; text-align: center; flex-shrink: 0; }
+.wbar-track { flex: 1; height: 6px; background: rgba(255,255,255,0.07); border-radius: 3px; overflow: hidden; }
+.wbar-fill { height: 100%; background: var(--lime); border-radius: 3px; transition: width 0.5s ease; }
+.wbar-count { font-size: 11px; color: var(--muted); width: 32px; text-align: right; flex-shrink: 0; }
+
+/* type breakdown */
+.type-breakdown { background: var(--dark3); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 16px; margin-bottom: 20px; }
+.type-breakdown-title { font-size: 13px; font-weight: 600; color: #fff; margin-bottom: 14px; }
+.type-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.type-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.type-name { font-size: 13px; color: rgba(255,255,255,0.7); flex: 1; }
+.type-count { font-size: 13px; font-weight: 600; color: #fff; }
+.type-bar { height: 4px; background: rgba(255,255,255,0.07); border-radius: 2px; overflow: hidden; margin-bottom: 0; }
+.type-bar-inner { height: 100%; border-radius: 2px; }
+
+/* ─── TIMER SCREEN ─── */
+#timerScreen { background: var(--dark); align-items: center; justify-content: center; }
+.timer-inner { width: 100%; padding: 40px 28px; display: flex; flex-direction: column; align-items: center; }
+.timer-back { align-self: flex-start; margin-bottom: 30px; width: 38px; height: 38px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; cursor: pointer; color: rgba(255,255,255,0.7); font-size: 17px; }
+.timer-step-label { font-size: 12px; color: var(--muted); letter-spacing: 0.08em; margin-bottom: 8px; }
+.timer-step-name { font-family: 'Prompt', sans-serif; font-size: 26px; color: #fff; text-align: center; margin-bottom: 8px; font-weight: 600; letter-spacing: -0.3px; }
+.timer-round { font-size: 13px; color: var(--lime); margin-bottom: 40px; }
+
+.timer-ring-wrap { position: relative; width: 200px; height: 200px; margin-bottom: 40px; }
+.timer-ring-wrap svg { transform: rotate(-90deg); width: 200px; height: 200px; }
+.timer-ring-bg { fill: none; stroke: rgba(255,255,255,0.06); stroke-width: 8; }
+.timer-ring-fg { fill: none; stroke: var(--lime); stroke-width: 8; stroke-linecap: round; transition: stroke-dashoffset 0.3s linear; }
+.timer-time { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.timer-digits { font-size: 52px; font-weight: 300; color: #fff; letter-spacing: -2px; line-height: 1; }
+.timer-unit { font-size: 12px; color: var(--muted); margin-top: 4px; letter-spacing: 0.06em; }
+
+.timer-controls { display: flex; gap: 16px; align-items: center; }
+.tc-btn { width: 56px; height: 56px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.15); background: transparent; display: flex; align-items: center; justify-content: center; cursor: pointer; color: rgba(255,255,255,0.6); font-size: 22px; }
+.tc-main { width: 72px; height: 72px; border-radius: 50%; background: var(--lime); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 28px; color: var(--dark); transition: opacity 0.15s; }
+.tc-main:active { opacity: 0.82; }
+
+.timer-progress-steps { width: 100%; margin-top: 32px; display: flex; gap: 6px; justify-content: center; }
+.tps-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.15); transition: background 0.2s; }
+.tps-dot.active { background: var(--lime); }
+.tps-dot.done { background: rgba(200,241,53,0.4); }
+
+/* Utility */
+.mt8 { margin-top: 8px; }
+.pb16 { padding-bottom: 16px; }
+
+/* ─── STEP COMPLETE POPUP ─── */
+.popup-overlay {
+  position: absolute; inset: 0; z-index: 100;
+  background: rgba(0,0,0,0.75);
+  display: flex; align-items: flex-end; justify-content: center;
+  padding: 0 20px 48px;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+.popup-overlay.show { opacity: 1; pointer-events: all; }
+.popup-card {
+  width: 100%; background: #1a1a1a;
+  border: 1px solid rgba(200,241,53,0.22);
+  border-radius: 28px; padding: 28px 24px 24px;
+  text-align: center;
+  transform: translateY(40px);
+  transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+}
+.popup-overlay.show .popup-card { transform: translateY(0); }
+.popup-icon {
+  width: 64px; height: 64px; border-radius: 50%;
+  background: var(--lime); margin: 0 auto 16px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px; color: var(--dark);
+}
+.popup-title { font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 6px; letter-spacing: -0.3px; }
+.popup-sub { font-size: 13px; color: rgba(255,255,255,0.45); margin-bottom: 14px; line-height: 1.5; }
+.popup-next-name {
+  font-size: 14px; font-weight: 600; color: var(--lime);
+  background: rgba(200,241,53,0.08); border: 1px solid rgba(200,241,53,0.18);
+  border-radius: 10px; padding: 8px 16px; margin-bottom: 22px; display: inline-block;
+}
+.popup-btn-continue {
+  width: 100%; padding: 16px; border-radius: 16px;
+  background: var(--lime); border: none;
+  font-family: 'Prompt', sans-serif; font-size: 16px; font-weight: 700; color: var(--dark);
+  cursor: pointer; letter-spacing: 0.01em;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  transition: opacity 0.15s;
+}
+.popup-btn-continue:active { opacity: 0.82; }
+.popup-btn-continue i { font-size: 20px; }
+.popup-btn-skip {
+  width: 100%; padding: 12px; border-radius: 14px;
+  background: transparent; border: 1px solid rgba(255,255,255,0.1);
+  font-family: 'Prompt', sans-serif; font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.4);
+  cursor: pointer; margin-top: 10px; transition: opacity 0.15s;
+}
+.popup-btn-skip:active { opacity: 0.6; }
+@keyframes pulseRing {
+  0%   { box-shadow: 0 0 0 0 rgba(200,241,53,0.55); }
+  70%  { box-shadow: 0 0 0 20px rgba(200,241,53,0); }
+  100% { box-shadow: 0 0 0 0 rgba(200,241,53,0); }
+}
+.popup-icon.pulse { animation: pulseRing 0.9s ease-out 2; }
+
+
+/* ─── BACKUP SCREEN ─── */
+#backupScreen { background: var(--dark); }
+.backup-scroll { flex: 1; overflow-y: auto; padding: 52px 22px calc(90px + var(--safe-bottom)); }
+.backup-scroll::-webkit-scrollbar { display: none; }
+.backup-title { font-family: 'Prompt', sans-serif; font-size: 28px; font-weight: 700; color: #fff; letter-spacing: -0.5px; margin-bottom: 4px; }
+.backup-sub { font-size: 13px; color: var(--muted); margin-bottom: 28px; line-height: 1.5; }
+
+.bk-card { background: var(--dark3); border: 1px solid rgba(255,255,255,0.07); border-radius: 18px; padding: 20px; margin-bottom: 14px; }
+.bk-card-title { font-size: 13px; font-weight: 700; color: var(--lime); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+.bk-card-title i { font-size: 16px; }
+.bk-card-desc { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.55; margin-bottom: 16px; }
+.bk-btn { width: 100%; padding: 14px; border-radius: 14px; border: none; font-family: 'Prompt', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: opacity 0.15s; margin-bottom: 8px; }
+.bk-btn:last-child { margin-bottom: 0; }
+.bk-btn:active { opacity: 0.8; }
+.bk-btn-primary { background: var(--lime); color: var(--dark); }
+.bk-btn-secondary { background: rgba(255,255,255,0.07); color: #fff; border: 1px solid rgba(255,255,255,0.1); }
+.bk-btn-danger { background: rgba(232,74,74,0.12); color: #f09595; border: 1px solid rgba(232,74,74,0.2); }
+.bk-btn i { font-size: 18px; }
+
+.bk-status { font-size: 12px; color: var(--lime); margin-top: 10px; text-align: center; min-height: 18px; }
+.bk-status.err { color: #f09595; }
+
+.bk-info-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+.bk-info-row:last-child { border-bottom: none; }
+.bk-info-label { font-size: 13px; color: rgba(255,255,255,0.45); }
+.bk-info-val { font-size: 13px; font-weight: 600; color: #fff; }
+
+.toast { position: fixed; top: 60px; left: 50%; transform: translateX(-50%) translateY(-20px); background: var(--lime); color: var(--dark); font-family: 'Prompt', sans-serif; font-size: 13px; font-weight: 700; padding: 10px 20px; border-radius: 20px; z-index: 999; opacity: 0; transition: all 0.3s ease; pointer-events: none; white-space: nowrap; }
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════ HOME ══════════════════════════════ -->
+<div id="homeScreen" class="screen active">
+  <div class="home-scroll" id="homeScroll">
+    <div class="home-header">
+      <div class="home-greeting">สวัสดีครับ, นักวิ่ง 👋</div>
+      <div class="home-title">โปรแกรม<br><span>VO2max</span> 8 สัปดาห์</div>
+      <div style="font-size:11px;color:rgba(255,255,255,0.25);letter-spacing:0.06em;margin-top:-12px;margin-bottom:20px;font-weight:400">developed by akedesign V0.1</div>
+    </div>
+
+    <div class="progress-hero">
+      <div class="ring-wrap">
+        <svg viewBox="0 0 80 80" width="80" height="80">
+          <circle class="ring-bg" cx="40" cy="40" r="34"/>
+          <circle class="ring-fg" id="homeRing" cx="40" cy="40" r="34" stroke-dasharray="213.6" stroke-dashoffset="213.6"/>
+        </svg>
+        <div class="ring-label">
+          <div class="ring-pct" id="homeRingPct">0%</div>
+          <div class="ring-sub">DONE</div>
+        </div>
+      </div>
+      <div class="progress-info">
+        <div class="pi-title">ความคืบหน้า</div>
+        <div class="pi-row">
+          <div class="pi-stat">
+            <div class="pi-val" id="statDone">0</div>
+            <div class="pi-lbl">เซสชั่นเสร็จ</div>
+          </div>
+          <div class="pi-stat">
+            <div class="pi-val" id="statTotal">32</div>
+            <div class="pi-lbl">ทั้งหมด</div>
+          </div>
+          <div class="pi-stat">
+            <div class="pi-val" id="statWeekNum">1</div>
+            <div class="pi-lbl">สัปดาห์ที่</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="week-scroll-wrap">
+      <div class="week-scroll-label">เลือกสัปดาห์</div>
+      <div class="week-chips" id="weekChips"></div>
+    </div>
+
+    <div class="sessions-list" id="sessionsList"></div>
+  </div>
+
+  <div class="bottom-nav">
+    <div class="nav-btn active" id="nav-home" onclick="showScreen('home')">
+      <i class="ti ti-home"></i>
+      <div class="nav-label">หน้าหลัก</div>
+    </div>
+    <div class="nav-btn" id="nav-stats-h" onclick="showScreen('stats')">
+      <i class="ti ti-chart-bar"></i>
+      <div class="nav-label">สถิติ</div>
+    </div>
+    <div class="nav-btn" id="nav-backup-h" onclick="showScreen('backup')">
+      <i class="ti ti-cloud"></i>
+      <div class="nav-label">บันทึก</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════ WORKOUT DETAIL ══════════════════════════════ -->
+<div id="workoutScreen" class="screen">
+  <div class="workout-scroll" id="workoutScroll">
+    <div class="workout-hero">
+      <div class="workout-hero-circle"></div>
+      <div class="workout-hero-circle2"></div>
+      <div class="wh-topbar">
+        <div class="wh-back" onclick="showScreen('home')"><i class="ti ti-arrow-left"></i></div>
+        <div class="wh-week-pill" id="wh-week-pill">Week 1</div>
+        <div class="wh-back" onclick="shareWorkout()"><i class="ti ti-share"></i></div>
+      </div>
+      <div class="wh-badges">
+        <div class="wh-date" id="wh-date">MON</div>
+        <div class="wh-type-badge" id="wh-type-badge">EASY RUN</div>
+      </div>
+      <div class="wh-title" id="wh-title">Easy Run</div>
+      <div class="wh-subtitle" id="wh-subtitle"></div>
+      <div class="meta-strip" id="wh-meta"></div>
+      <div class="action-row" id="wh-actions"></div>
+    </div>
+    <div class="workout-body" id="workout-body"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════ STATS ══════════════════════════════ -->
+<div id="statsScreen" class="screen">
+  <div class="stats-scroll" id="statsScroll">
+    <div class="stats-title">สถิติของคุณ</div>
+    <div class="stats-sub">โปรแกรม 8 สัปดาห์ · 32 เซสชั่นวิ่ง</div>
+
+    <div class="stat-grid" id="statsGrid"></div>
+    <div class="week-bars" id="weekBars">
+      <div class="week-bars-title">ความคืบหน้าแต่ละสัปดาห์</div>
+      <div id="wbarsContent"></div>
+    </div>
+    <div class="type-breakdown" id="typeBreakdown">
+      <div class="type-breakdown-title">ประเภทการซ้อม</div>
+      <div id="typeContent"></div>
+    </div>
+  </div>
+  <div class="bottom-nav">
+    <div class="nav-btn" id="nav-home-s" onclick="showScreen('home')">
+      <i class="ti ti-home"></i>
+      <div class="nav-label">หน้าหลัก</div>
+    </div>
+    <div class="nav-btn active" id="nav-stats-s" onclick="showScreen('stats')">
+      <i class="ti ti-chart-bar"></i>
+      <div class="nav-label">สถิติ</div>
+    </div>
+    <div class="nav-btn" id="nav-backup-s" onclick="showScreen('backup')">
+      <i class="ti ti-cloud"></i>
+      <div class="nav-label">บันทึก</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════ TIMER ══════════════════════════════ -->
+<div id="timerScreen" class="screen" style="position:relative">
+  <div class="timer-inner">
+    <div class="timer-back" onclick="stopTimer()"><i class="ti ti-x"></i></div>
+    <div class="timer-step-label" id="timerStepLabel">ขั้นตอนที่ 1</div>
+    <div class="timer-step-name" id="timerStepName">วอร์มอัพ</div>
+    <div class="timer-round" id="timerRound"></div>
+    <div class="timer-ring-wrap">
+      <svg viewBox="0 0 200 200">
+        <circle class="timer-ring-bg" cx="100" cy="100" r="88"/>
+        <circle class="timer-ring-fg" id="timerRingFg" cx="100" cy="100" r="88" stroke-dasharray="552.9" stroke-dashoffset="0"/>
+      </svg>
+      <div class="timer-time">
+        <div class="timer-digits" id="timerDigits">5:00</div>
+        <div class="timer-unit">นาที : วินาที</div>
+      </div>
+    </div>
+    <div class="timer-controls">
+      <button class="tc-btn" onclick="prevStep()"><i class="ti ti-player-skip-back"></i></button>
+      <button class="tc-main" id="timerPlayBtn" onclick="toggleTimer()"><i class="ti ti-player-play"></i></button>
+      <button class="tc-btn" onclick="nextStep()"><i class="ti ti-player-skip-forward"></i></button>
+    </div>
+    <div class="timer-progress-steps" id="timerDots"></div>
+  </div>
+<!-- ══ STEP COMPLETE POPUP ══ -->
+<div class="popup-overlay" id="stepPopup">
+  <div class="popup-card">
+    <div class="popup-icon" id="popupIcon"><i class="ti ti-check"></i></div>
+    <div class="popup-title" id="popupTitle">ยอดเยี่ยม!</div>
+    <div class="popup-sub" id="popupSub">คุณผ่านขั้นตอนนี้แล้ว พร้อมไปต่อไหม?</div>
+    <div class="popup-next-name" id="popupNextName">ถัดไป: —</div>
+    <button class="popup-btn-continue" onclick="popupContinue()">
+      <i class="ti ti-player-play"></i> ไปต่อเลย!
+    </button>
+    <button class="popup-btn-skip" onclick="popupFinish()">จบ Workout นี้</button>
+  </div>
+</div>
+
+</div>
+
+<!-- ══════════════════════════════ BACKUP ══════════════════════════════ -->
+<div id="backupScreen" class="screen">
+  <div class="backup-scroll">
+    <div class="backup-title">บันทึกข้อมูล</div>
+    <div class="backup-sub">ข้อมูลของคุณถูกบันทึกอัตโนมัติในอุปกรณ์นี้ตลอดเวลา ต่อให้ปิดแอปหรือรีเฟรช ก็ไม่หาย</div>
+
+    <!-- Auto Save Status -->
+    <div class="bk-card">
+      <div class="bk-card-title"><i class="ti ti-device-floppy"></i> บันทึกอัตโนมัติ</div>
+      <div id="bkInfoRows"></div>
+      <div class="bk-status" id="autoSaveStatus"></div>
+    </div>
+
+    <!-- Export -->
+    <div class="bk-card">
+      <div class="bk-card-title"><i class="ti ti-download"></i> ส่งออกข้อมูล</div>
+      <div class="bk-card-desc">บันทึกไฟล์ backup ไว้ที่อุปกรณ์ เพื่อย้ายข้อมูลหรือสำรองไว้ใช้บนอุปกรณ์ใหม่</div>
+      <button class="bk-btn bk-btn-primary" onclick="exportData()">
+        <i class="ti ti-file-export"></i> Export เป็นไฟล์ .json
+      </button>
+    </div>
+
+    <!-- Import -->
+    <div class="bk-card">
+      <div class="bk-card-title"><i class="ti ti-upload"></i> นำเข้าข้อมูล</div>
+      <div class="bk-card-desc">โหลดไฟล์ backup ที่เคย export ไว้ เพื่อคืนข้อมูลทั้งหมด</div>
+      <button class="bk-btn bk-btn-secondary" onclick="document.getElementById('importFile').click()">
+        <i class="ti ti-file-import"></i> Import จากไฟล์ .json
+      </button>
+      <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
+      <div class="bk-status" id="importStatus"></div>
+    </div>
+
+    <!-- Copy Code -->
+    <div class="bk-card">
+      <div class="bk-card-title"><i class="ti ti-clipboard-copy"></i> คัดลอก Code สำรอง</div>
+      <div class="bk-card-desc">คัดลอก code ข้อมูลเพื่อบันทึกไว้ใน Notes หรือส่งให้ตัวเอง</div>
+      <button class="bk-btn bk-btn-secondary" onclick="copyCode()">
+        <i class="ti ti-copy"></i> คัดลอก Backup Code
+      </button>
+      <button class="bk-btn bk-btn-secondary" onclick="showPasteBox()">
+        <i class="ti ti-clipboard"></i> วาง Backup Code
+      </button>
+      <div id="pasteBox" style="display:none;margin-top:12px">
+        <textarea id="pasteArea" rows="4" placeholder="วาง code ที่นี่..." style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.15);border-radius:10px;padding:10px;color:#fff;font-family:'Prompt',sans-serif;font-size:12px;resize:none;outline:none"></textarea>
+        <button class="bk-btn bk-btn-primary" style="margin-top:8px" onclick="pasteCode()">
+          <i class="ti ti-check"></i> กู้คืนข้อมูล
+        </button>
+      </div>
+      <div class="bk-status" id="codeStatus"></div>
+    </div>
+
+    <!-- Reset -->
+    <div class="bk-card">
+      <div class="bk-card-title" style="color:#f09595"><i class="ti ti-trash"></i> รีเซ็ตข้อมูล</div>
+      <div class="bk-card-desc">ลบความคืบหน้าทั้งหมดและเริ่มโปรแกรมใหม่ตั้งแต่ต้น</div>
+      <button class="bk-btn bk-btn-danger" onclick="confirmReset()">
+        <i class="ti ti-refresh"></i> รีเซ็ตเริ่มใหม่
+      </button>
+    </div>
+
+  </div>
+  <div class="bottom-nav">
+    <div class="nav-btn" onclick="showScreen('home')">
+      <i class="ti ti-home"></i>
+      <div class="nav-label">หน้าหลัก</div>
+    </div>
+    <div class="nav-btn" onclick="showScreen('stats')">
+      <i class="ti ti-chart-bar"></i>
+      <div class="nav-label">สถิติ</div>
+    </div>
+    <div class="nav-btn active" onclick="showScreen('backup')">
+      <i class="ti ti-cloud"></i>
+      <div class="nav-label">บันทึก</div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+
+<script>
+// ══════════════════════════════════════════════
+//  DATA
+// ══════════════════════════════════════════════
+const DAYS = ['จันทร์','อังคาร','พุธ','พฤหัส','ศุกร์','เสาร์','อาทิตย์'];
+
+const PLANS = [
+  // Week 1
+  { w:1, d:'จันทร์', name:'Easy Run', type:'easy', dur:'30 นาที', dist:'4–5 กม.', zone:'Zone 2', hr:'65–75%',
+    tip:'วันแรกอย่าฝืน! วิ่งช้าพอคุยได้สบาย ร่างกายกำลังปรับตัว',
+    coach:'เริ่มต้นดีครับ! อย่าเร็วเกินไปในวันแรก',
+    blocks:[
+      { title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+        steps:[{n:'1', main:'เดินเร็ว 5 นาที', type:'เดิน · Zone 1', icon:'ti-shoe', timer:300}] },
+      { title:'Main Set', icon:'ti-run', style:'dark', badge:'EASY', sub:'20 นาที',
+        steps:[{n:'2', main:'วิ่งเบาๆ ต่อเนื่อง 20 นาที', type:'วิ่ง · Zone 2 · พูดได้ตลอด', icon:'ti-run', timer:1200}] },
+      { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+        steps:[{n:'3', main:'เดินช้าๆ 5 นาที', type:'เดิน · ให้ HR ลดลง', icon:'ti-shoe', timer:300}] }
+    ]
+  },
+  { w:1, d:'อังคาร', name:'พักฟื้น', type:'rest', dur:'—', dist:'—', zone:'—', hr:'—',
+    tip:'วันพักสำคัญมาก กล้ามเนื้อซ่อมแซมและแข็งแกร่งขึ้นระหว่างพัก',
+    coach:'พักให้เต็มที่ นี่คือส่วนสำคัญของโปรแกรม',
+    blocks:[
+      { title:'กิจกรรมแนะนำ', icon:'ti-heart', style:'dark', badge:'REST', sub:'Recovery',
+        steps:[
+          {n:'1', main:'ยืดเหยียด 10–15 นาที', type:'Stretching', icon:'ti-body-scan', timer:0},
+          {n:'2', main:'โฟมโรล หรือนวด', type:'Recovery', icon:'ti-massage', timer:0},
+          {n:'3', main:'นอนหลับ 7–8 ชั่วโมง', type:'Sleep', icon:'ti-moon', timer:0}
+        ]}
+    ]
+  },
+  { w:1, d:'พุธ', name:'Tempo Run', type:'hard', dur:'25 นาที', dist:'4 กม.', zone:'Zone 3–4', hr:'80–88%',
+    tip:'Tempo = หนักพอพูดได้แค่ประโยคสั้นๆ ไม่ต้องวิ่งสุดแรง',
+    coach:'Tempo ครั้งแรก! รู้สึกหนักได้ แต่ต้องทนได้ตลอด 15 นาที',
+    blocks:[
+      { title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+        steps:[{n:'1', main:'เดินเร็ว 5 นาที', type:'เดิน · Zone 1', icon:'ti-shoe', timer:300}] },
+      { title:'Tempo', icon:'ti-bolt', style:'lime', badge:'TEMPO', sub:'15 นาที',
+        steps:[{n:'2', main:'วิ่ง Tempo 15 นาที ต่อเนื่อง', type:'วิ่ง · Zone 3–4 · หนักแต่ทนได้', icon:'ti-run', timer:900}] },
+      { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+        steps:[{n:'3', main:'เดินช้า 5 นาที', type:'เดิน · Zone 1', icon:'ti-shoe', timer:300}] }
+    ]
+  },
+  { w:1, d:'พฤหัส', name:'พักฟื้น Active', type:'rest', dur:'—', dist:'—', zone:'—', hr:'—',
+    tip:'Active recovery ช่วยให้เลือดหมุนเวียนดี ฟื้นตัวเร็วขึ้น',
+    coach:'เดินหรือว่ายน้ำเบาๆ ได้ ไม่ต้องวิ่ง',
+    blocks:[
+      { title:'กิจกรรมแนะนำ', icon:'ti-heart', style:'dark', badge:'REST', sub:'Active',
+        steps:[
+          {n:'1', main:'เดินเบาๆ 20–30 นาที', type:'Active Recovery', icon:'ti-shoe', timer:0},
+          {n:'2', main:'ยืดเหยียด full body', type:'Stretching', icon:'ti-body-scan', timer:0}
+        ]}
+    ]
+  },
+  { w:1, d:'ศุกร์', name:'Easy Run', type:'easy', dur:'30 นาที', dist:'4–5 กม.', zone:'Zone 2', hr:'65–75%',
+    tip:'วันศุกร์วิ่งเบา เก็บแรงไว้สำหรับ Long Run วันเสาร์',
+    coach:'วิ่งสบายๆ คุยได้ตลอด อย่าฝืนเลย',
+    blocks:[
+      { title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+        steps:[{n:'1', main:'เดินเร็ว 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] },
+      { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'20 นาที',
+        steps:[{n:'2', main:'วิ่งเบา 20 นาที', type:'Zone 2 · คุยได้ตลอด', icon:'ti-run', timer:1200}] },
+      { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+        steps:[{n:'3', main:'เดินช้า 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] }
+    ]
+  },
+  { w:1, d:'เสาร์', name:'Long Run', type:'mod', dur:'40–45 นาที', dist:'6–7 กม.', zone:'Zone 2', hr:'65–75%',
+    tip:'Long Run เน้นเวลา ไม่ใช่ความเร็ว วิ่งช้าพอคุยได้ตลอด',
+    coach:'Long Run แรก! เป็น milestone สำคัญมาก ทำได้ดีมากครับ',
+    blocks:[
+      { title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+        steps:[{n:'1', main:'เดินเร็ว 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] },
+      { title:'Long Run', icon:'ti-run', style:'dark', badge:'LONG', sub:'35–40 นาที',
+        steps:[{n:'2', main:'วิ่งเบายาว 35–40 นาที', type:'Zone 2 · ช้าแต่ต่อเนื่อง', icon:'ti-run', timer:2100},
+               {n:'3', main:'ดื่มน้ำทุก 15 นาที', type:'Hydration', icon:'ti-droplet', timer:0}] },
+      { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+        steps:[{n:'4', main:'เดินช้า 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] }
+    ]
+  },
+  { w:1, d:'อาทิตย์', name:'พักผ่อน', type:'rest', dur:'—', dist:'—', zone:'—', hr:'—',
+    tip:'พักสมบูรณ์ทุกอาทิตย์ ร่างกายต้องการเวลาซ่อมแซมและแข็งแกร่ง',
+    coach:'สัปดาห์แรกจบแล้ว! คุณทำได้ดีมากครับ 🎉',
+    blocks:[
+      { title:'พักผ่อนสมบูรณ์', icon:'ti-moon', style:'dark', badge:'REST', sub:'Full Rest',
+        steps:[{n:'1', main:'นอนหลับพักผ่อนให้เต็มที่', type:'Recovery', icon:'ti-moon', timer:0},
+               {n:'2', main:'เตรียมใจสำหรับสัปดาห์หน้า', type:'Mental prep', icon:'ti-brain', timer:0}] }
+    ]
+  },
+
+  // Week 2
+  { w:2, d:'จันทร์', name:'Easy Run', type:'easy', dur:'35 นาที', dist:'5 กม.', zone:'Zone 2', hr:'65–75%',
+    tip:'เพิ่มระยะเล็กน้อย ยังคงวิ่งเบาๆ สบาย',
+    coach:'สัปดาห์ 2 เริ่มแล้ว! เพิ่มระยะนิดหน่อย',
+    blocks:[
+      { title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+        steps:[{n:'1', main:'เดินเร็ว 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] },
+      { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'25 นาที',
+        steps:[{n:'2', main:'วิ่งเบา 25 นาที', type:'Zone 2', icon:'ti-run', timer:1500}] },
+      { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+        steps:[{n:'3', main:'เดินช้า 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] }
+    ]
+  },
+  { w:2, d:'อังคาร', name:'พักฟื้น', type:'rest', dur:'—', dist:'—', zone:'—', hr:'—',
+    tip:'พักและยืดเหยียด',
+    coach:'พักให้เต็มที่ครับ',
+    blocks:[{ title:'พัก', icon:'ti-heart', style:'dark', badge:'REST', sub:'Recovery',
+      steps:[{n:'1', main:'ยืดเหยียด', type:'Stretching', icon:'ti-body-scan', timer:0}] }]
+  },
+  { w:2, d:'พุธ', name:'Interval 400m', type:'hard', dur:'40 นาที', dist:'5 กม.', zone:'Zone 5', hr:'90–95%',
+    tip:'Interval ครั้งแรก! วิ่ง 400m เร็วสุดๆ แล้วพัก ทำซ้ำ 4–5 รอบ นี่คือกุญแจ VO2max',
+    coach:'Interval คือหัวใจของ VO2max training! ทำเต็มที่ทุกรอบ',
+    blocks:[
+      { title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'10 นาที',
+        steps:[{n:'1', main:'วิ่งเบา 10 นาที', type:'Zone 2', icon:'ti-run', timer:600}] },
+      { title:'Interval × 4–5 รอบ', icon:'ti-bolt', style:'lime', badge:'INTERVAL', sub:'400m × 4–5',
+        steps:[
+          {n:'2a', main:'วิ่ง 400m เร็วสุดๆ', type:'วิ่ง · Zone 5 · 90–95% max HR', icon:'ti-run', timer:120},
+          {n:'2b', main:'พักเดิน 90 วินาที', type:'เดิน · Active Rest', icon:'ti-shoe', timer:90}
+        ]},
+      { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'10 นาที',
+        steps:[{n:'3', main:'วิ่งเบา/เดิน 10 นาที', type:'Zone 1', icon:'ti-shoe', timer:600}] }
+    ]
+  },
+  { w:2, d:'พฤหัส', name:'พักฟื้น Active', type:'rest', dur:'—', dist:'—', zone:'—', hr:'—',
+    tip:'หลัง Interval ต้องพักดีๆ',
+    coach:'พักหลัง Interval ครับ ร่างกายกำลัง supercompensate',
+    blocks:[{ title:'Active Recovery', icon:'ti-heart', style:'dark', badge:'REST', sub:'Active',
+      steps:[{n:'1', main:'เดิน 20 นาที หรือยืดเหยียด', type:'Active Rest', icon:'ti-shoe', timer:0}] }]
+  },
+  { w:2, d:'ศุกร์', name:'Easy Run', type:'easy', dur:'35 นาที', dist:'5 กม.', zone:'Zone 2', hr:'65–75%',
+    tip:'หลัง Interval วิ่งเบาช่วยฟื้นฟูดีมาก',
+    coach:'วิ่งเบาๆ ให้ขากลับมาสดครับ',
+    blocks:[
+      { title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+        steps:[{n:'1', main:'เดินเร็ว 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] },
+      { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'25 นาที',
+        steps:[{n:'2', main:'วิ่งเบา 25 นาที', type:'Zone 2', icon:'ti-run', timer:1500}] },
+      { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+        steps:[{n:'3', main:'เดินช้า 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] }
+    ]
+  },
+  { w:2, d:'เสาร์', name:'Long Run', type:'mod', dur:'50 นาที', dist:'7–8 กม.', zone:'Zone 2', hr:'65–75%',
+    tip:'Long Run เพิ่มขึ้น 10 นาที เน้นเวลาและ consistency',
+    coach:'Long Run สัปดาห์ 2 เพิ่มระยะแล้ว ทำได้แน่นอน!',
+    blocks:[
+      { title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+        steps:[{n:'1', main:'เดินเร็ว 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] },
+      { title:'Long Run', icon:'ti-run', style:'dark', badge:'LONG', sub:'40–45 นาที',
+        steps:[{n:'2', main:'วิ่งเบายาว 40–45 นาที', type:'Zone 2', icon:'ti-run', timer:2400}] },
+      { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+        steps:[{n:'3', main:'เดินช้า 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] }
+    ]
+  },
+  { w:2, d:'อาทิตย์', name:'พักผ่อน', type:'rest', dur:'—', dist:'—', zone:'—', hr:'—',
+    tip:'พักสมบูรณ์ก่อนสัปดาห์หนักขึ้น',
+    coach:'สัปดาห์ 2 เสร็จแล้ว! ยอดเยี่ยมมากครับ',
+    blocks:[{ title:'พักผ่อน', icon:'ti-moon', style:'dark', badge:'REST', sub:'Full Rest',
+      steps:[{n:'1', main:'พักเต็มที่', type:'Recovery', icon:'ti-moon', timer:0}] }]
+  },
+
+  // Week 3
+  { w:3, d:'จันทร์', name:'Easy Run', type:'easy', dur:'30 นาที', dist:'4–5 กม.', zone:'Zone 2', hr:'65–75%',
+    tip:'เริ่มสัปดาห์ด้วย easy run เพื่อเตรียมร่างกายสำหรับ interval หนักๆ',
+    coach:'Easy run เพื่อเตรียมพร้อมสัปดาห์หนักที่สุดจนถึงตอนนี้',
+    blocks:[
+      { title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+        steps:[{n:'1', main:'เดินเร็ว 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] },
+      { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'20 นาที',
+        steps:[{n:'2', main:'วิ่งเบา 20 นาที', type:'Zone 2', icon:'ti-run', timer:1200}] },
+      { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+        steps:[{n:'3', main:'เดินช้า 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] }
+    ]
+  },
+  { w:3, d:'อังคาร', name:'Interval 1 นาที', type:'hard', dur:'45 นาที', dist:'6 กม.', zone:'Zone 5', hr:'95–100%',
+    tip:'นี่คือ King of VO2max Training! วิ่ง 1 นาทีเร็วสุด พัก 1 นาที ทำ 8–10 รอบ',
+    coach:'1-1 Interval คือสูตรที่ดีที่สุดสำหรับ VO2max ทำให้ครบทุกรอบ!',
+    blocks:[
+      { title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'EASY', sub:'10 นาที',
+        steps:[{n:'1', main:'วิ่งเบา 10 นาที', type:'Zone 2', icon:'ti-run', timer:600}] },
+      { title:'1:1 Interval × 8–10 รอบ', icon:'ti-bolt', style:'lime', badge:'VO2MAX', sub:'16–20 นาที',
+        steps:[
+          {n:'2a', main:'วิ่ง 1 นาที เร็วสุดๆ (sprint)', type:'Zone 5 · 95–100% max HR', icon:'ti-run', timer:60},
+          {n:'2b', main:'พักเดิน 1 นาที', type:'Active Rest · ลดหัวใจ', icon:'ti-shoe', timer:60}
+        ]},
+      { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'10 นาที',
+        steps:[{n:'3', main:'วิ่งเบา/เดิน 10 นาที', type:'Zone 1', icon:'ti-shoe', timer:600}] }
+    ]
+  },
+  { w:3, d:'พุธ', name:'Easy Recovery', type:'easy', dur:'25 นาที', dist:'3–4 กม.', zone:'Zone 1', hr:'60–65%',
+    tip:'Recovery run ช้ามากๆ หลัง Interval หนัก อย่าสนใจความเร็วเลย',
+    coach:'ช้าๆ วันนี้ครับ ร่างกายกำลังซ่อมแซม',
+    blocks:[
+      { title:'Recovery Run', icon:'ti-run', style:'dark', badge:'SLOW', sub:'25 นาที',
+        steps:[{n:'1', main:'วิ่งช้ามากๆ 25 นาที', type:'Zone 1 · ช้ากว่า easy ปกติ', icon:'ti-run', timer:1500}] }
+    ]
+  },
+  { w:3, d:'พฤหัส', name:'Tempo Run', type:'hard', dur:'35 นาที', dist:'5 กม.', zone:'Zone 4', hr:'85–90%',
+    tip:'Tempo ยาวขึ้น เป็น 20 นาที รักษาจังหวะให้สม่ำเสมอตลอด',
+    coach:'Tempo 20 นาที ท้าทายขึ้น แต่คุณพร้อมแล้ว!',
+    blocks:[
+      { title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'EASY', sub:'5 นาที',
+        steps:[{n:'1', main:'วิ่งเบา 5 นาที', type:'Zone 2', icon:'ti-run', timer:300}] },
+      { title:'Tempo Run', icon:'ti-bolt', style:'lime', badge:'TEMPO', sub:'20 นาที',
+        steps:[{n:'2', main:'Tempo 20 นาที ต่อเนื่อง', type:'Zone 4 · หนักแต่ทนได้', icon:'ti-run', timer:1200}] },
+      { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'10 นาที',
+        steps:[{n:'3', main:'วิ่งเบา/เดิน 10 นาที', type:'Zone 1', icon:'ti-shoe', timer:600}] }
+    ]
+  },
+  { w:3, d:'ศุกร์', name:'พัก', type:'rest', dur:'—', dist:'—', zone:'—', hr:'—',
+    tip:'พักหลังจากสองวันหนักติดกัน',
+    coach:'พักจริงๆ วันนี้ครับ ไม่ต้องวิ่ง',
+    blocks:[{ title:'พักเต็มที่', icon:'ti-moon', style:'dark', badge:'REST', sub:'Full Rest',
+      steps:[{n:'1', main:'พักและนอนหลับ', type:'Recovery', icon:'ti-moon', timer:0}] }]
+  },
+  { w:3, d:'เสาร์', name:'Long Run', type:'mod', dur:'55 นาที', dist:'8–9 กม.', zone:'Zone 2', hr:'65–75%',
+    tip:'Long Run ยาวขึ้นอีก เน้น consistency ไม่ใช่ความเร็ว',
+    coach:'55 นาที! คุณกำลังพัฒนาอย่างดีมากครับ',
+    blocks:[
+      { title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+        steps:[{n:'1', main:'เดินเร็ว 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] },
+      { title:'Long Run', icon:'ti-run', style:'dark', badge:'LONG', sub:'45–50 นาที',
+        steps:[{n:'2', main:'วิ่งเบายาว 45–50 นาที', type:'Zone 2 · ช้าและต่อเนื่อง', icon:'ti-run', timer:2700}] },
+      { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+        steps:[{n:'3', main:'เดินช้า 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] }
+    ]
+  },
+  { w:3, d:'อาทิตย์', name:'พักผ่อน', type:'rest', dur:'—', dist:'—', zone:'—', hr:'—',
+    tip:'สัปดาห์ที่หนักที่สุดจนถึงตอนนี้ พักให้เต็มที่',
+    coach:'สัปดาห์ 3 เสร็จ! คุณทำสิ่งที่ยากมากได้สำเร็จ',
+    blocks:[{ title:'พักผ่อน', icon:'ti-moon', style:'dark', badge:'REST', sub:'Full Rest',
+      steps:[{n:'1', main:'พักเต็มที่', type:'Recovery', icon:'ti-moon', timer:0}] }]
+  },
+
+  // Week 4 – Deload
+  { w:4, d:'จันทร์', name:'Easy Run (สั้น)', type:'easy', dur:'25 นาที', dist:'3–4 กม.', zone:'Zone 2', hr:'60–70%',
+    tip:'สัปดาห์ Deload ลดภาระ 30–40% ร่างกายจะแข็งแกร่งขึ้นระหว่างพักนี้',
+    coach:'Deload week! ลดปริมาณ แต่รักษาคุณภาพ',
+    blocks:[
+      { title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+        steps:[{n:'1', main:'เดินเร็ว 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] },
+      { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'15–20 นาที',
+        steps:[{n:'2', main:'วิ่งเบา 15–20 นาที', type:'Zone 2 · เบามากๆ', icon:'ti-run', timer:1050}] },
+      { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+        steps:[{n:'3', main:'เดินช้า 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] }
+    ]
+  },
+  { w:4, d:'อังคาร', name:'พัก', type:'rest', dur:'—', dist:'—', zone:'—', hr:'—',
+    tip:'พักเต็มที่ Deload คือการลงทุนสำหรับอนาคต',
+    coach:'พักครับ นี่คือสัปดาห์ที่ร่างกายจะ supercompensate',
+    blocks:[{ title:'พักเต็มที่', icon:'ti-moon', style:'dark', badge:'REST', sub:'Full Rest',
+      steps:[{n:'1', main:'พักและฟื้นฟู', type:'Recovery', icon:'ti-moon', timer:0}] }]
+  },
+  { w:4, d:'พุธ', name:'Easy Run', type:'easy', dur:'30 นาที', dist:'4 กม.', zone:'Zone 2', hr:'65–75%',
+    tip:'วิ่งสบายๆ ฟังร่างกายตัวเอง',
+    coach:'สบายๆ วันนี้ครับ',
+    blocks:[
+      { title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+        steps:[{n:'1', main:'เดินเร็ว 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] },
+      { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'20 นาที',
+        steps:[{n:'2', main:'วิ่งเบา 20 นาที', type:'Zone 2', icon:'ti-run', timer:1200}] },
+      { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+        steps:[{n:'3', main:'เดินช้า 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] }
+    ]
+  },
+  { w:4, d:'พฤหัส', name:'พัก', type:'rest', dur:'—', dist:'—', zone:'—', hr:'—',
+    tip:'โฟมโรลและนวดช่วยฟื้นฟูดีมาก',
+    coach:'ยืดเหยียดและนวดครับ',
+    blocks:[{ title:'Recovery', icon:'ti-heart', style:'dark', badge:'REST', sub:'Active',
+      steps:[{n:'1', main:'โฟมโรล / นวด 15 นาที', type:'Recovery', icon:'ti-massage', timer:0}] }]
+  },
+  { w:4, d:'ศุกร์', name:'Easy Run', type:'easy', dur:'30 นาที', dist:'4 กม.', zone:'Zone 2', hr:'65–75%',
+    tip:'เตรียมพร้อมสำหรับช่วงเข้มข้นหลัง Deload',
+    coach:'ร่างกายกำลังพร้อมสำหรับสัปดาห์หน้า!',
+    blocks:[
+      { title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+        steps:[{n:'1', main:'เดินเร็ว 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] },
+      { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'20 นาที',
+        steps:[{n:'2', main:'วิ่งเบา 20 นาที', type:'Zone 2', icon:'ti-run', timer:1200}] },
+      { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+        steps:[{n:'3', main:'เดินช้า 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] }
+    ]
+  },
+  { w:4, d:'เสาร์', name:'Long Run (สั้นลง)', type:'mod', dur:'40 นาที', dist:'6 กม.', zone:'Zone 2', hr:'65–75%',
+    tip:'Long Run Deload สั้นลง แต่รักษาจังหวะ',
+    coach:'Deload Long Run สบายๆ ครับ',
+    blocks:[
+      { title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+        steps:[{n:'1', main:'เดินเร็ว 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] },
+      { title:'Long Run', icon:'ti-run', style:'dark', badge:'LONG', sub:'30 นาที',
+        steps:[{n:'2', main:'วิ่งเบา 30 นาที', type:'Zone 2', icon:'ti-run', timer:1800}] },
+      { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+        steps:[{n:'3', main:'เดินช้า 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] }
+    ]
+  },
+  { w:4, d:'อาทิตย์', name:'พักผ่อน', type:'rest', dur:'—', dist:'—', zone:'—', hr:'—',
+    tip:'Deload สัปดาห์เสร็จแล้ว พักเต็มที่ก่อนช่วงหนักจริงๆ',
+    coach:'สัปดาห์ 4 เสร็จ! ครึ่งทางแล้วครับ 💪',
+    blocks:[{ title:'พักผ่อน', icon:'ti-moon', style:'dark', badge:'REST', sub:'Full Rest',
+      steps:[{n:'1', main:'พักเต็มที่', type:'Recovery', icon:'ti-moon', timer:0}] }]
+  },
+
+  // Week 5
+  { w:5, d:'จันทร์', name:'Easy Run', type:'easy', dur:'35 นาที', dist:'5 กม.', zone:'Zone 2', hr:'65–75%',
+    tip:'กลับมาหลัง Deload ร่างกายแข็งแกร่งขึ้น!',
+    coach:'ยินดีต้อนรับกลับ! สัปดาห์นี้เข้มข้นขึ้นอีก',
+    blocks:[
+      { title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+        steps:[{n:'1', main:'เดินเร็ว 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] },
+      { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'25 นาที',
+        steps:[{n:'2', main:'วิ่งเบา 25 นาที', type:'Zone 2', icon:'ti-run', timer:1500}] },
+      { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+        steps:[{n:'3', main:'เดินช้า 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] }
+    ]
+  },
+  { w:5, d:'อังคาร', name:'Interval 800m', type:'hard', dur:'50 นาที', dist:'7 กม.', zone:'Zone 5', hr:'90–95%',
+    tip:'800m Interval ยาวกว่า 400m แต่ยังเร็วมาก ช่วย VO2max ได้ดีมาก',
+    coach:'800m Interval ท้าทายขึ้น แต่คุณแข็งแกร่งพอแล้ว!',
+    blocks:[
+      { title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'EASY', sub:'10 นาที',
+        steps:[{n:'1', main:'วิ่งเบา 10 นาที', type:'Zone 2', icon:'ti-run', timer:600}] },
+      { title:'800m Interval × 4–5 รอบ', icon:'ti-bolt', style:'lime', badge:'INTERVAL', sub:'800m × 4–5',
+        steps:[
+          {n:'2a', main:'วิ่ง 800m เร็วมาก', type:'Zone 5 · 90–95% max HR', icon:'ti-run', timer:240},
+          {n:'2b', main:'พักเดิน 2–3 นาที', type:'Active Rest', icon:'ti-shoe', timer:150}
+        ]},
+      { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'10 นาที',
+        steps:[{n:'3', main:'วิ่งเบา/เดิน 10 นาที', type:'Zone 1', icon:'ti-shoe', timer:600}] }
+    ]
+  },
+  { w:5, d:'พุธ', name:'Easy Recovery', type:'easy', dur:'30 นาที', dist:'4 กม.', zone:'Zone 1', hr:'60–65%',
+    tip:'Recovery run ช้ามากๆ ห้ามหนักวันนี้',
+    coach:'ช้าๆ ครับ ร่างกายกำลังฟื้นฟู',
+    blocks:[
+      { title:'Recovery Run', icon:'ti-run', style:'dark', badge:'SLOW', sub:'30 นาที',
+        steps:[{n:'1', main:'วิ่งช้ามากๆ 30 นาที', type:'Zone 1 · ห้ามหักโหม', icon:'ti-run', timer:1800}] }
+    ]
+  },
+  { w:5, d:'พฤหัส', name:'Tempo Run', type:'hard', dur:'40 นาที', dist:'6 กม.', zone:'Zone 4', hr:'85–90%',
+    tip:'Tempo 25 นาที รักษาจังหวะสม่ำเสมอตลอด',
+    coach:'Tempo 25 นาที! เพิ่มขึ้น 5 นาทีจากสัปดาห์ก่อน',
+    blocks:[
+      { title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'EASY', sub:'5 นาที',
+        steps:[{n:'1', main:'วิ่งเบา 5 นาที', type:'Zone 2', icon:'ti-run', timer:300}] },
+      { title:'Tempo Run', icon:'ti-bolt', style:'lime', badge:'TEMPO', sub:'25 นาที',
+        steps:[{n:'2', main:'Tempo 25 นาที ต่อเนื่อง', type:'Zone 4 · หนักแต่ทนได้', icon:'ti-run', timer:1500}] },
+      { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'10 นาที',
+        steps:[{n:'3', main:'วิ่งเบา/เดิน 10 นาที', type:'Zone 1', icon:'ti-shoe', timer:600}] }
+    ]
+  },
+  { w:5, d:'ศุกร์', name:'พัก', type:'rest', dur:'—', dist:'—', zone:'—', hr:'—',
+    tip:'พักหลัง 2 วันหนัก เตรียมพร้อม Long Run',
+    coach:'พักดีๆ ครับ Long Run พรุ่งนี้',
+    blocks:[{ title:'พักเต็มที่', icon:'ti-moon', style:'dark', badge:'REST', sub:'Full Rest',
+      steps:[{n:'1', main:'พักและเตรียม Long Run', type:'Recovery', icon:'ti-moon', timer:0}] }]
+  },
+  { w:5, d:'เสาร์', name:'Long Run', type:'mod', dur:'60 นาที', dist:'9–10 กม.', zone:'Zone 2', hr:'65–75%',
+    tip:'Long Run 1 ชั่วโมง! Milestone ใหญ่ เน้น consistency',
+    coach:'1 ชั่วโมง! คุณกำลังกลายเป็นนักวิ่งจริงๆ 🏃',
+    blocks:[
+      { title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+        steps:[{n:'1', main:'เดินเร็ว 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] },
+      { title:'Long Run', icon:'ti-run', style:'dark', badge:'LONG', sub:'50–55 นาที',
+        steps:[{n:'2', main:'วิ่งเบายาว 50–55 นาที', type:'Zone 2 · ช้าและต่อเนื่อง', icon:'ti-run', timer:3150},
+               {n:'3', main:'ดื่มน้ำทุก 15 นาที', type:'Hydration', icon:'ti-droplet', timer:0}] },
+      { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+        steps:[{n:'4', main:'เดินช้า 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] }
+    ]
+  },
+  { w:5, d:'อาทิตย์', name:'พักผ่อน', type:'rest', dur:'—', dist:'—', zone:'—', hr:'—',
+    tip:'พักหลัง Long Run 1 ชั่วโมง ร่างกายต้องการ',
+    coach:'สัปดาห์ 5 เสร็จ! ยอดเยี่ยมมากครับ',
+    blocks:[{ title:'พักผ่อน', icon:'ti-moon', style:'dark', badge:'REST', sub:'Full Rest',
+      steps:[{n:'1', main:'พักเต็มที่', type:'Recovery', icon:'ti-moon', timer:0}] }]
+  },
+
+  // Week 6 – Peak
+  { w:6, d:'จันทร์', name:'Easy Run', type:'easy', dur:'35 นาที', dist:'5 กม.', zone:'Zone 2', hr:'65–75%',
+    tip:'สัปดาห์ Peak เริ่มด้วย easy เพื่อเก็บแรงสำหรับ interval หนักๆ',
+    coach:'Peak week เริ่มแล้ว! นี่คือสัปดาห์สำคัญที่สุด',
+    blocks:[
+      { title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+        steps:[{n:'1', main:'เดินเร็ว 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] },
+      { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'25 นาที',
+        steps:[{n:'2', main:'วิ่งเบา 25 นาที', type:'Zone 2', icon:'ti-run', timer:1500}] },
+      { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+        steps:[{n:'3', main:'เดินช้า 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] }
+    ]
+  },
+  { w:6, d:'อังคาร', name:'Interval 1 min MAX', type:'hard', dur:'50 นาที', dist:'7 กม.', zone:'Zone 5', hr:'100%',
+    tip:'Peak Interval! 10–12 รอบ เต็มสุดๆ ทุกรอบ นี่คือวันที่สำคัญที่สุดของโปรแกรม',
+    coach:'เต็มสุดๆ ทุกรอบ! นี่คือวันที่จะทำให้ VO2max ของคุณพุ่ง!',
+    blocks:[
+      { title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'EASY', sub:'10 นาที',
+        steps:[{n:'1', main:'วิ่งเบา 10 นาที', type:'Zone 2', icon:'ti-run', timer:600}] },
+      { title:'1:1 Interval × 10–12 รอบ', icon:'ti-bolt', style:'lime', badge:'PEAK', sub:'20–24 นาที',
+        steps:[
+          {n:'2a', main:'วิ่ง 1 นาที FULL SPRINT', type:'Zone 5 · 100% max HR · สุดแรง!', icon:'ti-run', timer:60},
+          {n:'2b', main:'พักเดิน 1 นาที', type:'Active Rest', icon:'ti-shoe', timer:60}
+        ]},
+      { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'10 นาที',
+        steps:[{n:'3', main:'วิ่งเบา/เดิน 10 นาที', type:'Zone 1', icon:'ti-shoe', timer:600}] }
+    ]
+  },
+  { w:6, d:'พุธ', name:'Easy Recovery', type:'easy', dur:'30 นาที', dist:'4 กม.', zone:'Zone 1', hr:'60–65%',
+    tip:'Recovery run ช้ามากๆ หลัง peak interval',
+    coach:'ช้ามากๆ ครับ ร่างกายกำลังซ่อมแซมหนักๆ',
+    blocks:[
+      { title:'Recovery Run', icon:'ti-run', style:'dark', badge:'SLOW', sub:'30 นาที',
+        steps:[{n:'1', main:'วิ่งช้ามากๆ 30 นาที', type:'Zone 1 · ห้ามหักโหม', icon:'ti-run', timer:1800}] }
+    ]
+  },
+  { w:6, d:'พฤหัส', name:'Tempo + Hills', type:'hard', dur:'45 นาที', dist:'6 กม.', zone:'Zone 4', hr:'85–90%',
+    tip:'เพิ่มการวิ่งขึ้นเขา/ทางชัน ช่วยสร้างความแข็งแกร่งและ VO2max',
+    coach:'Tempo + Hills วันนี้! ถ้าไม่มีเขา ใช้ลู่วิ่ง incline แทน',
+    blocks:[
+      { title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'EASY', sub:'5 นาที',
+        steps:[{n:'1', main:'วิ่งเบา 5 นาที', type:'Zone 2', icon:'ti-run', timer:300}] },
+      { title:'Tempo Run', icon:'ti-bolt', style:'lime', badge:'TEMPO', sub:'20 นาที',
+        steps:[{n:'2', main:'Tempo 20 นาที ต่อเนื่อง', type:'Zone 4', icon:'ti-run', timer:1200}] },
+      { title:'Hills / Incline', icon:'ti-trending-up', style:'lime', badge:'HILLS', sub:'5 นาที',
+        steps:[{n:'3', main:'วิ่งขึ้นเขา/ทางชัน 5 นาที', type:'Zone 4–5 · ความชัน 5–8%', icon:'ti-mountain', timer:300}] },
+      { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'10 นาที',
+        steps:[{n:'4', main:'วิ่งเบา/เดิน 10 นาที', type:'Zone 1', icon:'ti-shoe', timer:600}] }
+    ]
+  },
+  { w:6, d:'ศุกร์', name:'พัก', type:'rest', dur:'—', dist:'—', zone:'—', hr:'—',
+    tip:'พักเต็มที่ก่อน Long Run ยาวที่สุดในโปรแกรม',
+    coach:'พักดีๆ Long Run พรุ่งนี้ยาวที่สุด!',
+    blocks:[{ title:'พักเต็มที่', icon:'ti-moon', style:'dark', badge:'REST', sub:'Full Rest',
+      steps:[{n:'1', main:'พักและเตรียม Long Run', type:'Recovery', icon:'ti-moon', timer:0}] }]
+  },
+  { w:6, d:'เสาร์', name:'Long Run (Peak)', type:'mod', dur:'65–70 นาที', dist:'10–11 กม.', zone:'Zone 2', hr:'65–75%',
+    tip:'Long Run ยาวที่สุดในโปรแกรม! เน้นวิ่งต่อเนื่อง เดิน 2–3 นาทีได้ถ้าเหนื่อยมาก',
+    coach:'Peak Long Run! ถ้าทำได้ คุณพร้อมสำหรับ VO2max ที่ดีขึ้นมากแล้ว! 🔥',
+    blocks:[
+      { title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+        steps:[{n:'1', main:'เดินเร็ว 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] },
+      { title:'Peak Long Run', icon:'ti-run', style:'dark', badge:'PEAK', sub:'60–65 นาที',
+        steps:[{n:'2', main:'วิ่งเบายาว 60–65 นาที', type:'Zone 2 · ยาวที่สุดในโปรแกรม', icon:'ti-run', timer:3750},
+               {n:'3', main:'ดื่มน้ำทุก 15 นาที', type:'Hydration', icon:'ti-droplet', timer:0}] },
+      { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+        steps:[{n:'4', main:'เดินช้า 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] }
+    ]
+  },
+  { w:6, d:'อาทิตย์', name:'พักผ่อน', type:'rest', dur:'—', dist:'—', zone:'—', hr:'—',
+    tip:'Peak week เสร็จแล้ว! คุณทำสิ่งที่ยากที่สุดสำเร็จแล้ว',
+    coach:'สัปดาห์ 6 เสร็จ! คุณคือนักวิ่งตัวจริงแล้วครับ 🏆',
+    blocks:[{ title:'พักผ่อนสมบูรณ์', icon:'ti-moon', style:'dark', badge:'REST', sub:'Full Rest',
+      steps:[{n:'1', main:'พักและฉลอง Peak Week', type:'Recovery', icon:'ti-moon', timer:0}] }]
+  },
+
+  // Week 7 – Deload 2
+  { w:7, d:'จันทร์', name:'Easy Run', type:'easy', dur:'25 นาที', dist:'3–4 กม.', zone:'Zone 2', hr:'60–70%',
+    tip:'Deload ก่อน Race Week ลดภาระ ร่างกายจะถึง Supercompensation peak ในสัปดาห์หน้า',
+    coach:'Deload ครั้งสุดท้าย เพื่อ peak ในสัปดาห์ 8!',
+    blocks:[
+      { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'25 นาที',
+        steps:[{n:'1', main:'วิ่งเบา 25 นาที เบามากๆ', type:'Zone 2', icon:'ti-run', timer:1500}] }
+    ]
+  },
+  { w:7, d:'อังคาร', name:'พัก', type:'rest', dur:'—', dist:'—', zone:'—', hr:'—',
+    tip:'พักเต็มที่',
+    coach:'พักครับ',
+    blocks:[{ title:'พักเต็มที่', icon:'ti-moon', style:'dark', badge:'REST', sub:'Full Rest',
+      steps:[{n:'1', main:'พักเต็มที่', type:'Recovery', icon:'ti-moon', timer:0}] }]
+  },
+  { w:7, d:'พุธ', name:'Interval เบา', type:'hard', dur:'35 นาที', dist:'5 กม.', zone:'Zone 5', hr:'90–95%',
+    tip:'Interval แต่ลดรอบเหลือ 5 รอบ รักษาความเร็วแต่ลดปริมาณ',
+    coach:'5 รอบพอครับ รักษา quality ไว้',
+    blocks:[
+      { title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'EASY', sub:'10 นาที',
+        steps:[{n:'1', main:'วิ่งเบา 10 นาที', type:'Zone 2', icon:'ti-run', timer:600}] },
+      { title:'Interval × 5 รอบ', icon:'ti-bolt', style:'lime', badge:'INTERVAL', sub:'10 นาที',
+        steps:[
+          {n:'2a', main:'วิ่ง 1 นาที เร็วสุด', type:'Zone 5 · 90–95%', icon:'ti-run', timer:60},
+          {n:'2b', main:'พักเดิน 2 นาที', type:'Active Rest', icon:'ti-shoe', timer:120}
+        ]},
+      { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'10 นาที',
+        steps:[{n:'3', main:'วิ่งเบา/เดิน 10 นาที', type:'Zone 1', icon:'ti-shoe', timer:600}] }
+    ]
+  },
+  { w:7, d:'พฤหัส', name:'พัก', type:'rest', dur:'—', dist:'—', zone:'—', hr:'—',
+    tip:'ยืดเหยียดเบาๆ',
+    coach:'ยืดเหยียดครับ',
+    blocks:[{ title:'Active Recovery', icon:'ti-heart', style:'dark', badge:'REST', sub:'Light',
+      steps:[{n:'1', main:'ยืดเหยียดเบา 15 นาที', type:'Stretching', icon:'ti-body-scan', timer:0}] }]
+  },
+  { w:7, d:'ศุกร์', name:'Easy Run', type:'easy', dur:'30 นาที', dist:'4 กม.', zone:'Zone 2', hr:'65–75%',
+    tip:'เตรียมร่างกายสำหรับ Race Week สัปดาห์หน้า',
+    coach:'เกือบถึงแล้ว! สัปดาห์หน้าคือ Race Week!',
+    blocks:[
+      { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'30 นาที',
+        steps:[{n:'1', main:'วิ่งเบา 30 นาที', type:'Zone 2', icon:'ti-run', timer:1800}] }
+    ]
+  },
+  { w:7, d:'เสาร์', name:'Long Run (ปานกลาง)', type:'mod', dur:'45 นาที', dist:'7 กม.', zone:'Zone 2', hr:'65–75%',
+    tip:'Long Run ปานกลาง ไม่ต้องหักโหม เก็บแรงสำหรับ Race Week',
+    coach:'สบายๆ Long Run เพื่อเตรียมพร้อม',
+    blocks:[
+      { title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+        steps:[{n:'1', main:'เดินเร็ว 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] },
+      { title:'Long Run', icon:'ti-run', style:'dark', badge:'LONG', sub:'35–40 นาที',
+        steps:[{n:'2', main:'วิ่งเบา 35–40 นาที', type:'Zone 2', icon:'ti-run', timer:2250}] },
+      { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+        steps:[{n:'3', main:'เดินช้า 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] }
+    ]
+  },
+  { w:7, d:'อาทิตย์', name:'พักผ่อน', type:'rest', dur:'—', dist:'—', zone:'—', hr:'—',
+    tip:'พักผ่อนเต็มที่ก่อน Race Week สัปดาห์สุดท้าย',
+    coach:'สัปดาห์ 7 เสร็จ! เหลืออีกสัปดาห์เดียว!',
+    blocks:[{ title:'พักผ่อน', icon:'ti-moon', style:'dark', badge:'REST', sub:'Full Rest',
+      steps:[{n:'1', main:'พักเต็มที่', type:'Recovery', icon:'ti-moon', timer:0}] }]
+  },
+
+  // Week 8 – Race Week
+  { w:8, d:'จันทร์', name:'Easy Run', type:'easy', dur:'25 นาที', dist:'3–4 กม.', zone:'Zone 2', hr:'60–70%',
+    tip:'Race Week! วิ่งเบามากๆ เก็บแรงสำหรับ Time Trial วันเสาร์',
+    coach:'Race Week เริ่มแล้ว! เบาๆ ครับ เก็บแรงไว้',
+    blocks:[
+      { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'25 นาที',
+        steps:[{n:'1', main:'วิ่งเบามากๆ 25 นาที', type:'Zone 2 · เก็บแรง', icon:'ti-run', timer:1500}] }
+    ]
+  },
+  { w:8, d:'อังคาร', name:'พัก', type:'rest', dur:'—', dist:'—', zone:'—', hr:'—',
+    tip:'พักเต็มที่ก่อน Time Trial',
+    coach:'พักครับ Time Trial ใกล้แล้ว!',
+    blocks:[{ title:'พักเต็มที่', icon:'ti-moon', style:'dark', badge:'REST', sub:'Full Rest',
+      steps:[{n:'1', main:'พักเต็มที่', type:'Recovery', icon:'ti-moon', timer:0}] }]
+  },
+  { w:8, d:'พุธ', name:'Strides', type:'hard', dur:'30 นาที', dist:'4 กม.', zone:'Zone 4–5', hr:'85–90%',
+    tip:'Strides = วิ่งเร็วสั้นๆ 20 วินาที เพื่อ "ปลุก" ขา ก่อน race',
+    coach:'Strides ช่วยให้ขาสดและพร้อมสำหรับ Time Trial!',
+    blocks:[
+      { title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'EASY', sub:'10 นาที',
+        steps:[{n:'1', main:'วิ่งเบา 10 นาที', type:'Zone 2', icon:'ti-run', timer:600}] },
+      { title:'Strides × 6 ครั้ง', icon:'ti-bolt', style:'lime', badge:'STRIDES', sub:'2 นาที',
+        steps:[
+          {n:'2a', main:'วิ่งเร็ว 20 วินาที (ไม่ใช่สุดแรง)', type:'Zone 4–5 · ประมาณ 85–90%', icon:'ti-run', timer:20},
+          {n:'2b', main:'พักเดิน 60 วินาที', type:'Rest', icon:'ti-shoe', timer:60}
+        ]},
+      { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'10 นาที',
+        steps:[{n:'3', main:'วิ่งเบา/เดิน 10 นาที', type:'Zone 1', icon:'ti-shoe', timer:600}] }
+    ]
+  },
+  { w:8, d:'พฤหัส', name:'พัก', type:'rest', dur:'—', dist:'—', zone:'—', hr:'—',
+    tip:'พักเต็มที่ก่อน Time Trial อีก 2 วัน',
+    coach:'พักดีๆ ครับ Time Trial วันเสาร์!',
+    blocks:[{ title:'พักเต็มที่', icon:'ti-moon', style:'dark', badge:'REST', sub:'Full Rest',
+      steps:[{n:'1', main:'พักและนอนหลับเยอะๆ', type:'Recovery', icon:'ti-moon', timer:0}] }]
+  },
+  { w:8, d:'ศุกร์', name:'Easy Run สั้น', type:'easy', dur:'20 นาที', dist:'3 กม.', zone:'Zone 1', hr:'60–65%',
+    tip:'วิ่งสั้นมากๆ แค่ขยับขา ไม่ต้องเหนื่อยเลย เก็บแรงสำหรับพรุ่งนี้',
+    coach:'สั้นๆ ครับ แค่ขยับขาให้ตื่นตัว',
+    blocks:[
+      { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'20 นาที',
+        steps:[{n:'1', main:'วิ่งเบามากๆ 20 นาที', type:'Zone 1 · ช้ามาก', icon:'ti-run', timer:1200}] }
+    ]
+  },
+  { w:8, d:'เสาร์', name:'🏆 Time Trial 5km', type:'hard', dur:'5 กม.', dist:'5 กม.', zone:'Zone 5', hr:'100%',
+    tip:'วันนี้คือวันแห่งความภูมิใจ! วิ่ง 5km เร็วสุดที่ทำได้ เปรียบเทียบกับสัปดาห์แรก',
+    coach:'ถึงเวลาแล้ว! วิ่งสุดแรงและภาคภูมิใจในตัวเอง! คุณซ้อมมา 8 สัปดาห์แล้ว! 🔥',
+    blocks:[
+      { title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'EASY', sub:'10–15 นาที',
+        steps:[
+          {n:'1', main:'วิ่งเบา 10 นาที', type:'Zone 2', icon:'ti-run', timer:600},
+          {n:'2', main:'Strides 3 ครั้ง × 20 วินาที', type:'ปลุกขา', icon:'ti-bolt', timer:60}
+        ]},
+      { title:'🏆 5km Time Trial', icon:'ti-trophy', style:'lime', badge:'RACE!', sub:'5 กม. เต็มที่',
+        steps:[
+          {n:'3', main:'วิ่ง 5km เร็วสุดที่ทำได้!', type:'Zone 5 · 100% · สุดแรงตลอด', icon:'ti-run', timer:1500},
+          {n:'4', main:'จับเวลาและบันทึกผล', type:'PB Alert! 🎯', icon:'ti-clock', timer:0}
+        ]},
+      { title:'คูลดาวน์ + ฉลอง', icon:'ti-confetti', style:'dark', badge:'DONE!', sub:'ยินดีด้วย!',
+        steps:[
+          {n:'5', main:'เดินช้า 10 นาที', type:'ลด HR', icon:'ti-shoe', timer:600},
+          {n:'6', main:'ยืดเหยียด + ฉลองความสำเร็จ 🎉', type:'8 สัปดาห์เสร็จแล้ว!', icon:'ti-heart', timer:0}
+        ]}
+    ]
+  },
+  { w:8, d:'อาทิตย์', name:'ฉลองและพัก!', type:'rest', dur:'—', dist:'—', zone:'—', hr:'—',
+    tip:'คุณทำสำเร็จแล้ว! 8 สัปดาห์ 32 เซสชั่น VO2max ของคุณพัฒนาขึ้นอย่างแน่นอน!',
+    coach:'ยินดีด้วยครับ!! คุณทำโปรแกรมสำเร็จ! 🏆🎉 VO2max ของคุณดีขึ้นแน่นอน!',
+    blocks:[{ title:'ฉลองและพัก!', icon:'ti-trophy', style:'lime', badge:'CHAMPION', sub:'8 สัปดาห์เสร็จแล้ว!',
+      steps:[
+        {n:'1', main:'ฉลองความสำเร็จ!', type:'8 สัปดาห์เสร็จสมบูรณ์', icon:'ti-trophy', timer:0},
+        {n:'2', main:'วางแผนโปรแกรมถัดไป', type:'ก้าวต่อไป', icon:'ti-arrow-right', timer:0}
+      ]}]
+  }
+];
+
+// Count running sessions (non-rest)
+const TOTAL_SESSIONS = PLANS.filter(p => p.type !== 'rest').length;
+
+// ══════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════
+const STORAGE_KEY = 'vo2max_v3';
+const STORAGE_VER = 3;
+let state = { checked: {}, currentWeek: 1, savedAt: null, version: STORAGE_VER };
+
+// ── ROBUST STORAGE ──
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      state = Object.assign({ checked: {}, currentWeek: 1, savedAt: null, version: STORAGE_VER }, parsed);
+    }
+  } catch(e) { console.warn('loadState error', e); }
+}
+
+function saveState() {
+  try {
+    state.savedAt = new Date().toISOString();
+    state.version = STORAGE_VER;
+    const json = JSON.stringify(state);
+    localStorage.setItem(STORAGE_KEY, json);
+    // mirror backup slot
+    localStorage.setItem(STORAGE_KEY + '_bak', json);
+    return true;
+  } catch(e) {
+    // Try clearing old keys if quota exceeded
+    try {
+      for (let k of Object.keys(localStorage)) {
+        if (k !== STORAGE_KEY && k !== STORAGE_KEY + '_bak') localStorage.removeItem(k);
+      }
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      return true;
+    } catch(e2) { return false; }
+  }
+}
+
+function getStorageSize() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY) || '';
+    return (new Blob([raw]).size / 1024).toFixed(1) + ' KB';
+  } catch(e) { return '—'; }
+}
+
+loadState();
+
+// ── BACKUP FUNCTIONS ──
+function showToast(msg, isErr) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.background = isErr ? '#f09595' : 'var(--lime)';
+  t.style.color = isErr ? '#500' : 'var(--dark)';
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+function exportData() {
+  try {
+    const done = PLANS.filter(p => p.type !== 'rest' && isDone(p)).length;
+    const payload = {
+      _app: 'vo2max-run',
+      _version: STORAGE_VER,
+      _exportedAt: new Date().toISOString(),
+      _summary: done + '/' + TOTAL_SESSIONS + ' sessions done',
+      ...state
+    };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const dateStr = new Date().toISOString().slice(0,10);
+    a.href = url; a.download = 'vo2max-backup-' + dateStr + '.json';
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('Export สำเร็จแล้ว!');
+  } catch(e) { showToast('Export ไม่ได้: ' + e.message, true); }
+}
+
+function importData(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const parsed = JSON.parse(e.target.result);
+      if (!parsed.checked) throw new Error('ไฟล์ไม่ถูกต้อง');
+      state = { checked: parsed.checked || {}, currentWeek: parsed.currentWeek || 1, savedAt: parsed.savedAt, version: STORAGE_VER };
+      saveState();
+      renderHome();
+      showToast('Import สำเร็จ! ข้อมูลกู้คืนแล้ว');
+      document.getElementById('importStatus').textContent = '';
+      renderBackupInfo();
+    } catch(err) {
+      document.getElementById('importStatus').textContent = 'ผิดพลาด: ' + err.message;
+      document.getElementById('importStatus').className = 'bk-status err';
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+function copyCode() {
+  try {
+    const code = btoa(unescape(encodeURIComponent(JSON.stringify(state))));
+    navigator.clipboard.writeText(code).then(() => {
+      showToast('คัดลอก Code แล้ว!');
+      document.getElementById('codeStatus').textContent = 'คัดลอกแล้ว ✓';
+    }).catch(() => {
+      document.getElementById('codeStatus').textContent = code.slice(0,40) + '...';
+    });
+  } catch(e) { showToast('ไม่สามารถคัดลอกได้', true); }
+}
+
+function showPasteBox() {
+  const box = document.getElementById('pasteBox');
+  box.style.display = box.style.display === 'none' ? 'block' : 'none';
+}
+
+function pasteCode() {
+  try {
+    const raw = document.getElementById('pasteArea').value.trim();
+    const decoded = JSON.parse(decodeURIComponent(escape(atob(raw))));
+    if (!decoded.checked) throw new Error('Code ไม่ถูกต้อง');
+    state = { checked: decoded.checked || {}, currentWeek: decoded.currentWeek || 1, savedAt: decoded.savedAt, version: STORAGE_VER };
+    saveState();
+    renderHome();
+    document.getElementById('pasteBox').style.display = 'none';
+    showToast('กู้คืนข้อมูลสำเร็จ!');
+    renderBackupInfo();
+  } catch(e) {
+    document.getElementById('codeStatus').textContent = 'Code ผิดพลาด ลองใหม่อีกครั้ง';
+    document.getElementById('codeStatus').className = 'bk-status err';
+  }
+}
+
+function confirmReset() {
+  if (confirm('ยืนยันรีเซ็ตข้อมูลทั้งหมด? ความคืบหน้าจะหายทั้งหมด')) {
+    state = { checked: {}, currentWeek: 1, savedAt: null, version: STORAGE_VER };
+    saveState();
+    renderHome();
+    showToast('รีเซ็ตเรียบร้อยแล้ว');
+    renderBackupInfo();
+  }
+}
+
+function renderBackupInfo() {
+  const done = PLANS.filter(p => p.type !== 'rest' && isDone(p)).length;
+  const savedAt = state.savedAt ? new Date(state.savedAt).toLocaleString('th-TH', { dateStyle:'medium', timeStyle:'short' }) : 'ยังไม่ได้บันทึก';
+  document.getElementById('bkInfoRows').innerHTML = [
+    ['สถานะ', '<span style="color:var(--lime)">บันทึกอัตโนมัติ ✓</span>'],
+    ['บันทึกล่าสุด', savedAt],
+    ['ความคืบหน้า', done + ' / ' + TOTAL_SESSIONS + ' เซสชั่น'],
+    ['ขนาดข้อมูล', getStorageSize()],
+  ].map(([l,v]) => '<div class="bk-info-row"><div class="bk-info-label">' + l + '</div><div class="bk-info-val">' + v + '</div></div>').join('');
+}
+
+function getPlanKey(plan) { return `w${plan.w}-${plan.d}`; }
+function isDone(plan) { return !!state.checked[getPlanKey(plan)]; }
+function runningDone() { return PLANS.filter(p => p.type !== 'rest' && isDone(p)).length; }
+function totalDone() { return PLANS.filter(p => isDone(p)).length; }
+
+// ══════════════════════════════════════════════
+//  SCREEN ROUTER
+// ══════════════════════════════════════════════
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(name + 'Screen').classList.add('active');
+  if(name === 'home') renderHome();
+  if(name === 'stats') renderStats();
+  if(name === 'backup') renderBackupInfo();
+}
+
+// ══════════════════════════════════════════════
+//  HOME
+// ══════════════════════════════════════════════
+function renderHome() {
+  renderRing();
+  renderWeekChips();
+  renderSessions();
+}
+
+function renderRing() {
+  const done = runningDone();
+  const total = TOTAL_SESSIONS;
+  const pct = Math.round(done / total * 100);
+  const circ = 213.6;
+  const offset = circ - (pct / 100 * circ);
+  document.getElementById('homeRing').style.strokeDashoffset = offset;
+  document.getElementById('homeRingPct').textContent = pct + '%';
+  document.getElementById('statDone').textContent = done;
+  document.getElementById('statTotal').textContent = total;
+  // current week
+  const cw = getCurrentWeek();
+  document.getElementById('statWeekNum').textContent = cw;
+}
+
+function getCurrentWeek() {
+  // find highest week with any activity or default 1
+  for(let w = 8; w >= 1; w--) {
+    const plans = PLANS.filter(p => p.w === w);
+    if(plans.some(p => isDone(p))) return w;
+  }
+  return state.currentWeek || 1;
+}
+
+function renderWeekChips() {
+  const wrap = document.getElementById('weekChips');
+  wrap.innerHTML = '';
+  for(let w = 1; w <= 8; w++) {
+    const plans = PLANS.filter(p => p.w === w);
+    const doneCount = plans.filter(isDone).length;
+    const hasProgress = doneCount > 0;
+    const isActive = w === state.currentWeek;
+    const btn = document.createElement('button');
+    btn.className = 'wchip' + (isActive ? ' active' : '') + (hasProgress && !isActive ? ' has-progress' : '');
+    btn.textContent = 'Week ' + w;
+    btn.onclick = () => { state.currentWeek = w; saveState(); renderHome(); };
+    wrap.appendChild(btn);
+  }
+}
+
+const TYPE_INFO = {
+  easy: { color:'#97C459', label:'EASY RUN', badgeCls:'pill-easy', accent:'#639922' },
+  hard: { color:'#f09595', label:'HARD', badgeCls:'pill-hard', accent:'#E24B4A' },
+  mod:  { color:'#85B7EB', label:'LONG RUN', badgeCls:'pill-mod', accent:'#378ADD' },
+  rest: { color:'#555', label:'พัก', badgeCls:'pill-rest', accent:'#333' }
+};
+
+function renderSessions() {
+  const list = document.getElementById('sessionsList');
+  list.innerHTML = '';
+  const plans = PLANS.filter(p => p.w === state.currentWeek);
+  plans.forEach(plan => {
+    const done = isDone(plan);
+    const ti = TYPE_INFO[plan.type] || TYPE_INFO.rest;
+    const isRest = plan.type === 'rest';
+    const card = document.createElement('div');
+    card.className = 'session-card' + (done ? ' done' : '') + (isRest ? ' rest-card' : '');
+    card.innerHTML = `
+      <div class="sc-accent" style="background:${done ? '#C8F135' : ti.color}"></div>
+      <div class="sc-top">
+        <div class="sc-check ${done ? 'done' : ''}" id="chk-${getPlanKey(plan)}">
+          <i class="ti ti-check"></i>
+        </div>
+        <div class="sc-info">
+          <div class="sc-day">${plan.d.toUpperCase()} · สัปดาห์ ${plan.w}</div>
+          <div class="sc-name">${plan.name}</div>
+          <div class="sc-meta">
+            <span class="sc-pill ${ti.badgeCls}">${ti.label}</span>
+            ${!isRest ? `<span class="sc-dur"><i class="ti ti-clock" style="font-size:11px;vertical-align:-1px"></i> ${plan.dur}</span>` : ''}
+            ${!isRest && plan.dist !== '—' ? `<span class="sc-dur"><i class="ti ti-map-pin" style="font-size:11px;vertical-align:-1px"></i> ${plan.dist}</span>` : ''}
+          </div>
+        </div>
+      </div>
+    `;
+    if(!isRest) {
+      card.onclick = (e) => {
+        if(e.target.closest('.sc-check')) return;
+        openWorkout(plan);
+      };
+    }
+    const chk = card.querySelector('.sc-check');
+    chk.onclick = (e) => {
+      e.stopPropagation();
+      const key = getPlanKey(plan);
+      state.checked[key] = !state.checked[key];
+      saveState();
+      renderHome();
+    };
+    list.appendChild(card);
+  });
+}
+
+// ══════════════════════════════════════════════
+//  WORKOUT DETAIL
+// ══════════════════════════════════════════════
+let currentPlan = null;
+
+function openWorkout(plan) {
+  currentPlan = plan;
+  const ti = TYPE_INFO[plan.type] || TYPE_INFO.rest;
+  const done = isDone(plan);
+
+  document.getElementById('wh-week-pill').textContent = 'Week ' + plan.w;
+  document.getElementById('wh-date').textContent = plan.d.toUpperCase() + ' · สัปดาห์ ' + plan.w;
+
+  const badge = document.getElementById('wh-type-badge');
+  badge.textContent = ti.label;
+  badge.style.background = plan.type === 'hard' ? 'rgba(232,74,74,0.15)' :
+                            plan.type === 'easy' ? 'rgba(99,153,34,0.15)' :
+                            plan.type === 'mod'  ? 'rgba(55,138,221,0.15)' : 'rgba(255,255,255,0.08)';
+  badge.style.color = ti.color;
+
+  document.getElementById('wh-title').textContent = plan.name;
+
+  // subtitle
+  const sub = document.getElementById('wh-subtitle');
+  if(plan.type !== 'rest') {
+    sub.innerHTML = `
+      <span><i class="ti ti-clock" style="font-size:13px;vertical-align:-2px"></i> ${plan.dur}</span>
+      <div class="dot"></div>
+      <span><i class="ti ti-map-pin" style="font-size:13px;vertical-align:-2px"></i> ${plan.dist}</span>
+      <div class="dot"></div>
+      <span><i class="ti ti-heart" style="font-size:13px;vertical-align:-2px"></i> ${plan.zone}</span>
+    `;
+  } else {
+    sub.innerHTML = `<span style="color:rgba(255,255,255,0.35)">วันพักฟื้น — สำคัญมาก!</span>`;
+  }
+
+  // meta
+  const meta = document.getElementById('wh-meta');
+  if(plan.type !== 'rest') {
+    const blocks = plan.blocks.filter(b => b.steps.some(s => s.timer > 0));
+    const totalSecs = plan.blocks.reduce((a,b) => a + b.steps.reduce((x,s) => x + (s.timer||0), 0), 0);
+    const totalMin = Math.round(totalSecs / 60);
+    meta.innerHTML = `
+      <div class="meta-item"><div class="meta-val">${plan.w}</div><div class="meta-lbl">สัปดาห์</div></div>
+      <div class="meta-item"><div class="meta-val">${plan.blocks.length}</div><div class="meta-lbl">Blocks</div></div>
+      <div class="meta-item"><div class="meta-val">${plan.hr !== '—' ? plan.hr.replace('%','') : '—'}</div><div class="meta-lbl">HR %</div></div>
+      <div class="meta-item"><div class="meta-val">${plan.dist !== '—' ? plan.dist.split('–')[0] : '—'}</div><div class="meta-lbl">กม.</div></div>
+    `;
+    meta.style.display = 'flex';
+  } else {
+    meta.style.display = 'none';
+  }
+
+  // actions
+  const actRow = document.getElementById('wh-actions');
+  const warmupDone = done;
+  actRow.innerHTML = `
+    <div class="act-btn ${done ? 'on' : ''}" onclick="toggleWorkoutDone()">
+      <i class="ti ${done ? 'ti-check' : 'ti-player-play'}"></i>
+      <div class="act-btn-label">${done ? 'เสร็จแล้ว' : 'ทำเสร็จ'}</div>
+    </div>
+    ${plan.type !== 'rest' ? `
+    <div class="act-btn" onclick="startTimer()">
+      <i class="ti ti-clock-play"></i>
+      <div class="act-btn-label">Timer</div>
+    </div>` : ''}
+    <div class="act-btn" onclick="">
+      <i class="ti ti-share"></i>
+      <div class="act-btn-label">แชร์</div>
+    </div>
+    <div class="act-btn" onclick="showScreen('home')">
+      <i class="ti ti-list"></i>
+      <div class="act-btn-label">รายการ</div>
+    </div>
+  `;
+
+  // body
+  const body = document.getElementById('workout-body');
+  let html = '';
+
+  // tip box
+  html += `<div class="tip-box"><i class="ti ti-bulb"></i><div class="tip-text">${plan.tip}</div></div>`;
+
+  // section header
+  html += `<div class="wb-section-head"><div class="wb-section-title">Workout Plan</div><div class="wb-section-sub">${plan.blocks.length} blocks</div></div>`;
+
+  // blocks
+  plan.blocks.forEach(blk => {
+    const headerCls = blk.style === 'lime' ? 'bh-lime' : 'bh-dark';
+    html += `<div class="block">
+      <div class="block-header ${headerCls}">
+        <div class="bh-icon"><i class="ti ${blk.icon}"></i></div>
+        <div class="bh-text">
+          <div class="bh-title">${blk.title}</div>
+          <div class="bh-sub">${blk.sub}</div>
+        </div>
+        <div class="bh-badge">${blk.badge}</div>
+      </div>`;
+    blk.steps.forEach(step => {
+      html += `<div class="step-row">
+        <div class="step-num">${step.n}</div>
+        <div class="step-info">
+          <div class="step-main">${step.main}</div>
+          <div class="step-type"><i class="ti ${step.icon}"></i> ${step.type}</div>
+        </div>
+        ${step.timer > 0 ? `<div style="font-size:11px;color:rgba(200,241,53,0.7);font-weight:600">${formatTime(step.timer)}</div>` : ''}
+      </div>`;
+    });
+    html += '</div>';
+  });
+
+  // CTA
+  html += `<div class="cta-wrap">
+    <button class="start-btn ${done ? 'completed' : ''}" onclick="${plan.type !== 'rest' ? 'startTimer()' : 'toggleWorkoutDone()'}">
+      <i class="ti ${done ? 'ti-check' : plan.type !== 'rest' ? 'ti-player-play' : 'ti-check'}"></i>
+      ${done ? 'เสร็จสมบูรณ์แล้ว!' : plan.type !== 'rest' ? 'เริ่ม Workout + Timer' : 'ทำเสร็จแล้ว'}
+    </button>
+    <div class="coach-card">
+      <div class="coach-ava">S</div>
+      <div class="coach-info">
+        <div class="coach-name">Coach Steph</div>
+        <div class="coach-msg">"${plan.coach}"</div>
+      </div>
+      <i class="ti ti-chevron-right coach-arr"></i>
+    </div>
+  </div>`;
+
+  body.innerHTML = html;
+
+  document.getElementById('workoutScroll').scrollTop = 0;
+  showScreen('workout');
+}
+
+function toggleWorkoutDone() {
+  if(!currentPlan) return;
+  const key = getPlanKey(currentPlan);
+  state.checked[key] = !state.checked[key];
+  saveState();
+  openWorkout(currentPlan);
+}
+
+// ══════════════════════════════════════════════
+//  STATS
+// ══════════════════════════════════════════════
+function renderStats() {
+  const rDone = runningDone();
+  const allDone = totalDone();
+  const pct = Math.round(rDone / TOTAL_SESSIONS * 100);
+
+  // stat grid
+  document.getElementById('statsGrid').innerHTML = `
+    <div class="stat-box"><div class="stat-box-val">${rDone}</div><div class="stat-box-lbl">เซสชั่นวิ่งเสร็จ</div><div class="stat-box-sub">จาก ${TOTAL_SESSIONS} ทั้งหมด</div></div>
+    <div class="stat-box"><div class="stat-box-val">${pct}%</div><div class="stat-box-lbl">ความคืบหน้า</div><div class="stat-box-sub">โปรแกรม 8 สัปดาห์</div></div>
+    <div class="stat-box"><div class="stat-box-val">${allDone}</div><div class="stat-box-lbl">วันเสร็จทั้งหมด</div><div class="stat-box-sub">รวมวันพัก</div></div>
+    <div class="stat-box"><div class="stat-box-val">${8 - Math.min(8, Math.floor(rDone / 4))}</div><div class="stat-box-lbl">สัปดาห์เหลือ</div><div class="stat-box-sub">ประมาณการ</div></div>
+  `;
+
+  // week bars
+  let barsHtml = '';
+  for(let w = 1; w <= 8; w++) {
+    const wplans = PLANS.filter(p => p.w === w);
+    const wrun = wplans.filter(p => p.type !== 'rest');
+    const wdone = wrun.filter(isDone).length;
+    const total = wrun.length;
+    const pctW = total > 0 ? Math.round(wdone / total * 100) : 0;
+    barsHtml += `<div class="wbar-row">
+      <div class="wbar-label">${w}</div>
+      <div class="wbar-track"><div class="wbar-fill" style="width:${pctW}%"></div></div>
+      <div class="wbar-count">${wdone}/${total}</div>
+    </div>`;
+  }
+  document.getElementById('wbarsContent').innerHTML = barsHtml;
+
+  // type breakdown
+  const types = [
+    { key:'easy', label:'Easy Run', color:'#97C459' },
+    { key:'hard', label:'Hard / Interval / Tempo', color:'#f09595' },
+    { key:'mod',  label:'Long Run', color:'#85B7EB' },
+    { key:'rest', label:'วันพัก', color:'#555' }
+  ];
+  const allRun = PLANS.filter(p => p.type !== 'rest');
+  const maxCount = Math.max(...types.map(t => PLANS.filter(p => p.type === t.key).length));
+  let typeHtml = '';
+  types.forEach(t => {
+    const total = PLANS.filter(p => p.type === t.key).length;
+    const done = PLANS.filter(p => p.type === t.key && isDone(p)).length;
+    typeHtml += `<div style="margin-bottom:12px">
+      <div class="type-row">
+        <div class="type-dot" style="background:${t.color}"></div>
+        <div class="type-name">${t.label}</div>
+        <div class="type-count">${done}/${total}</div>
+      </div>
+      <div class="type-bar">
+        <div class="type-bar-inner" style="width:${Math.round(total/maxCount*100)}%;background:${t.color};opacity:0.35"></div>
+      </div>
+    </div>`;
+  });
+  document.getElementById('typeContent').innerHTML = typeHtml;
+}
+
+// ══════════════════════════════════════════════
+//  TIMER
+// ══════════════════════════════════════════════
+let timerSteps = [];
+let timerIdx = 0;
+let timerSec = 0;
+let timerTotal = 0;
+let timerRunning = false;
+let timerInterval = null;
+
+function buildTimerSteps(plan) {
+  const steps = [];
+  plan.blocks.forEach(blk => {
+    blk.steps.forEach(s => {
+      if(s.timer > 0) steps.push({ name: s.main, dur: s.timer, block: blk.title });
+    });
+  });
+  return steps;
+}
+
+function startTimer() {
+  if(!currentPlan) return;
+  timerSteps = buildTimerSteps(currentPlan);
+  if(timerSteps.length === 0) return;
+  timerIdx = 0;
+  timerRunning = false;
+  clearInterval(timerInterval);
+  loadTimerStep();
+  renderTimerDots();
+  showScreen('timer');
+}
+
+function loadTimerStep() {
+  const step = timerSteps[timerIdx];
+  timerSec = step.dur;
+  timerTotal = step.dur;
+  document.getElementById('timerStepLabel').textContent = step.block;
+  document.getElementById('timerStepName').textContent = step.name;
+  document.getElementById('timerRound').textContent = `ขั้นตอน ${timerIdx+1} จาก ${timerSteps.length}`;
+  updateTimerDisplay();
+  updateTimerRing();
+  document.getElementById('timerPlayBtn').innerHTML = '<i class="ti ti-player-play"></i>';
+  timerRunning = false;
+  clearInterval(timerInterval);
+  renderTimerDots();
+}
+
+// ── SOUND ──
+let audioCtx = null;
+function getAudioCtx() {
+  if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+function playDone() {
+  try {
+    const ctx = getAudioCtx();
+    const notes = [523.25, 659.25, 783.99, 1046.50];
+    notes.forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, ctx.currentTime + i * 0.13);
+      gain.gain.setValueAtTime(0, ctx.currentTime + i * 0.13);
+      gain.gain.linearRampToValueAtTime(0.22, ctx.currentTime + i * 0.13 + 0.03);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.13 + 0.28);
+      osc.start(ctx.currentTime + i * 0.13);
+      osc.stop(ctx.currentTime + i * 0.13 + 0.3);
+    });
+  } catch(e) {}
+}
+function playTick() {
+  try {
+    const ctx = getAudioCtx();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.type = 'sine'; osc.frequency.value = 880;
+    gain.gain.setValueAtTime(0.08, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
+    osc.start(); osc.stop(ctx.currentTime + 0.09);
+  } catch(e) {}
+}
+
+// ── POPUP ──
+const POPUP_MESSAGES = [
+  { title: 'ยอดเยี่ยมมาก!', sub: 'ผ่านขั้นตอนนี้แล้ว พร้อมลุยต่อไหม?' },
+  { title: 'เก่งมากเลย!', sub: 'ร่างกายพร้อมแล้ว ไปต่อกันเลย!' },
+  { title: 'สุดยอด!', sub: 'ทำได้ดีมากครับ หยุดพักสักครู่แล้วไปต่อ' },
+  { title: 'เดินหน้าต่อ!', sub: 'ขั้นตอนถัดไปรอคุณอยู่ พร้อมหรือยัง?' },
+  { title: 'ไม่หยุด!', sub: 'โมเมนตัมอยู่กับคุณแล้ว อย่าหยุด!' },
+];
+let pendingNextIdx = -1;
+
+function showStepPopup(nextIdx) {
+  pendingNextIdx = nextIdx;
+  const isLast = nextIdx >= timerSteps.length;
+  const msg = POPUP_MESSAGES[Math.floor(Math.random() * POPUP_MESSAGES.length)];
+  document.getElementById('popupTitle').textContent = isLast ? 'Workout เสร็จแล้ว! 🏆' : msg.title;
+  document.getElementById('popupSub').textContent = isLast ? 'คุณทำสำเร็จครบทุกขั้นตอนแล้วครับ ยอดเยี่ยมมาก!' : msg.sub;
+  document.getElementById('popupNextName').textContent = isLast ? '🎉 ยินดีด้วย!' : 'ถัดไป: ' + timerSteps[nextIdx].name;
+  const continueBtn = document.querySelector('.popup-btn-continue');
+  continueBtn.innerHTML = isLast ? '<i class="ti ti-trophy"></i> จบ Workout!' : '<i class="ti ti-player-play"></i> ไปต่อเลย!';
+  const icon = document.getElementById('popupIcon');
+  icon.innerHTML = isLast ? '<i class="ti ti-trophy"></i>' : '<i class="ti ti-check"></i>';
+  icon.classList.remove('pulse');
+  void icon.offsetWidth;
+  icon.classList.add('pulse');
+  document.getElementById('stepPopup').classList.add('show');
+  if(navigator.vibrate) navigator.vibrate([80, 40, 80]);
+  playDone();
+}
+
+function popupContinue() {
+  document.getElementById('stepPopup').classList.remove('show');
+  if(pendingNextIdx >= timerSteps.length) {
+    stopTimer();
+    if(currentPlan) {
+      state.checked[getPlanKey(currentPlan)] = true;
+      saveState();
+    }
+    showScreen('workout');
+  } else {
+    timerIdx = pendingNextIdx;
+    loadTimerStep();
+    setTimeout(() => toggleTimer(), 300);
+  }
+}
+
+function popupFinish() {
+  document.getElementById('stepPopup').classList.remove('show');
+  stopTimer();
+}
+
+function toggleTimer() {
+  if(timerRunning) {
+    clearInterval(timerInterval);
+    timerRunning = false;
+    document.getElementById('timerPlayBtn').innerHTML = '<i class="ti ti-player-play"></i>';
+  } else {
+    timerRunning = true;
+    document.getElementById('timerPlayBtn').innerHTML = '<i class="ti ti-player-pause"></i>';
+    timerInterval = setInterval(() => {
+      timerSec--;
+      if(timerSec <= 3 && timerSec > 0) playTick();
+      if(timerSec <= 0) {
+        timerSec = 0;
+        updateTimerDisplay();
+        updateTimerRing();
+        clearInterval(timerInterval);
+        timerRunning = false;
+        setTimeout(() => {
+          showStepPopup(timerIdx + 1);
+        }, 400);
+      } else {
+        updateTimerDisplay();
+        updateTimerRing();
+      }
+    }, 1000);
+  }
+}
+
+function updateTimerDisplay() {
+  const m = Math.floor(timerSec / 60);
+  const s = timerSec % 60;
+  document.getElementById('timerDigits').textContent = m + ':' + String(s).padStart(2,'0');
+}
+
+function updateTimerRing() {
+  const circ = 552.9;
+  const pct = timerTotal > 0 ? timerSec / timerTotal : 0;
+  const offset = circ - pct * circ;
+  document.getElementById('timerRingFg').style.strokeDashoffset = offset;
+}
+
+function nextStep() {
+  if(timerIdx < timerSteps.length - 1) { timerIdx++; loadTimerStep(); }
+}
+function prevStep() {
+  if(timerIdx > 0) { timerIdx--; loadTimerStep(); }
+}
+
+function stopTimer() {
+  clearInterval(timerInterval);
+  timerRunning = false;
+  showScreen('workout');
+}
+
+function renderTimerDots() {
+  const wrap = document.getElementById('timerDots');
+  wrap.innerHTML = timerSteps.map((s, i) =>
+    `<div class="tps-dot ${i < timerIdx ? 'done' : i === timerIdx ? 'active' : ''}"></div>`
+  ).join('');
+}
+
+function formatTime(s) {
+  if(s >= 60) return Math.floor(s/60) + ':' + String(s%60).padStart(2,'0');
+  return s + 'วิ';
+}
+
+function shareWorkout() {
+  if(navigator.share && currentPlan) {
+    navigator.share({ title: currentPlan.name, text: `VO2max Run: ${currentPlan.name} – Week ${currentPlan.w}` });
+  }
+}
+
+// ── INIT ──
+renderHome();
+// Auto-save heartbeat every 30s
+setInterval(() => { saveState(); }, 30000);
+// On page hide (tab close / background)
+document.addEventListener('visibilitychange', () => { if(document.visibilityState === 'hidden') saveState(); });
+window.addEventListener('beforeunload', () => saveState());
+</script>
+</body>
+</html>
