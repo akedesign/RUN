@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>VO2max Run — 8 Week Program</title>
-<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=Chakra+Petch:wght@400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 <style>
 :root {
@@ -27,7 +27,7 @@
 }
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 html, body { height: 100%; overflow: hidden; background: var(--dark); }
-body { font-family: 'Prompt', sans-serif; line-height: 1.6; letter-spacing: 0.01em; }
+body { font-family: 'Chakra Petch', 'Prompt', sans-serif; line-height: 1.6; letter-spacing: 0.01em; }
 
 /* ─── SCREEN ROUTER ─── */
 .screen { display: none; height: 100vh; overflow: hidden; flex-direction: column; }
@@ -40,7 +40,7 @@ body { font-family: 'Prompt', sans-serif; line-height: 1.6; letter-spacing: 0.01
 
 .home-header { padding: 0; }
 .home-greeting { font-size: 13px; color: var(--muted); letter-spacing: 0.06em; margin-bottom: 4px; }
-.home-title { font-family: 'Prompt', sans-serif; font-size: 30px; color: #fff; line-height: 1.1; margin-bottom: 6px; font-weight: 700; letter-spacing: -0.5px; }
+.home-title { font-family: 'Chakra Petch', 'Prompt', sans-serif; font-size: 30px; color: #fff; line-height: 1.1; margin-bottom: 6px; font-weight: 700; letter-spacing: -0.5px; }
 .home-title span { color: var(--lime); }
 
 /* Progress ring */
@@ -64,7 +64,7 @@ body { font-family: 'Prompt', sans-serif; line-height: 1.6; letter-spacing: 0.01
 .week-scroll-label { font-size: 11px; color: var(--muted); letter-spacing: 0.08em; margin-bottom: 10px; }
 .week-chips { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
 .week-chips::-webkit-scrollbar { display: none; }
-.wchip { flex-shrink: 0; padding: 8px 16px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); background: transparent; font-family: 'Prompt', sans-serif; font-size: 13px; font-weight: 500; color: var(--muted); cursor: pointer; transition: all 0.18s; }
+.wchip { flex-shrink: 0; padding: 8px 16px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); background: transparent; font-family: 'Chakra Petch', 'Prompt', sans-serif; font-size: 13px; font-weight: 500; color: var(--muted); cursor: pointer; transition: all 0.18s; }
 .wchip.active { background: var(--lime); border-color: var(--lime); color: var(--dark); }
 .wchip.has-progress { border-color: rgba(200,241,53,0.35); color: rgba(200,241,53,0.8); }
 
@@ -114,7 +114,7 @@ body { font-family: 'Prompt', sans-serif; line-height: 1.6; letter-spacing: 0.01
 .wh-badges { display: flex; gap: 8px; align-items: center; margin-bottom: 14px; }
 .wh-date { font-size: 11px; color: var(--muted); letter-spacing: 0.07em; font-weight: 500; }
 .wh-type-badge { border-radius: 10px; padding: 3px 10px; font-size: 11px; font-weight: 700; letter-spacing: 0.04em; }
-.wh-title { font-family: 'Prompt', sans-serif; font-size: 34px; line-height: 1.05; color: #fff; margin-bottom: 8px; font-weight: 700; letter-spacing: -0.5px; }
+.wh-title { font-family: 'Chakra Petch', 'Prompt', sans-serif; font-size: 34px; line-height: 1.05; color: #fff; margin-bottom: 8px; font-weight: 700; letter-spacing: -0.5px; }
 .wh-subtitle { font-size: 13px; color: var(--muted); margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
 .wh-subtitle .dot { width: 3px; height: 3px; border-radius: 50%; background: rgba(255,255,255,0.25); }
 
@@ -166,7 +166,7 @@ body { font-family: 'Prompt', sans-serif; line-height: 1.6; letter-spacing: 0.01
 
 /* start btn */
 .cta-wrap { padding: 20px 0 6px; }
-.start-btn { width: 100%; padding: 18px; border-radius: 18px; background: var(--dark); border: none; font-family: 'Prompt', sans-serif; font-size: 16px; font-weight: 700; color: var(--lime); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; letter-spacing: 0.03em; transition: opacity 0.15s; }
+.start-btn { width: 100%; padding: 18px; border-radius: 18px; background: var(--dark); border: none; font-family: 'Chakra Petch', 'Prompt', sans-serif; font-size: 16px; font-weight: 700; color: var(--lime); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; letter-spacing: 0.03em; transition: opacity 0.15s; }
 .start-btn:active { opacity: 0.82; }
 .start-btn i { font-size: 20px; }
 .start-btn.completed { background: rgba(200,241,53,0.12); border: 1px solid rgba(200,241,53,0.3); color: var(--lime); }
@@ -188,7 +188,7 @@ body { font-family: 'Prompt', sans-serif; line-height: 1.6; letter-spacing: 0.01
 #statsScreen { background: var(--dark); }
 .stats-scroll { flex: 1; overflow-y: auto; padding: 52px 22px calc(80px + var(--safe-bottom)); }
 .stats-scroll::-webkit-scrollbar { display: none; }
-.stats-title { font-family: 'Prompt', sans-serif; font-size: 28px; color: #fff; margin-bottom: 6px; font-weight: 700; letter-spacing: -0.5px; }
+.stats-title { font-family: 'Chakra Petch', 'Prompt', sans-serif; font-size: 28px; color: #fff; margin-bottom: 6px; font-weight: 700; letter-spacing: -0.5px; }
 .stats-sub { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
 
 .stat-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-bottom: 20px; }
@@ -221,7 +221,7 @@ body { font-family: 'Prompt', sans-serif; line-height: 1.6; letter-spacing: 0.01
 .timer-inner { width: 100%; padding: 40px 28px; display: flex; flex-direction: column; align-items: center; }
 .timer-back { align-self: flex-start; margin-bottom: 30px; width: 38px; height: 38px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; cursor: pointer; color: rgba(255,255,255,0.7); font-size: 17px; }
 .timer-step-label { font-size: 12px; color: var(--muted); letter-spacing: 0.08em; margin-bottom: 8px; }
-.timer-step-name { font-family: 'Prompt', sans-serif; font-size: 26px; color: #fff; text-align: center; margin-bottom: 8px; font-weight: 600; letter-spacing: -0.3px; }
+.timer-step-name { font-family: 'Chakra Petch', 'Prompt', sans-serif; font-size: 26px; color: #fff; text-align: center; margin-bottom: 8px; font-weight: 600; letter-spacing: -0.3px; }
 .timer-round { font-size: 13px; color: var(--lime); margin-bottom: 40px; }
 
 .timer-ring-wrap { position: relative; width: 200px; height: 200px; margin-bottom: 40px; }
@@ -281,7 +281,7 @@ body { font-family: 'Prompt', sans-serif; line-height: 1.6; letter-spacing: 0.01
 .popup-btn-continue {
   width: 100%; padding: 16px; border-radius: 16px;
   background: var(--lime); border: none;
-  font-family: 'Prompt', sans-serif; font-size: 16px; font-weight: 700; color: var(--dark);
+  font-family: 'Chakra Petch', 'Prompt', sans-serif; font-size: 16px; font-weight: 700; color: var(--dark);
   cursor: pointer; letter-spacing: 0.01em;
   display: flex; align-items: center; justify-content: center; gap: 8px;
   transition: opacity 0.15s;
@@ -291,7 +291,7 @@ body { font-family: 'Prompt', sans-serif; line-height: 1.6; letter-spacing: 0.01
 .popup-btn-skip {
   width: 100%; padding: 12px; border-radius: 14px;
   background: transparent; border: 1px solid rgba(255,255,255,0.1);
-  font-family: 'Prompt', sans-serif; font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.4);
+  font-family: 'Chakra Petch', 'Prompt', sans-serif; font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.4);
   cursor: pointer; margin-top: 10px; transition: opacity 0.15s;
 }
 .popup-btn-skip:active { opacity: 0.6; }
@@ -307,14 +307,14 @@ body { font-family: 'Prompt', sans-serif; line-height: 1.6; letter-spacing: 0.01
 #backupScreen { background: var(--dark); }
 .backup-scroll { flex: 1; overflow-y: auto; padding: 52px 22px calc(90px + var(--safe-bottom)); }
 .backup-scroll::-webkit-scrollbar { display: none; }
-.backup-title { font-family: 'Prompt', sans-serif; font-size: 28px; font-weight: 700; color: #fff; letter-spacing: -0.5px; margin-bottom: 4px; }
+.backup-title { font-family: 'Chakra Petch', 'Prompt', sans-serif; font-size: 28px; font-weight: 700; color: #fff; letter-spacing: -0.5px; margin-bottom: 4px; }
 .backup-sub { font-size: 13px; color: var(--muted); margin-bottom: 28px; line-height: 1.5; }
 
 .bk-card { background: var(--dark3); border: 1px solid rgba(255,255,255,0.07); border-radius: 18px; padding: 20px; margin-bottom: 14px; }
 .bk-card-title { font-size: 13px; font-weight: 700; color: var(--lime); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
 .bk-card-title i { font-size: 16px; }
 .bk-card-desc { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.55; margin-bottom: 16px; }
-.bk-btn { width: 100%; padding: 14px; border-radius: 14px; border: none; font-family: 'Prompt', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: opacity 0.15s; margin-bottom: 8px; }
+.bk-btn { width: 100%; padding: 14px; border-radius: 14px; border: none; font-family: 'Chakra Petch', 'Prompt', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: opacity 0.15s; margin-bottom: 8px; }
 .bk-btn:last-child { margin-bottom: 0; }
 .bk-btn:active { opacity: 0.8; }
 .bk-btn-primary { background: var(--lime); color: var(--dark); }
@@ -330,7 +330,7 @@ body { font-family: 'Prompt', sans-serif; line-height: 1.6; letter-spacing: 0.01
 .bk-info-label { font-size: 13px; color: rgba(255,255,255,0.45); }
 .bk-info-val { font-size: 13px; font-weight: 600; color: #fff; }
 
-.toast { position: fixed; top: 60px; left: 50%; transform: translateX(-50%) translateY(-20px); background: var(--lime); color: var(--dark); font-family: 'Prompt', sans-serif; font-size: 13px; font-weight: 700; padding: 10px 20px; border-radius: 20px; z-index: 999; opacity: 0; transition: all 0.3s ease; pointer-events: none; white-space: nowrap; }
+.toast { position: fixed; top: 60px; left: 50%; transform: translateX(-50%) translateY(-20px); background: var(--lime); color: var(--dark); font-family: 'Chakra Petch', 'Prompt', sans-serif; font-size: 13px; font-weight: 700; padding: 10px 20px; border-radius: 20px; z-index: 999; opacity: 0; transition: all 0.3s ease; pointer-events: none; white-space: nowrap; }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
 
@@ -341,7 +341,7 @@ body { font-family: 'Prompt', sans-serif; line-height: 1.6; letter-spacing: 0.01
 .cover-content { position: absolute; inset: 0; padding: 48px 22px 22px; display: flex; flex-direction: column; justify-content: flex-end; }
 .cover-credit { font-size: 11px; color: rgba(255,255,255,0.3); letter-spacing: 0.06em; margin-top: 4px; font-weight: 400; }
 .home-greeting { font-size: 13px; color: rgba(255,255,255,0.65); letter-spacing: 0.06em; margin-bottom: 4px; }
-.home-title { font-family: 'Prompt', sans-serif; font-size: 30px; font-weight: 700; color: #fff; line-height: 1.1; margin-bottom: 0; letter-spacing: -0.5px; }
+.home-title { font-family: 'Chakra Petch', 'Prompt', sans-serif; font-size: 30px; font-weight: 700; color: #fff; line-height: 1.1; margin-bottom: 0; letter-spacing: -0.5px; }
 .home-title span { color: var(--lime); }
 
 </style>
@@ -556,7 +556,7 @@ body { font-family: 'Prompt', sans-serif; line-height: 1.6; letter-spacing: 0.01
         <i class="ti ti-clipboard"></i> วาง Backup Code
       </button>
       <div id="pasteBox" style="display:none;margin-top:12px">
-        <textarea id="pasteArea" rows="4" placeholder="วาง code ที่นี่..." style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.15);border-radius:10px;padding:10px;color:#fff;font-family:'Prompt',sans-serif;font-size:12px;resize:none;outline:none"></textarea>
+        <textarea id="pasteArea" rows="4" placeholder="วาง code ที่นี่..." style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.15);border-radius:10px;padding:10px;color:#fff;font-family: 'Chakra Petch', 'Prompt', sans-serif;font-size:12px;resize:none;outline:none"></textarea>
         <button class="bk-btn bk-btn-primary" style="margin-top:8px" onclick="pasteCode()">
           <i class="ti ti-check"></i> กู้คืนข้อมูล
         </button>
