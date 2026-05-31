@@ -73,8 +73,8 @@ body { font-family: 'Chakra Petch', 'Prompt', sans-serif; line-height: 1.6; lett
 .session-card { background: var(--dark3); border: 1px solid rgba(255,255,255,0.06); border-radius: 18px; padding: 16px; margin-bottom: 10px; cursor: pointer; transition: border-color 0.18s, transform 0.12s; position: relative; overflow: hidden; }
 .session-card:active { transform: scale(0.98); }
 .session-card.done { border-color: rgba(200,241,53,0.2); }
-.session-card.rest-card { opacity: 0.6; cursor: default; }
-.session-card.rest-card:active { transform: none; }
+.session-card.rest-card { opacity: 0.75; cursor: pointer; }
+.session-card.rest-card:active { transform: scale(0.98); }
 .sc-accent { position: absolute; left: 0; top: 0; bottom: 0; width: 3px; border-radius: 3px 0 0 3px; }
 .sc-top { display: flex; align-items: flex-start; gap: 12px; }
 .sc-check { width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; transition: all 0.2s; }
@@ -90,6 +90,7 @@ body { font-family: 'Chakra Petch', 'Prompt', sans-serif; line-height: 1.6; lett
 .pill-easy { background: rgba(99,153,34,0.15); color: #97C459; }
 .pill-mod  { background: rgba(55,138,221,0.15); color: #85B7EB; }
 .pill-rest { background: rgba(255,255,255,0.07); color: var(--muted); }
+.pill-weight { background: rgba(192,132,252,0.15); color: #C084FC; }
 .sc-dur { font-size: 12px; color: var(--muted); }
 
 /* bottom nav */
@@ -339,7 +340,7 @@ body { font-family: 'Chakra Petch', 'Prompt', sans-serif; line-height: 1.6; lett
 .cover-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 30%; }
 .cover-overlay { position: absolute; inset: 0; background: linear-gradient(135deg, rgba(13,13,13,0.78) 0%, rgba(13,13,13,0.3) 60%, rgba(13,13,13,0.55) 100%); }
 .cover-content { position: absolute; inset: 0; padding: 48px 22px 22px; display: flex; flex-direction: column; justify-content: flex-end; }
-.cover-credit { font-size: 11px; color: rgba(255,255,255,0.3); letter-spacing: 0.06em; margin-top: 4px; font-weight: 400; }
+.cover-credit { font-size: 11px; color: rgba(255,255,255,0.65); letter-spacing: 0.06em; margin-top: 4px; font-weight: 400; }
 .home-greeting { font-size: 13px; color: rgba(255,255,255,0.65); letter-spacing: 0.06em; margin-bottom: 4px; }
 .home-title { font-family: 'Chakra Petch', 'Prompt', sans-serif; font-size: 30px; font-weight: 700; color: #fff; line-height: 1.1; margin-bottom: 0; letter-spacing: -0.5px; }
 .home-title span { color: var(--lime); }
@@ -624,7 +625,13 @@ const PLANS = [
           {n:'2', main:'โฟมโรล หรือนวด', type:'Recovery', icon:'ti-massage', timer:0},
           {n:'3', main:'นอนหลับ 7–8 ชั่วโมง', type:'Sleep', icon:'ti-moon', timer:0}
         ]}
-    ]
+    ],
+    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30 นาที',
+      steps:[
+        {n:'1', main:'วอร์มอัพ — ยืดเหยียด 5 นาที', type:'เตรียมกล้ามเนื้อ', icon:'ti-body-scan', timer:300},
+        {n:'2', main:'เวทเทรนนิ่ง 20 นาที', type:'Full body · น้ำหนักปานกลาง', icon:'ti-barbell', timer:1200},
+        {n:'3', main:'คูลดาวน์ยืดเหยียด 5 นาที', type:'ลดความตึงกล้ามเนื้อ', icon:'ti-heart', timer:300}
+      ]}
   },
   { w:1, d:'พุธ', name:'Tempo Run', type:'hard', dur:'25 นาที', dist:'4 กม.', zone:'Zone 3–4', hr:'80–88%',
     tip:'Tempo = หนักพอพูดได้แค่ประโยคสั้นๆ ไม่ต้องวิ่งสุดแรง',
@@ -647,7 +654,13 @@ const PLANS = [
           {n:'1', main:'เดินเบาๆ 20–30 นาที', type:'Active Recovery', icon:'ti-shoe', timer:0},
           {n:'2', main:'ยืดเหยียด full body', type:'Stretching', icon:'ti-body-scan', timer:0}
         ]}
-    ]
+    ],
+    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30 นาที',
+      steps:[
+        {n:'1', main:'วอร์มอัพ — ยืดเหยียด 5 นาที', type:'เตรียมกล้ามเนื้อ', icon:'ti-body-scan', timer:300},
+        {n:'2', main:'เวทเทรนนิ่ง 20 นาที', type:'Full body · น้ำหนักปานกลาง', icon:'ti-barbell', timer:1200},
+        {n:'3', main:'คูลดาวน์ยืดเหยียด 5 นาที', type:'ลดความตึงกล้ามเนื้อ', icon:'ti-heart', timer:300}
+      ]}
   },
   { w:1, d:'ศุกร์', name:'Easy Run', type:'easy', dur:'30 นาที', dist:'4–5 กม.', zone:'Zone 2', hr:'65–75%',
     tip:'วันศุกร์วิ่งเบา เก็บแรงไว้สำหรับ Long Run วันเสาร์',
@@ -681,7 +694,13 @@ const PLANS = [
       { title:'พักผ่อนสมบูรณ์', icon:'ti-moon', style:'dark', badge:'REST', sub:'Full Rest',
         steps:[{n:'1', main:'นอนหลับพักผ่อนให้เต็มที่', type:'Recovery', icon:'ti-moon', timer:0},
                {n:'2', main:'เตรียมใจสำหรับสัปดาห์หน้า', type:'Mental prep', icon:'ti-brain', timer:0}] }
-    ]
+    ],
+    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30 นาที',
+      steps:[
+        {n:'1', main:'วอร์มอัพ — ยืดเหยียด 5 นาที', type:'เตรียมกล้ามเนื้อ', icon:'ti-body-scan', timer:300},
+        {n:'2', main:'เวทเทรนนิ่ง 20 นาที', type:'Full body · น้ำหนักปานกลาง', icon:'ti-barbell', timer:1200},
+        {n:'3', main:'คูลดาวน์ยืดเหยียด 5 นาที', type:'ลดความตึงกล้ามเนื้อ', icon:'ti-heart', timer:300}
+      ]}
   },
 
   // Week 2
@@ -701,7 +720,13 @@ const PLANS = [
     tip:'พักและยืดเหยียด',
     coach:'พักให้เต็มที่ครับ',
     blocks:[{ title:'พัก', icon:'ti-heart', style:'dark', badge:'REST', sub:'Recovery',
-      steps:[{n:'1', main:'ยืดเหยียด', type:'Stretching', icon:'ti-body-scan', timer:0}] }]
+      steps:[{n:'1', main:'ยืดเหยียด', type:'Stretching', icon:'ti-body-scan', timer:0}] }],
+    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30 นาที',
+      steps:[
+        {n:'1', main:'วอร์มอัพ — ยืดเหยียด 5 นาที', type:'เตรียมกล้ามเนื้อ', icon:'ti-body-scan', timer:300},
+        {n:'2', main:'เวทเทรนนิ่ง 20 นาที', type:'Full body · น้ำหนักปานกลาง', icon:'ti-barbell', timer:1200},
+        {n:'3', main:'คูลดาวน์ยืดเหยียด 5 นาที', type:'ลดความตึงกล้ามเนื้อ', icon:'ti-heart', timer:300}
+      ]}
   },
   { w:2, d:'พุธ', name:'Interval 400m', type:'hard', dur:'40 นาที', dist:'5 กม.', zone:'Zone 5', hr:'90–95%',
     tip:'Interval ครั้งแรก! วิ่ง 400m เร็วสุดๆ แล้วพัก ทำซ้ำ 4–5 รอบ นี่คือกุญแจ VO2max',
@@ -722,7 +747,13 @@ const PLANS = [
     tip:'หลัง Interval ต้องพักดีๆ',
     coach:'พักหลัง Interval ครับ ร่างกายกำลัง supercompensate',
     blocks:[{ title:'Active Recovery', icon:'ti-heart', style:'dark', badge:'REST', sub:'Active',
-      steps:[{n:'1', main:'เดิน 20 นาที หรือยืดเหยียด', type:'Active Rest', icon:'ti-shoe', timer:0}] }]
+      steps:[{n:'1', main:'เดิน 20 นาที หรือยืดเหยียด', type:'Active Rest', icon:'ti-shoe', timer:0}] }],
+    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30 นาที',
+      steps:[
+        {n:'1', main:'วอร์มอัพ — ยืดเหยียด 5 นาที', type:'เตรียมกล้ามเนื้อ', icon:'ti-body-scan', timer:300},
+        {n:'2', main:'เวทเทรนนิ่ง 20 นาที', type:'Full body · น้ำหนักปานกลาง', icon:'ti-barbell', timer:1200},
+        {n:'3', main:'คูลดาวน์ยืดเหยียด 5 นาที', type:'ลดความตึงกล้ามเนื้อ', icon:'ti-heart', timer:300}
+      ]}
   },
   { w:2, d:'ศุกร์', name:'Easy Run', type:'easy', dur:'35 นาที', dist:'5 กม.', zone:'Zone 2', hr:'65–75%',
     tip:'หลัง Interval วิ่งเบาช่วยฟื้นฟูดีมาก',
@@ -752,7 +783,13 @@ const PLANS = [
     tip:'พักสมบูรณ์ก่อนสัปดาห์หนักขึ้น',
     coach:'สัปดาห์ 2 เสร็จแล้ว! ยอดเยี่ยมมากครับ',
     blocks:[{ title:'พักผ่อน', icon:'ti-moon', style:'dark', badge:'REST', sub:'Full Rest',
-      steps:[{n:'1', main:'พักเต็มที่', type:'Recovery', icon:'ti-moon', timer:0}] }]
+      steps:[{n:'1', main:'พักเต็มที่', type:'Recovery', icon:'ti-moon', timer:0}] }],
+    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30 นาที',
+      steps:[
+        {n:'1', main:'วอร์มอัพ — ยืดเหยียด 5 นาที', type:'เตรียมกล้ามเนื้อ', icon:'ti-body-scan', timer:300},
+        {n:'2', main:'เวทเทรนนิ่ง 20 นาที', type:'Full body · น้ำหนักปานกลาง', icon:'ti-barbell', timer:1200},
+        {n:'3', main:'คูลดาวน์ยืดเหยียด 5 นาที', type:'ลดความตึงกล้ามเนื้อ', icon:'ti-heart', timer:300}
+      ]}
   },
 
   // Week 3
@@ -807,7 +844,13 @@ const PLANS = [
     tip:'พักหลังจากสองวันหนักติดกัน',
     coach:'พักจริงๆ วันนี้ครับ ไม่ต้องวิ่ง',
     blocks:[{ title:'พักเต็มที่', icon:'ti-moon', style:'dark', badge:'REST', sub:'Full Rest',
-      steps:[{n:'1', main:'พักและนอนหลับ', type:'Recovery', icon:'ti-moon', timer:0}] }]
+      steps:[{n:'1', main:'พักและนอนหลับ', type:'Recovery', icon:'ti-moon', timer:0}] }],
+    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30 นาที',
+      steps:[
+        {n:'1', main:'วอร์มอัพ — ยืดเหยียด 5 นาที', type:'เตรียมกล้ามเนื้อ', icon:'ti-body-scan', timer:300},
+        {n:'2', main:'เวทเทรนนิ่ง 20 นาที', type:'Full body · น้ำหนักปานกลาง', icon:'ti-barbell', timer:1200},
+        {n:'3', main:'คูลดาวน์ยืดเหยียด 5 นาที', type:'ลดความตึงกล้ามเนื้อ', icon:'ti-heart', timer:300}
+      ]}
   },
   { w:3, d:'เสาร์', name:'Long Run', type:'mod', dur:'55 นาที', dist:'8–9 กม.', zone:'Zone 2', hr:'65–75%',
     tip:'Long Run ยาวขึ้นอีก เน้น consistency ไม่ใช่ความเร็ว',
@@ -825,7 +868,13 @@ const PLANS = [
     tip:'สัปดาห์ที่หนักที่สุดจนถึงตอนนี้ พักให้เต็มที่',
     coach:'สัปดาห์ 3 เสร็จ! คุณทำสิ่งที่ยากมากได้สำเร็จ',
     blocks:[{ title:'พักผ่อน', icon:'ti-moon', style:'dark', badge:'REST', sub:'Full Rest',
-      steps:[{n:'1', main:'พักเต็มที่', type:'Recovery', icon:'ti-moon', timer:0}] }]
+      steps:[{n:'1', main:'พักเต็มที่', type:'Recovery', icon:'ti-moon', timer:0}] }],
+    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30 นาที',
+      steps:[
+        {n:'1', main:'วอร์มอัพ — ยืดเหยียด 5 นาที', type:'เตรียมกล้ามเนื้อ', icon:'ti-body-scan', timer:300},
+        {n:'2', main:'เวทเทรนนิ่ง 20 นาที', type:'Full body · น้ำหนักปานกลาง', icon:'ti-barbell', timer:1200},
+        {n:'3', main:'คูลดาวน์ยืดเหยียด 5 นาที', type:'ลดความตึงกล้ามเนื้อ', icon:'ti-heart', timer:300}
+      ]}
   },
 
   // Week 4 – Deload
@@ -845,7 +894,13 @@ const PLANS = [
     tip:'พักเต็มที่ Deload คือการลงทุนสำหรับอนาคต',
     coach:'พักครับ นี่คือสัปดาห์ที่ร่างกายจะ supercompensate',
     blocks:[{ title:'พักเต็มที่', icon:'ti-moon', style:'dark', badge:'REST', sub:'Full Rest',
-      steps:[{n:'1', main:'พักและฟื้นฟู', type:'Recovery', icon:'ti-moon', timer:0}] }]
+      steps:[{n:'1', main:'พักและฟื้นฟู', type:'Recovery', icon:'ti-moon', timer:0}] }],
+    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30 นาที',
+      steps:[
+        {n:'1', main:'วอร์มอัพ — ยืดเหยียด 5 นาที', type:'เตรียมกล้ามเนื้อ', icon:'ti-body-scan', timer:300},
+        {n:'2', main:'เวทเทรนนิ่ง 20 นาที', type:'Full body · น้ำหนักปานกลาง', icon:'ti-barbell', timer:1200},
+        {n:'3', main:'คูลดาวน์ยืดเหยียด 5 นาที', type:'ลดความตึงกล้ามเนื้อ', icon:'ti-heart', timer:300}
+      ]}
   },
   { w:4, d:'พุธ', name:'Easy Run', type:'easy', dur:'30 นาที', dist:'4 กม.', zone:'Zone 2', hr:'65–75%',
     tip:'วิ่งสบายๆ ฟังร่างกายตัวเอง',
@@ -863,7 +918,13 @@ const PLANS = [
     tip:'โฟมโรลและนวดช่วยฟื้นฟูดีมาก',
     coach:'ยืดเหยียดและนวดครับ',
     blocks:[{ title:'Recovery', icon:'ti-heart', style:'dark', badge:'REST', sub:'Active',
-      steps:[{n:'1', main:'โฟมโรล / นวด 15 นาที', type:'Recovery', icon:'ti-massage', timer:0}] }]
+      steps:[{n:'1', main:'โฟมโรล / นวด 15 นาที', type:'Recovery', icon:'ti-massage', timer:0}] }],
+    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30 นาที',
+      steps:[
+        {n:'1', main:'วอร์มอัพ — ยืดเหยียด 5 นาที', type:'เตรียมกล้ามเนื้อ', icon:'ti-body-scan', timer:300},
+        {n:'2', main:'เวทเทรนนิ่ง 20 นาที', type:'Full body · น้ำหนักปานกลาง', icon:'ti-barbell', timer:1200},
+        {n:'3', main:'คูลดาวน์ยืดเหยียด 5 นาที', type:'ลดความตึงกล้ามเนื้อ', icon:'ti-heart', timer:300}
+      ]}
   },
   { w:4, d:'ศุกร์', name:'Easy Run', type:'easy', dur:'30 นาที', dist:'4 กม.', zone:'Zone 2', hr:'65–75%',
     tip:'เตรียมพร้อมสำหรับช่วงเข้มข้นหลัง Deload',
@@ -893,7 +954,13 @@ const PLANS = [
     tip:'Deload สัปดาห์เสร็จแล้ว พักเต็มที่ก่อนช่วงหนักจริงๆ',
     coach:'สัปดาห์ 4 เสร็จ! ครึ่งทางแล้วครับ 💪',
     blocks:[{ title:'พักผ่อน', icon:'ti-moon', style:'dark', badge:'REST', sub:'Full Rest',
-      steps:[{n:'1', main:'พักเต็มที่', type:'Recovery', icon:'ti-moon', timer:0}] }]
+      steps:[{n:'1', main:'พักเต็มที่', type:'Recovery', icon:'ti-moon', timer:0}] }],
+    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30 นาที',
+      steps:[
+        {n:'1', main:'วอร์มอัพ — ยืดเหยียด 5 นาที', type:'เตรียมกล้ามเนื้อ', icon:'ti-body-scan', timer:300},
+        {n:'2', main:'เวทเทรนนิ่ง 20 นาที', type:'Full body · น้ำหนักปานกลาง', icon:'ti-barbell', timer:1200},
+        {n:'3', main:'คูลดาวน์ยืดเหยียด 5 นาที', type:'ลดความตึงกล้ามเนื้อ', icon:'ti-heart', timer:300}
+      ]}
   },
 
   // Week 5
@@ -948,7 +1015,13 @@ const PLANS = [
     tip:'พักหลัง 2 วันหนัก เตรียมพร้อม Long Run',
     coach:'พักดีๆ ครับ Long Run พรุ่งนี้',
     blocks:[{ title:'พักเต็มที่', icon:'ti-moon', style:'dark', badge:'REST', sub:'Full Rest',
-      steps:[{n:'1', main:'พักและเตรียม Long Run', type:'Recovery', icon:'ti-moon', timer:0}] }]
+      steps:[{n:'1', main:'พักและเตรียม Long Run', type:'Recovery', icon:'ti-moon', timer:0}] }],
+    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30 นาที',
+      steps:[
+        {n:'1', main:'วอร์มอัพ — ยืดเหยียด 5 นาที', type:'เตรียมกล้ามเนื้อ', icon:'ti-body-scan', timer:300},
+        {n:'2', main:'เวทเทรนนิ่ง 20 นาที', type:'Full body · น้ำหนักปานกลาง', icon:'ti-barbell', timer:1200},
+        {n:'3', main:'คูลดาวน์ยืดเหยียด 5 นาที', type:'ลดความตึงกล้ามเนื้อ', icon:'ti-heart', timer:300}
+      ]}
   },
   { w:5, d:'เสาร์', name:'Long Run', type:'mod', dur:'60 นาที', dist:'9–10 กม.', zone:'Zone 2', hr:'65–75%',
     tip:'Long Run 1 ชั่วโมง! Milestone ใหญ่ เน้น consistency',
@@ -967,7 +1040,13 @@ const PLANS = [
     tip:'พักหลัง Long Run 1 ชั่วโมง ร่างกายต้องการ',
     coach:'สัปดาห์ 5 เสร็จ! ยอดเยี่ยมมากครับ',
     blocks:[{ title:'พักผ่อน', icon:'ti-moon', style:'dark', badge:'REST', sub:'Full Rest',
-      steps:[{n:'1', main:'พักเต็มที่', type:'Recovery', icon:'ti-moon', timer:0}] }]
+      steps:[{n:'1', main:'พักเต็มที่', type:'Recovery', icon:'ti-moon', timer:0}] }],
+    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30 นาที',
+      steps:[
+        {n:'1', main:'วอร์มอัพ — ยืดเหยียด 5 นาที', type:'เตรียมกล้ามเนื้อ', icon:'ti-body-scan', timer:300},
+        {n:'2', main:'เวทเทรนนิ่ง 20 นาที', type:'Full body · น้ำหนักปานกลาง', icon:'ti-barbell', timer:1200},
+        {n:'3', main:'คูลดาวน์ยืดเหยียด 5 นาที', type:'ลดความตึงกล้ามเนื้อ', icon:'ti-heart', timer:300}
+      ]}
   },
 
   // Week 6 – Peak
@@ -1024,7 +1103,13 @@ const PLANS = [
     tip:'พักเต็มที่ก่อน Long Run ยาวที่สุดในโปรแกรม',
     coach:'พักดีๆ Long Run พรุ่งนี้ยาวที่สุด!',
     blocks:[{ title:'พักเต็มที่', icon:'ti-moon', style:'dark', badge:'REST', sub:'Full Rest',
-      steps:[{n:'1', main:'พักและเตรียม Long Run', type:'Recovery', icon:'ti-moon', timer:0}] }]
+      steps:[{n:'1', main:'พักและเตรียม Long Run', type:'Recovery', icon:'ti-moon', timer:0}] }],
+    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30 นาที',
+      steps:[
+        {n:'1', main:'วอร์มอัพ — ยืดเหยียด 5 นาที', type:'เตรียมกล้ามเนื้อ', icon:'ti-body-scan', timer:300},
+        {n:'2', main:'เวทเทรนนิ่ง 20 นาที', type:'Full body · น้ำหนักปานกลาง', icon:'ti-barbell', timer:1200},
+        {n:'3', main:'คูลดาวน์ยืดเหยียด 5 นาที', type:'ลดความตึงกล้ามเนื้อ', icon:'ti-heart', timer:300}
+      ]}
   },
   { w:6, d:'เสาร์', name:'Long Run (Peak)', type:'mod', dur:'65–70 นาที', dist:'10–11 กม.', zone:'Zone 2', hr:'65–75%',
     tip:'Long Run ยาวที่สุดในโปรแกรม! เน้นวิ่งต่อเนื่อง เดิน 2–3 นาทีได้ถ้าเหนื่อยมาก',
@@ -1043,7 +1128,13 @@ const PLANS = [
     tip:'Peak week เสร็จแล้ว! คุณทำสิ่งที่ยากที่สุดสำเร็จแล้ว',
     coach:'สัปดาห์ 6 เสร็จ! คุณคือนักวิ่งตัวจริงแล้วครับ 🏆',
     blocks:[{ title:'พักผ่อนสมบูรณ์', icon:'ti-moon', style:'dark', badge:'REST', sub:'Full Rest',
-      steps:[{n:'1', main:'พักและฉลอง Peak Week', type:'Recovery', icon:'ti-moon', timer:0}] }]
+      steps:[{n:'1', main:'พักและฉลอง Peak Week', type:'Recovery', icon:'ti-moon', timer:0}] }],
+    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30 นาที',
+      steps:[
+        {n:'1', main:'วอร์มอัพ — ยืดเหยียด 5 นาที', type:'เตรียมกล้ามเนื้อ', icon:'ti-body-scan', timer:300},
+        {n:'2', main:'เวทเทรนนิ่ง 20 นาที', type:'Full body · น้ำหนักปานกลาง', icon:'ti-barbell', timer:1200},
+        {n:'3', main:'คูลดาวน์ยืดเหยียด 5 นาที', type:'ลดความตึงกล้ามเนื้อ', icon:'ti-heart', timer:300}
+      ]}
   },
 
   // Week 7 – Deload 2
@@ -1059,7 +1150,13 @@ const PLANS = [
     tip:'พักเต็มที่',
     coach:'พักครับ',
     blocks:[{ title:'พักเต็มที่', icon:'ti-moon', style:'dark', badge:'REST', sub:'Full Rest',
-      steps:[{n:'1', main:'พักเต็มที่', type:'Recovery', icon:'ti-moon', timer:0}] }]
+      steps:[{n:'1', main:'พักเต็มที่', type:'Recovery', icon:'ti-moon', timer:0}] }],
+    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30 นาที',
+      steps:[
+        {n:'1', main:'วอร์มอัพ — ยืดเหยียด 5 นาที', type:'เตรียมกล้ามเนื้อ', icon:'ti-body-scan', timer:300},
+        {n:'2', main:'เวทเทรนนิ่ง 20 นาที', type:'Full body · น้ำหนักปานกลาง', icon:'ti-barbell', timer:1200},
+        {n:'3', main:'คูลดาวน์ยืดเหยียด 5 นาที', type:'ลดความตึงกล้ามเนื้อ', icon:'ti-heart', timer:300}
+      ]}
   },
   { w:7, d:'พุธ', name:'Interval เบา', type:'hard', dur:'35 นาที', dist:'5 กม.', zone:'Zone 5', hr:'90–95%',
     tip:'Interval แต่ลดรอบเหลือ 5 รอบ รักษาความเร็วแต่ลดปริมาณ',
@@ -1080,7 +1177,13 @@ const PLANS = [
     tip:'ยืดเหยียดเบาๆ',
     coach:'ยืดเหยียดครับ',
     blocks:[{ title:'Active Recovery', icon:'ti-heart', style:'dark', badge:'REST', sub:'Light',
-      steps:[{n:'1', main:'ยืดเหยียดเบา 15 นาที', type:'Stretching', icon:'ti-body-scan', timer:0}] }]
+      steps:[{n:'1', main:'ยืดเหยียดเบา 15 นาที', type:'Stretching', icon:'ti-body-scan', timer:0}] }],
+    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30 นาที',
+      steps:[
+        {n:'1', main:'วอร์มอัพ — ยืดเหยียด 5 นาที', type:'เตรียมกล้ามเนื้อ', icon:'ti-body-scan', timer:300},
+        {n:'2', main:'เวทเทรนนิ่ง 20 นาที', type:'Full body · น้ำหนักปานกลาง', icon:'ti-barbell', timer:1200},
+        {n:'3', main:'คูลดาวน์ยืดเหยียด 5 นาที', type:'ลดความตึงกล้ามเนื้อ', icon:'ti-heart', timer:300}
+      ]}
   },
   { w:7, d:'ศุกร์', name:'Easy Run', type:'easy', dur:'30 นาที', dist:'4 กม.', zone:'Zone 2', hr:'65–75%',
     tip:'เตรียมร่างกายสำหรับ Race Week สัปดาห์หน้า',
@@ -1106,7 +1209,13 @@ const PLANS = [
     tip:'พักผ่อนเต็มที่ก่อน Race Week สัปดาห์สุดท้าย',
     coach:'สัปดาห์ 7 เสร็จ! เหลืออีกสัปดาห์เดียว!',
     blocks:[{ title:'พักผ่อน', icon:'ti-moon', style:'dark', badge:'REST', sub:'Full Rest',
-      steps:[{n:'1', main:'พักเต็มที่', type:'Recovery', icon:'ti-moon', timer:0}] }]
+      steps:[{n:'1', main:'พักเต็มที่', type:'Recovery', icon:'ti-moon', timer:0}] }],
+    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30 นาที',
+      steps:[
+        {n:'1', main:'วอร์มอัพ — ยืดเหยียด 5 นาที', type:'เตรียมกล้ามเนื้อ', icon:'ti-body-scan', timer:300},
+        {n:'2', main:'เวทเทรนนิ่ง 20 นาที', type:'Full body · น้ำหนักปานกลาง', icon:'ti-barbell', timer:1200},
+        {n:'3', main:'คูลดาวน์ยืดเหยียด 5 นาที', type:'ลดความตึงกล้ามเนื้อ', icon:'ti-heart', timer:300}
+      ]}
   },
 
   // Week 8 – Race Week
@@ -1122,7 +1231,13 @@ const PLANS = [
     tip:'พักเต็มที่ก่อน Time Trial',
     coach:'พักครับ Time Trial ใกล้แล้ว!',
     blocks:[{ title:'พักเต็มที่', icon:'ti-moon', style:'dark', badge:'REST', sub:'Full Rest',
-      steps:[{n:'1', main:'พักเต็มที่', type:'Recovery', icon:'ti-moon', timer:0}] }]
+      steps:[{n:'1', main:'พักเต็มที่', type:'Recovery', icon:'ti-moon', timer:0}] }],
+    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30 นาที',
+      steps:[
+        {n:'1', main:'วอร์มอัพ — ยืดเหยียด 5 นาที', type:'เตรียมกล้ามเนื้อ', icon:'ti-body-scan', timer:300},
+        {n:'2', main:'เวทเทรนนิ่ง 20 นาที', type:'Full body · น้ำหนักปานกลาง', icon:'ti-barbell', timer:1200},
+        {n:'3', main:'คูลดาวน์ยืดเหยียด 5 นาที', type:'ลดความตึงกล้ามเนื้อ', icon:'ti-heart', timer:300}
+      ]}
   },
   { w:8, d:'พุธ', name:'Strides', type:'hard', dur:'30 นาที', dist:'4 กม.', zone:'Zone 4–5', hr:'85–90%',
     tip:'Strides = วิ่งเร็วสั้นๆ 20 วินาที เพื่อ "ปลุก" ขา ก่อน race',
@@ -1143,7 +1258,13 @@ const PLANS = [
     tip:'พักเต็มที่ก่อน Time Trial อีก 2 วัน',
     coach:'พักดีๆ ครับ Time Trial วันเสาร์!',
     blocks:[{ title:'พักเต็มที่', icon:'ti-moon', style:'dark', badge:'REST', sub:'Full Rest',
-      steps:[{n:'1', main:'พักและนอนหลับเยอะๆ', type:'Recovery', icon:'ti-moon', timer:0}] }]
+      steps:[{n:'1', main:'พักและนอนหลับเยอะๆ', type:'Recovery', icon:'ti-moon', timer:0}] }],
+    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30 นาที',
+      steps:[
+        {n:'1', main:'วอร์มอัพ — ยืดเหยียด 5 นาที', type:'เตรียมกล้ามเนื้อ', icon:'ti-body-scan', timer:300},
+        {n:'2', main:'เวทเทรนนิ่ง 20 นาที', type:'Full body · น้ำหนักปานกลาง', icon:'ti-barbell', timer:1200},
+        {n:'3', main:'คูลดาวน์ยืดเหยียด 5 นาที', type:'ลดความตึงกล้ามเนื้อ', icon:'ti-heart', timer:300}
+      ]}
   },
   { w:8, d:'ศุกร์', name:'Easy Run สั้น', type:'easy', dur:'20 นาที', dist:'3 กม.', zone:'Zone 1', hr:'60–65%',
     tip:'วิ่งสั้นมากๆ แค่ขยับขา ไม่ต้องเหนื่อยเลย เก็บแรงสำหรับพรุ่งนี้',
@@ -1181,7 +1302,13 @@ const PLANS = [
       steps:[
         {n:'1', main:'ฉลองความสำเร็จ!', type:'8 สัปดาห์เสร็จสมบูรณ์', icon:'ti-trophy', timer:0},
         {n:'2', main:'วางแผนโปรแกรมถัดไป', type:'ก้าวต่อไป', icon:'ti-arrow-right', timer:0}
-      ]}]
+      ]}],
+    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30 นาที',
+      steps:[
+        {n:'1', main:'วอร์มอัพ — ยืดเหยียด 5 นาที', type:'เตรียมกล้ามเนื้อ', icon:'ti-body-scan', timer:300},
+        {n:'2', main:'เวทเทรนนิ่ง 20 นาที', type:'Full body · น้ำหนักปานกลาง', icon:'ti-barbell', timer:1200},
+        {n:'3', main:'คูลดาวน์ยืดเหยียด 5 นาที', type:'ลดความตึงกล้ามเนื้อ', icon:'ti-heart', timer:300}
+      ]}
   }
 ];
 
@@ -1411,10 +1538,11 @@ function renderWeekChips() {
 }
 
 const TYPE_INFO = {
-  easy: { color:'#97C459', label:'EASY RUN', badgeCls:'pill-easy', accent:'#639922' },
-  hard: { color:'#f09595', label:'HARD', badgeCls:'pill-hard', accent:'#E24B4A' },
-  mod:  { color:'#85B7EB', label:'LONG RUN', badgeCls:'pill-mod', accent:'#378ADD' },
-  rest: { color:'#555', label:'พัก', badgeCls:'pill-rest', accent:'#333' }
+  easy:   { color:'#97C459', label:'EASY RUN', badgeCls:'pill-easy', accent:'#639922' },
+  hard:   { color:'#f09595', label:'HARD', badgeCls:'pill-hard', accent:'#E24B4A' },
+  mod:    { color:'#85B7EB', label:'LONG RUN', badgeCls:'pill-mod', accent:'#378ADD' },
+  rest:   { color:'#555', label:'พัก', badgeCls:'pill-rest', accent:'#333' },
+  weight: { color:'#C084FC', label:'เวท', badgeCls:'pill-weight', accent:'#9333EA' }
 };
 
 function renderSessions() {
@@ -1438,18 +1566,17 @@ function renderSessions() {
           <div class="sc-name">${plan.name}</div>
           <div class="sc-meta">
             <span class="sc-pill ${ti.badgeCls}">${ti.label}</span>
-            ${!isRest ? `<span class="sc-dur"><i class="ti ti-clock" style="font-size:11px;vertical-align:-1px"></i> ${plan.dur}</span>` : ''}
+            ${isRest ? '<span class="sc-pill pill-weight"><i class="ti ti-barbell" style="font-size:10px;vertical-align:-1px"></i> เวทเทรนนิ่ง</span>' : ''}
+            ${!isRest ? `<span class="sc-dur"><i class="ti ti-clock" style="font-size:11px;vertical-align:-1px"></i> ${plan.dur}</span>` : '<span class="sc-dur"><i class="ti ti-clock" style="font-size:11px;vertical-align:-1px"></i> 30 นาที</span>'}
             ${!isRest && plan.dist !== '—' ? `<span class="sc-dur"><i class="ti ti-map-pin" style="font-size:11px;vertical-align:-1px"></i> ${plan.dist}</span>` : ''}
           </div>
         </div>
       </div>
     `;
-    if(!isRest) {
-      card.onclick = (e) => {
-        if(e.target.closest('.sc-check')) return;
-        openWorkout(plan);
-      };
-    }
+    card.onclick = (e) => {
+      if(e.target.closest('.sc-check')) return;
+      openWorkout(plan);
+    };
     const chk = card.querySelector('.sc-check');
     chk.onclick = (e) => {
       e.stopPropagation();
@@ -1495,15 +1622,18 @@ function openWorkout(plan) {
       <span><i class="ti ti-heart" style="font-size:13px;vertical-align:-2px"></i> ${plan.zone}</span>
     `;
   } else {
-    sub.innerHTML = `<span style="color:rgba(255,255,255,0.35)">วันพักฟื้น — สำคัญมาก!</span>`;
+    sub.innerHTML = `
+      <span><i class="ti ti-barbell" style="font-size:13px;vertical-align:-2px;color:#C084FC"></i> <span style="color:#C084FC">เวทเทรนนิ่ง</span></span>
+      <div class="dot"></div>
+      <span><i class="ti ti-clock" style="font-size:13px;vertical-align:-2px"></i> 30 นาที</span>
+      <div class="dot"></div>
+      <span style="color:rgba(255,255,255,0.35)">วันพักฟื้น</span>
+    `;
   }
 
   // meta
   const meta = document.getElementById('wh-meta');
   if(plan.type !== 'rest') {
-    const blocks = plan.blocks.filter(b => b.steps.some(s => s.timer > 0));
-    const totalSecs = plan.blocks.reduce((a,b) => a + b.steps.reduce((x,s) => x + (s.timer||0), 0), 0);
-    const totalMin = Math.round(totalSecs / 60);
     meta.innerHTML = `
       <div class="meta-item"><div class="meta-val">${plan.w}</div><div class="meta-lbl">สัปดาห์</div></div>
       <div class="meta-item"><div class="meta-val">${plan.blocks.length}</div><div class="meta-lbl">Blocks</div></div>
@@ -1512,7 +1642,13 @@ function openWorkout(plan) {
     `;
     meta.style.display = 'flex';
   } else {
-    meta.style.display = 'none';
+    meta.innerHTML = `
+      <div class="meta-item"><div class="meta-val">30</div><div class="meta-lbl">นาที</div></div>
+      <div class="meta-item"><div class="meta-val">${plan.w}</div><div class="meta-lbl">สัปดาห์</div></div>
+      <div class="meta-item"><div class="meta-val">3</div><div class="meta-lbl">เซต</div></div>
+      <div class="meta-item"><div class="meta-val">Full</div><div class="meta-lbl">Body</div></div>
+    `;
+    meta.style.display = 'flex';
   }
 
   // actions
@@ -1523,11 +1659,10 @@ function openWorkout(plan) {
       <i class="ti ${done ? 'ti-check' : 'ti-player-play'}"></i>
       <div class="act-btn-label">${done ? 'เสร็จแล้ว' : 'ทำเสร็จ'}</div>
     </div>
-    ${plan.type !== 'rest' ? `
     <div class="act-btn" onclick="startTimer()">
       <i class="ti ti-clock-play"></i>
       <div class="act-btn-label">Timer</div>
-    </div>` : ''}
+    </div>
     <div class="act-btn" onclick="">
       <i class="ti ti-share"></i>
       <div class="act-btn-label">แชร์</div>
@@ -1545,11 +1680,14 @@ function openWorkout(plan) {
   // tip box
   html += `<div class="tip-box"><i class="ti ti-bulb"></i><div class="tip-text">${plan.tip}</div></div>`;
 
+  // Weight training section for rest days
+  const allBlocks = plan.weightBlock ? [...plan.blocks, plan.weightBlock] : plan.blocks;
+
   // section header
-  html += `<div class="wb-section-head"><div class="wb-section-title">Workout Plan</div><div class="wb-section-sub">${plan.blocks.length} blocks</div></div>`;
+  html += `<div class="wb-section-head"><div class="wb-section-title">Workout Plan</div><div class="wb-section-sub">${allBlocks.length} blocks</div></div>`;
 
   // blocks
-  plan.blocks.forEach(blk => {
+  allBlocks.forEach(blk => {
     const headerCls = blk.style === 'lime' ? 'bh-lime' : 'bh-dark';
     html += `<div class="block">
       <div class="block-header ${headerCls}">
@@ -1575,9 +1713,9 @@ function openWorkout(plan) {
 
   // CTA
   html += `<div class="cta-wrap">
-    <button class="start-btn ${done ? 'completed' : ''}" onclick="${plan.type !== 'rest' ? 'startTimer()' : 'toggleWorkoutDone()'}">
-      <i class="ti ${done ? 'ti-check' : plan.type !== 'rest' ? 'ti-player-play' : 'ti-check'}"></i>
-      ${done ? 'เสร็จสมบูรณ์แล้ว!' : plan.type !== 'rest' ? 'เริ่ม Workout + Timer' : 'ทำเสร็จแล้ว'}
+    <button class="start-btn ${done ? 'completed' : ''}" onclick="startTimer()">
+      <i class="ti ${done ? 'ti-check' : 'ti-player-play'}"></i>
+      ${done ? 'เสร็จสมบูรณ์แล้ว!' : plan.type === 'rest' ? 'เริ่มเวทเทรนนิ่ง + Timer' : 'เริ่ม Workout + Timer'}
     </button>
     <div class="coach-card">
       <div class="coach-ava">S</div>
@@ -1674,7 +1812,8 @@ let timerInterval = null;
 
 function buildTimerSteps(plan) {
   const steps = [];
-  plan.blocks.forEach(blk => {
+  const allBlks = plan.weightBlock ? [...plan.blocks, plan.weightBlock] : plan.blocks;
+  allBlks.forEach(blk => {
     blk.steps.forEach(s => {
       if(s.timer > 0) steps.push({ name: s.main, dur: s.timer, block: blk.title });
     });
