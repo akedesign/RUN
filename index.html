@@ -1981,6 +1981,13 @@ function openWorkout(plan) {
       <i class="ti ${done ? 'ti-check' : 'ti-player-play'}"></i>
       ${done ? 'เสร็จสมบูรณ์แล้ว!' : plan.type === 'rest' ? 'เริ่มเวทเทรนนิ่ง + Timer' : 'เริ่ม Workout + Timer'}
     </button>
+    ${plan.type !== 'rest' ? `
+    <button style="width:100%;padding:15px;border-radius:16px;background:rgba(200,241,53,0.1);border:1px solid rgba(200,241,53,0.28);font-family:'Chakra Petch','Prompt',sans-serif;font-size:15px;font-weight:700;color:var(--lime);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;margin-top:10px" onclick="openMapScreen(currentPlan)">
+      <i class='ti ti-map-pin' style='font-size:19px'></i> ติดตาม GPS + แผนที่
+    </button>
+    <button style="width:100%;padding:13px;border-radius:14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);font-family:'Chakra Petch','Prompt',sans-serif;font-size:13px;font-weight:600;color:rgba(255,255,255,0.45);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:8px" onclick="openLogModal(currentPlan)">
+      <i class='ti ti-activity-heartbeat' style='font-size:16px'></i> บันทึกผลการวิ่ง (ไม่ใช้ GPS)
+    </button>` : ''}
     <div class="coach-card">
       <div class="coach-ava">S</div>
       <div class="coach-info">
