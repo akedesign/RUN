@@ -219,31 +219,42 @@ body { font-family: 'Chakra Petch', 'Prompt', sans-serif; line-height: 1.6; lett
 .type-bar { height: 4px; background: rgba(255,255,255,0.07); border-radius: 2px; overflow: hidden; margin-bottom: 0; }
 .type-bar-inner { height: 100%; border-radius: 2px; }
 
-/* ─── TIMER SCREEN ─── */
-#timerScreen { background: var(--dark); align-items: center; justify-content: center; }
-.timer-inner { width: 100%; padding: 40px 28px; display: flex; flex-direction: column; align-items: center; }
-.timer-back { align-self: flex-start; margin-bottom: 30px; width: 38px; height: 38px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; cursor: pointer; color: rgba(255,255,255,0.7); font-size: 17px; }
-.timer-step-label { font-size: 12px; color: var(--muted); letter-spacing: 0.08em; margin-bottom: 8px; }
-.timer-step-name { font-family: 'Chakra Petch', 'Prompt', sans-serif; font-size: 26px; color: #fff; text-align: center; margin-bottom: 8px; font-weight: 600; letter-spacing: -0.3px; }
-.timer-round { font-size: 13px; color: var(--lime); margin-bottom: 40px; }
-
-.timer-ring-wrap { position: relative; width: 200px; height: 200px; margin-bottom: 40px; }
-.timer-ring-wrap svg { transform: rotate(-90deg); width: 200px; height: 200px; }
+/* ─── TIMER SCREEN (split: timer top + map bottom) ─── */
+#timerScreen { background: var(--dark); flex-direction: column; overflow: hidden; }
+.timer-inner { width: 100%; display: flex; flex-direction: column; align-items: center; }
+.timer-back { position: absolute; top: 48px; left: 20px; width: 38px; height: 38px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.15); background: rgba(13,13,13,0.8); display: flex; align-items: center; justify-content: center; cursor: pointer; color: rgba(255,255,255,0.7); font-size: 17px; z-index: 10; }
+.timer-step-label { font-size: 11px; color: var(--muted); letter-spacing: 0.08em; margin-bottom: 3px; }
+.timer-step-name { font-family: 'Chakra Petch', 'Prompt', sans-serif; font-size: 20px; color: #fff; text-align: center; margin-bottom: 3px; font-weight: 600; letter-spacing: -0.3px; }
+.timer-round { font-size: 12px; color: var(--lime); margin-bottom: 12px; }
+.timer-ring-wrap { position: relative; width: 150px; height: 150px; margin-bottom: 12px; }
+.timer-ring-wrap svg { transform: rotate(-90deg); width: 150px; height: 150px; }
 .timer-ring-bg { fill: none; stroke: rgba(255,255,255,0.06); stroke-width: 8; }
 .timer-ring-fg { fill: none; stroke: var(--lime); stroke-width: 8; stroke-linecap: round; transition: stroke-dashoffset 0.3s linear; }
 .timer-time { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-.timer-digits { font-size: 52px; font-weight: 300; color: #fff; letter-spacing: -2px; line-height: 1; }
-.timer-unit { font-size: 12px; color: var(--muted); margin-top: 4px; letter-spacing: 0.06em; }
-
-.timer-controls { display: flex; gap: 16px; align-items: center; }
-.tc-btn { width: 56px; height: 56px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.15); background: transparent; display: flex; align-items: center; justify-content: center; cursor: pointer; color: rgba(255,255,255,0.6); font-size: 22px; }
-.tc-main { width: 72px; height: 72px; border-radius: 50%; background: var(--lime); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 28px; color: var(--dark); transition: opacity 0.15s; }
+.timer-digits { font-size: 40px; font-weight: 300; color: #fff; letter-spacing: -2px; line-height: 1; }
+.timer-unit { font-size: 10px; color: var(--muted); margin-top: 3px; letter-spacing: 0.06em; }
+.timer-controls { display: flex; gap: 14px; align-items: center; margin-bottom: 10px; }
+.tc-btn { width: 48px; height: 48px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.15); background: transparent; display: flex; align-items: center; justify-content: center; cursor: pointer; color: rgba(255,255,255,0.6); font-size: 20px; }
+.tc-main { width: 62px; height: 62px; border-radius: 50%; background: var(--lime); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 26px; color: var(--dark); transition: opacity 0.15s; }
 .tc-main:active { opacity: 0.82; }
-
-.timer-progress-steps { width: 100%; margin-top: 32px; display: flex; gap: 6px; justify-content: center; }
-.tps-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.15); transition: background 0.2s; }
+.timer-progress-steps { width: 100%; display: flex; gap: 5px; justify-content: center; margin-bottom: 4px; }
+.tps-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.15); transition: background 0.2s; }
 .tps-dot.active { background: var(--lime); }
 .tps-dot.done { background: rgba(200,241,53,0.4); }
+/* GPS strip inside timer top */
+.timer-gps-strip { width: 100%; display: flex; border-radius: 10px; overflow: hidden; border: 1px solid rgba(255,255,255,0.07); margin-top: 6px; }
+.tgs-item { flex: 1; background: rgba(255,255,255,0.04); padding: 7px 4px; text-align: center; border-right: 1px solid rgba(255,255,255,0.05); }
+.tgs-item:last-child { border-right: none; }
+.tgs-val { font-size: 13px; font-weight: 700; color: var(--lime); font-family: 'Chakra Petch','Prompt',sans-serif; }
+.tgs-lbl { font-size: 9px; color: rgba(255,255,255,0.3); margin-top: 2px; letter-spacing: 0.04em; }
+/* Map half */
+.timer-top { flex-shrink: 0; padding: 44px 22px 12px; position: relative; display: flex; flex-direction: column; align-items: center; }
+.timer-map-half { flex: 1; position: relative; min-height: 180px; }
+#timerLeafletMap { width: 100%; height: 100%; }
+.timer-map-badge { position: absolute; top: 8px; right: 8px; z-index: 1000; display: flex; align-items: center; gap: 5px; background: rgba(13,13,13,0.78); border-radius: 20px; padding: 4px 10px; pointer-events: none; }
+.timer-map-badge-dot { width: 7px; height: 7px; border-radius: 50%; background: #555; flex-shrink: 0; }
+.timer-map-badge-dot.on { background: var(--lime); animation: blink 1.2s infinite; }
+.timer-map-badge-txt { font-size: 10px; color: rgba(255,255,255,0.45); }
 
 /* Utility */
 .mt8 { margin-top: 8px; }
@@ -513,7 +524,7 @@ canvas.chart-canvas { width: 100%; height: 180px; display: block; }
       <div class="cover-content">
         <div class="home-greeting">สวัสดีครับ, นักวิ่ง 👋</div>
         <div class="home-title">โปรแกรม<br><span>VO2max</span> 8 สัปดาห์</div>
-        <div class="cover-credit">developed by akedesign V0.2</div>
+        <div class="cover-credit">developed by akedesign V0.3</div>
       </div>
     </div>
 
@@ -616,27 +627,44 @@ canvas.chart-canvas { width: 100%; height: 180px; display: block; }
 
 <!-- ══════════════════════════════ TIMER ══════════════════════════════ -->
 <div id="timerScreen" class="screen" style="position:relative">
-  <div class="timer-inner">
+  <!-- Top half: timer controls -->
+  <div class="timer-top">
     <div class="timer-back" onclick="stopTimer()"><i class="ti ti-x"></i></div>
-    <div class="timer-step-label" id="timerStepLabel">ขั้นตอนที่ 1</div>
-    <div class="timer-step-name" id="timerStepName">วอร์มอัพ</div>
-    <div class="timer-round" id="timerRound"></div>
-    <div class="timer-ring-wrap">
-      <svg viewBox="0 0 200 200">
-        <circle class="timer-ring-bg" cx="100" cy="100" r="88"/>
-        <circle class="timer-ring-fg" id="timerRingFg" cx="100" cy="100" r="88" stroke-dasharray="552.9" stroke-dashoffset="0"/>
-      </svg>
-      <div class="timer-time">
-        <div class="timer-digits" id="timerDigits">5:00</div>
-        <div class="timer-unit">นาที : วินาที</div>
+    <div class="timer-inner">
+      <div class="timer-step-label" id="timerStepLabel">ขั้นตอนที่ 1</div>
+      <div class="timer-step-name" id="timerStepName">วอร์มอัพ</div>
+      <div class="timer-round" id="timerRound"></div>
+      <div class="timer-ring-wrap">
+        <svg viewBox="0 0 150 150">
+          <circle class="timer-ring-bg" cx="75" cy="75" r="66"/>
+          <circle class="timer-ring-fg" id="timerRingFg" cx="75" cy="75" r="66" stroke-dasharray="414.7" stroke-dashoffset="0"/>
+        </svg>
+        <div class="timer-time">
+          <div class="timer-digits" id="timerDigits">5:00</div>
+          <div class="timer-unit">นาที : วินาที</div>
+        </div>
+      </div>
+      <div class="timer-controls">
+        <button class="tc-btn" onclick="prevStep()"><i class="ti ti-player-skip-back"></i></button>
+        <button class="tc-main" id="timerPlayBtn" onclick="toggleTimer()"><i class="ti ti-player-play"></i></button>
+        <button class="tc-btn" onclick="nextStep()"><i class="ti ti-player-skip-forward"></i></button>
+      </div>
+      <div class="timer-progress-steps" id="timerDots"></div>
+      <!-- GPS live strip -->
+      <div class="timer-gps-strip">
+        <div class="tgs-item"><div class="tgs-val" id="tgsDistVal">—</div><div class="tgs-lbl">กม.</div></div>
+        <div class="tgs-item"><div class="tgs-val" id="tgsPaceVal">—:——</div><div class="tgs-lbl">PACE</div></div>
+        <div class="tgs-item"><div class="tgs-val" id="tgsTimeVal">—:——</div><div class="tgs-lbl">เวลา GPS</div></div>
       </div>
     </div>
-    <div class="timer-controls">
-      <button class="tc-btn" onclick="prevStep()"><i class="ti ti-player-skip-back"></i></button>
-      <button class="tc-main" id="timerPlayBtn" onclick="toggleTimer()"><i class="ti ti-player-play"></i></button>
-      <button class="tc-btn" onclick="nextStep()"><i class="ti ti-player-skip-forward"></i></button>
+  </div>
+  <!-- Bottom half: live map -->
+  <div class="timer-map-half">
+    <div id="timerLeafletMap"></div>
+    <div class="timer-map-badge">
+      <div class="timer-map-badge-dot" id="timerMapDot"></div>
+      <div class="timer-map-badge-txt" id="timerMapTxt">GPS ยังไม่เริ่ม</div>
     </div>
-    <div class="timer-progress-steps" id="timerDots"></div>
   </div>
 <!-- ══ STEP COMPLETE POPUP ══ -->
 <div class="popup-overlay" id="stepPopup">
@@ -1982,9 +2010,6 @@ function openWorkout(plan) {
       ${done ? 'เสร็จสมบูรณ์แล้ว!' : plan.type === 'rest' ? 'เริ่มเวทเทรนนิ่ง + Timer' : 'เริ่ม Workout + Timer'}
     </button>
     ${plan.type !== 'rest' ? `
-    <button style="width:100%;padding:15px;border-radius:16px;background:rgba(200,241,53,0.1);border:1px solid rgba(200,241,53,0.28);font-family:'Chakra Petch','Prompt',sans-serif;font-size:15px;font-weight:700;color:var(--lime);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;margin-top:10px" onclick="openMapScreen(currentPlan)">
-      <i class='ti ti-map-pin' style='font-size:19px'></i> ติดตาม GPS + แผนที่
-    </button>
     <button style="width:100%;padding:13px;border-radius:14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);font-family:'Chakra Petch','Prompt',sans-serif;font-size:13px;font-weight:600;color:rgba(255,255,255,0.45);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:8px" onclick="openLogModal(currentPlan)">
       <i class='ti ti-activity-heartbeat' style='font-size:16px'></i> บันทึกผลการวิ่ง (ไม่ใช้ GPS)
     </button>` : ''}
@@ -2092,6 +2117,78 @@ function buildTimerSteps(plan) {
   return steps;
 }
 
+let timerLeafletMap = null;
+let timerRoutePolyline = null;
+let timerMapWatchId = null;
+let timerMapPositions = [];
+let timerMapStartTime = null;
+let timerMapClockInterval = null;
+let timerMarkerCurrent = null;
+let timerMarkerStart = null;
+
+function initTimerMap() {
+  if(timerLeafletMap) {
+    timerLeafletMap.invalidateSize();
+    return;
+  }
+  timerLeafletMap = L.map('timerLeafletMap', { zoomControl: false, attributionControl: false })
+    .setView([13.75, 100.52], 15);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(timerLeafletMap);
+  timerRoutePolyline = L.polyline([], { color:'#C8F135', weight:4, opacity:0.9 }).addTo(timerLeafletMap);
+  L.control.attribution({ prefix: '© OSM' }).addTo(timerLeafletMap);
+}
+
+function startTimerGPS() {
+  if(!navigator.geolocation) return;
+  timerMapPositions = [];
+  timerMapStartTime = Date.now();
+  document.getElementById('timerMapDot').className = 'timer-map-badge-dot on';
+  document.getElementById('timerMapTxt').textContent = 'หาสัญญาณ GPS...';
+
+  timerMapClockInterval = setInterval(() => {
+    const s = Math.floor((Date.now() - timerMapStartTime)/1000);
+    const m = Math.floor(s/60), sec = s%60;
+    document.getElementById('tgsTimeVal').textContent = String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0');
+  }, 1000);
+
+  timerMapWatchId = navigator.geolocation.watchPosition(pos => {
+    const { latitude: lat, longitude: lng } = pos.coords;
+    timerMapPositions.push({ lat, lng, ts: Date.now() });
+    const pts = timerMapPositions.map(p => [p.lat, p.lng]);
+    timerRoutePolyline.setLatLngs(pts);
+    if(timerMapPositions.length === 1) {
+      timerLeafletMap.setView([lat, lng], 16);
+      timerMarkerStart = L.marker([lat, lng], { icon: L.divIcon({ className:'', html:'<div style="width:12px;height:12px;border-radius:50%;background:#C8F135;border:2px solid #0d0d0d"></div>', iconSize:[12,12], iconAnchor:[6,6] }) }).addTo(timerLeafletMap);
+    }
+    if(timerMarkerCurrent) timerMarkerCurrent.setLatLng([lat, lng]);
+    else timerMarkerCurrent = L.marker([lat, lng], { icon: L.divIcon({ className:'', html:'<div style="width:14px;height:14px;border-radius:50%;background:#fff;border:3px solid #0d0d0d;box-shadow:0 0 6px rgba(255,255,255,0.5)"></div>', iconSize:[14,14], iconAnchor:[7,7] }) }).addTo(timerLeafletMap);
+    timerLeafletMap.panTo([lat, lng], { animate: true, duration: 0.8 });
+
+    const dist = calcGPSDist(timerMapPositions);
+    const elapsed = (Date.now() - timerMapStartTime)/1000;
+    const pace = dist > 0.05 ? (elapsed/60)/dist : 0;
+    document.getElementById('tgsDistVal').textContent = dist.toFixed(2);
+    document.getElementById('tgsPaceVal').textContent = pace > 0 ? Math.floor(pace)+':'+String(Math.round((pace%1)*60)).padStart(2,'0') : '--:--';
+    document.getElementById('timerMapTxt').textContent = 'ติดตามอยู่ · '+timerMapPositions.length+' จุด';
+  }, () => {
+    document.getElementById('timerMapDot').className = 'timer-map-badge-dot';
+    document.getElementById('timerMapTxt').textContent = 'GPS ไม่ได้รับอนุญาต';
+  }, { enableHighAccuracy: true, maximumAge: 2000, timeout: 12000 });
+}
+
+function stopTimerGPS() {
+  if(timerMapWatchId !== null) { navigator.geolocation.clearWatch(timerMapWatchId); timerMapWatchId = null; }
+  clearInterval(timerMapClockInterval);
+  document.getElementById('timerMapDot').className = 'timer-map-badge-dot';
+  // Save GPS data to prefill log modal
+  if(timerMapPositions.length > 2 && currentPlan) {
+    const dist = calcGPSDist(timerMapPositions);
+    const elapsed = timerMapStartTime ? Math.round((Date.now()-timerMapStartTime)/60000) : 0;
+    if(!state.logs) state.logs = {};
+    state._pendingGPS = { dist: dist.toFixed(2), min: elapsed };
+  }
+}
+
 function startTimer() {
   if(!currentPlan) return;
   timerSteps = buildTimerSteps(currentPlan);
@@ -2099,9 +2196,25 @@ function startTimer() {
   timerIdx = 0;
   timerRunning = false;
   clearInterval(timerInterval);
+  // reset GPS strip
+  document.getElementById('tgsDistVal').textContent = '—';
+  document.getElementById('tgsPaceVal').textContent = '--:--';
+  document.getElementById('tgsTimeVal').textContent = '--:--';
+  document.getElementById('timerMapDot').className = 'timer-map-badge-dot';
+  document.getElementById('timerMapTxt').textContent = 'กำลังเริ่ม GPS...';
+  timerMapPositions = [];
+  if(timerMarkerCurrent) { timerMarkerCurrent.remove(); timerMarkerCurrent = null; }
+  if(timerMarkerStart) { timerMarkerStart.remove(); timerMarkerStart = null; }
+  if(timerRoutePolyline) timerRoutePolyline.setLatLngs([]);
   loadTimerStep();
   renderTimerDots();
   showScreen('timer');
+  // Init map + start GPS after screen visible
+  setTimeout(() => {
+    initTimerMap();
+    timerLeafletMap.invalidateSize();
+    if(currentPlan && currentPlan.type !== 'rest') startTimerGPS();
+  }, 200);
 }
 
 function loadTimerStep() {
@@ -2287,7 +2400,7 @@ function updateTimerDisplay() {
 }
 
 function updateTimerRing() {
-  const circ = 552.9;
+  const circ = 414.7;
   const pct = timerTotal > 0 ? timerSec / timerTotal : 0;
   const offset = circ - pct * circ;
   document.getElementById('timerRingFg').style.strokeDashoffset = offset;
@@ -2303,7 +2416,24 @@ function prevStep() {
 function stopTimer() {
   clearInterval(timerInterval);
   timerRunning = false;
-  showScreen('workout');
+  releaseWakeLock();
+  stopTimerGPS();
+  // Open log modal prefilled if running plan
+  if(currentPlan && currentPlan.type !== 'rest' && timerMapPositions && timerMapPositions.length > 2) {
+    const dist = parseFloat(calcGPSDist(timerMapPositions).toFixed(2));
+    const min = timerMapStartTime ? Math.round((Date.now()-timerMapStartTime)/60000) : 0;
+    showScreen('workout');
+    setTimeout(() => {
+      openLogModal(currentPlan);
+      setTimeout(() => {
+        document.getElementById('logDist').value = dist;
+        document.getElementById('logMin').value = min;
+        calcVO2();
+      }, 300);
+    }, 200);
+  } else {
+    showScreen('workout');
+  }
 }
 
 function renderTimerDots() {
