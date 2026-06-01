@@ -2706,18 +2706,12 @@ function initLeafletMap() {
   leafletMap = L.map('leafletMap', {
     zoomControl: true,
     attributionControl: true
-  }).setView([13.75, 100.52], 14); // Bangkok default
+  }).setView([13.75, 100.52], 14);
 
+  // OpenStreetMap — ฟรี 100% ไม่ต้อง API key
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
-    attribution: '© <a href="https://openstreetmap.org">OSM</a>'
-  }).addTo(leafletMap);
-
-  // Dark overlay for dark theme feel
-  L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png', {
-    maxZoom: 20,
-    attribution: '© <a href="https://stadiamaps.com/">Stadia</a> © <a href="https://openstreetmap.org">OSM</a>',
-    opacity: 0.92
+    attribution: '© <a href="https://openstreetmap.org">OpenStreetMap</a> contributors'
   }).addTo(leafletMap);
 
   routePolyline = L.polyline([], {
