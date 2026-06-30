@@ -74,7 +74,9 @@ body { font-family: 'Chakra Petch', 'Prompt', sans-serif; line-height: 1.6; lett
 .sessions-list { padding: 12px 22px 0; }
 .session-card { background: var(--dark3); border: 1px solid rgba(255,255,255,0.06); border-radius: 18px; padding: 16px; margin-bottom: 10px; cursor: pointer; transition: border-color 0.18s, transform 0.12s; position: relative; overflow: hidden; }
 .session-card:active { transform: scale(0.98); }
-.session-card.done { border-color: rgba(200,241,53,0.2); }
+.session-card.done { border-color: rgba(200,241,53,0.2); background: rgba(200,241,53,0.04); opacity: 0.55; }
+.session-card.done .sc-name { color: rgba(255,255,255,0.6); }
+.session-card.done .sc-day { color: rgba(255,255,255,0.3); }
 .session-card.rest-card { opacity: 0.75; cursor: pointer; }
 .session-card.rest-card:active { transform: scale(0.98); }
 .sc-accent { position: absolute; left: 0; top: 0; bottom: 0; width: 3px; border-radius: 3px 0 0 3px; }
@@ -523,7 +525,7 @@ canvas.chart-canvas { width: 100%; height: 180px; display: block; }
       <div class="cover-overlay"></div>
       <div class="cover-content">
         <div class="home-greeting">สวัสดีครับ, นักวิ่ง 👋</div>
-        <div class="home-title">โปรแกรม<br><span>VO2max</span> 8 สัปดาห์</div>
+        <div class="home-title">แผนซ้อม<br><span>ฮาล์ฟมาราธอน</span> 21K</div>
         <div class="cover-credit">developed by akedesign V0.3</div>
       </div>
     </div>
@@ -605,7 +607,7 @@ canvas.chart-canvas { width: 100%; height: 180px; display: block; }
 <div id="statsScreen" class="screen">
   <div class="stats-scroll" id="statsScroll">
     <div class="stats-title">สถิติของคุณ</div>
-    <div class="stats-sub">โปรแกรม 8 สัปดาห์ · 32 เซสชั่นวิ่ง</div>
+    <div class="stats-sub">22 สัปดาห์ · มุ่งสู่ 28 พ.ย. 2569</div>
 
     <div class="stat-grid" id="statsGrid"></div>
     <div class="week-bars" id="weekBars">
@@ -847,14 +849,14 @@ canvas.chart-canvas { width: 100%; height: 180px; display: block; }
 <div id="chartScreen" class="screen">
   <div class="chart-scroll">
     <div class="chart-title">พัฒนาการ</div>
-    <div class="chart-sub">8 สัปดาห์ · VO2max · Pace · HR</div>
+    <div class="chart-sub">22 สัปดาห์ · VO2max · Pace · HR</div>
 
     <!-- Demo notice -->
     <div id="chartDemoNotice" style="display:flex;align-items:flex-start;gap:10px;background:rgba(200,241,53,0.07);border:1px solid rgba(200,241,53,0.2);border-radius:14px;padding:12px 14px;margin-bottom:16px">
       <i class="ti ti-info-circle" style="font-size:16px;color:var(--lime);flex-shrink:0;margin-top:1px"></i>
       <div>
         <div style="font-size:12px;font-weight:700;color:var(--lime);margin-bottom:3px">ข้อมูลตัวอย่าง</div>
-        <div style="font-size:12px;color:rgba(255,255,255,0.5);line-height:1.5">กราฟนี้แสดงตัวอย่างจากโปรแกรม 8 สัปดาห์ กด <strong style="color:rgba(255,255,255,0.75)">"บันทึกผลการวิ่ง"</strong> หลังซ้อมแต่ละครั้ง เพื่อดูพัฒนาการจริงของคุณ</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.5);line-height:1.5">กราฟนี้แสดงตัวอย่างจากแผนซ้อม กด <strong style="color:rgba(255,255,255,0.75)">"บันทึกผลการวิ่ง"</strong> หลังซ้อมแต่ละครั้ง เพื่อดูพัฒนาการจริงของคุณ</div>
         <button onclick="showScreen('home')" style="margin-top:8px;background:var(--lime);color:var(--dark);border:none;border-radius:8px;padding:7px 14px;font-family:'Chakra Petch','Prompt',sans-serif;font-size:12px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:5px"><i class="ti ti-run" style="font-size:13px"></i> ไปเริ่มซ้อมเลย</button>
       </div>
     </div>
@@ -893,717 +895,1485 @@ canvas.chart-canvas { width: 100%; height: 180px; display: block; }
 const DAYS = ['จันทร์','อังคาร','พุธ','พฤหัส','ศุกร์','เสาร์','อาทิตย์'];
 
 const PLANS = [
-  // Week 1
-  { w:1, d:'จันทร์', name:'Easy Run', type:'easy', dur:'30 นาที', dist:'4–5 กม.', zone:'Zone 2', hr:'65–75%',
-    tip:'วันแรกอย่าฝืน! วิ่งช้าพอคุยได้สบาย ร่างกายกำลังปรับตัว',
-    coach:'เริ่มต้นดีครับ! อย่าเร็วเกินไปในวันแรก',
-    blocks:[
-      { title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
-        steps:[{n:'1', main:'เดินเร็ว 5 นาที', type:'เดิน · Zone 1', icon:'ti-shoe', timer:300}] },
-      { title:'Main Set', icon:'ti-run', style:'dark', badge:'EASY', sub:'20 นาที',
-        steps:[{n:'2', main:'วิ่งเบาๆ ต่อเนื่อง 20 นาที', type:'วิ่ง · Zone 2 · พูดได้ตลอด', icon:'ti-run', timer:1200}] },
-      { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
-        steps:[{n:'3', main:'เดินช้าๆ 5 นาที', type:'เดิน · ให้ HR ลดลง', icon:'ti-shoe', timer:300}] }
-    ]
+  { w:1, d:'อังคาร', name:'Easy Run', type:'easy', dur:'35-45 นาที', dist:'6-7 กม.', zone:'HR 135-145', hr:'135-145',
+    tip:'Easy Run คือพื้นฐานสำคัญที่สุด วิ่งช้าพอคุยได้ตลอดการวิ่ง',
+    coach:'วิ่งสบายๆ คุยได้ตลอดครับ เก็บแรงไว้สำหรับวันสำคัญ',
+    realDate:'30/06/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'1', main:'เดินเร็ว/วิ่งเหยาะ 5 นาที', type:'เดิน · เตรียมร่างกาย', icon:'ti-shoe', timer:300}]},
+    { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'6-7 กม.',
+      steps:[{n:'2', main:'วิ่ง 6-7 กม.', type:'Zone 2 · HR 135-145 · พูดคุยได้', icon:'ti-run', timer:1500}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'3', main:'เดินช้า + ยืดเหยียด 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}]}]
   },
-  { w:1, d:'อังคาร', name:'พักฟื้น', type:'rest', dur:'—', dist:'—', zone:'—', hr:'—',
-    tip:'วันพักสำคัญมาก กล้ามเนื้อซ่อมแซมและแข็งแกร่งขึ้นระหว่างพัก',
-    coach:'พักให้เต็มที่ นี่คือส่วนสำคัญของโปรแกรม',
-    blocks:[
-      { title:'กิจกรรมแนะนำ', icon:'ti-heart', style:'dark', badge:'REST', sub:'Recovery',
-        steps:[
-          {n:'1', main:'ยืดเหยียด 10–15 นาที', type:'Stretching', icon:'ti-body-scan', timer:0},
-          {n:'2', main:'โฟมโรล หรือนวด', type:'Recovery', icon:'ti-massage', timer:0},
-          {n:'3', main:'นอนหลับ 7–8 ชั่วโมง', type:'Sleep', icon:'ti-moon', timer:0}
-        ]}
-    ],
-    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30 นาที',
+  { w:1, d:'พุธ', name:'พักฟื้น', type:'rest', dur:'30-40 นาที', dist:'—', zone:'—', hr:'—',
+    tip:'เวทเทรนนิ่งช่วยป้องกันการบาดเจ็บและเสริมความแข็งแรงให้นักวิ่ง',
+    coach:'วันนี้เสริมความแข็งแรงด้วยเวทเทรนนิ่งครับ',
+    realDate:'01/07/2026',
+    blocks:[],
+    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30-40 นาที',
       steps:[
         {n:'1', main:'วอร์มอัพ — ยืดเหยียด 5 นาที', type:'เตรียมกล้ามเนื้อ', icon:'ti-body-scan', timer:300},
-        {n:'2', main:'เวทเทรนนิ่ง 20 นาที', type:'Full body · น้ำหนักปานกลาง', icon:'ti-barbell', timer:1200},
+        {n:'2', main:'Squat, Lunge, Core, Calf Raise', type:'Full body · 20-25 นาที', icon:'ti-barbell', timer:1350},
         {n:'3', main:'คูลดาวน์ยืดเหยียด 5 นาที', type:'ลดความตึงกล้ามเนื้อ', icon:'ti-heart', timer:300}
       ]}
   },
-  { w:1, d:'พุธ', name:'Tempo Run', type:'hard', dur:'25 นาที', dist:'4 กม.', zone:'Zone 3–4', hr:'80–88%',
-    tip:'Tempo = หนักพอพูดได้แค่ประโยคสั้นๆ ไม่ต้องวิ่งสุดแรง',
-    coach:'Tempo ครั้งแรก! รู้สึกหนักได้ แต่ต้องทนได้ตลอด 15 นาที',
-    blocks:[
-      { title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
-        steps:[{n:'1', main:'เดินเร็ว 5 นาที', type:'เดิน · Zone 1', icon:'ti-shoe', timer:300}] },
-      { title:'Tempo', icon:'ti-bolt', style:'lime', badge:'TEMPO', sub:'15 นาที',
-        steps:[{n:'2', main:'วิ่ง Tempo 15 นาที ต่อเนื่อง', type:'วิ่ง · Zone 3–4 · หนักแต่ทนได้', icon:'ti-run', timer:900}] },
-      { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
-        steps:[{n:'3', main:'เดินช้า 5 นาที', type:'เดิน · Zone 1', icon:'ti-shoe', timer:300}] }
-    ]
+  { w:1, d:'พฤหัส', name:'Tempo Run', type:'hard', dur:'20-30 นาที', dist:'—', zone:'HR 150-160', hr:'150-160',
+    tip:'วอร์มอัป 15 นาที + คูลดาวน์',
+    coach:'วันคุณภาพ! หนักได้แต่ต้องทนได้ตลอดครับ',
+    realDate:'02/07/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'EASY', sub:'15 นาที',
+      steps:[{n:'1', main:'วอร์มอัพ 15 นาที', type:'Zone 2 · เตรียมกล้ามเนื้อ', icon:'ti-run', timer:900}]},
+    { title:'Tempo / Quality', icon:'ti-bolt', style:'lime', badge:'TEMPO', sub:'Tempo 20-30 นาที',
+      steps:[{n:'2', main:'Tempo 20-30 นาที', type:'Zone 3-4 · HR 150-160', icon:'ti-run', timer:1500}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'10 นาที',
+      steps:[{n:'3', main:'คูลดาวน์ 10 นาที', type:'Zone 1', icon:'ti-shoe', timer:600}]}]
   },
-  { w:1, d:'พฤหัส', name:'พักฟื้น Active', type:'rest', dur:'—', dist:'—', zone:'—', hr:'—',
-    tip:'Active recovery ช่วยให้เลือดหมุนเวียนดี ฟื้นตัวเร็วขึ้น',
-    coach:'เดินหรือว่ายน้ำเบาๆ ได้ ไม่ต้องวิ่ง',
-    blocks:[
-      { title:'กิจกรรมแนะนำ', icon:'ti-heart', style:'dark', badge:'REST', sub:'Active',
-        steps:[
-          {n:'1', main:'เดินเบาๆ 20–30 นาที', type:'Active Recovery', icon:'ti-shoe', timer:0},
-          {n:'2', main:'ยืดเหยียด full body', type:'Stretching', icon:'ti-body-scan', timer:0}
-        ]}
-    ],
-    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30 นาที',
+  { w:1, d:'ศุกร์', name:'พักผ่อน', type:'rest', dur:'30 นาที', dist:'—', zone:'—', hr:'—',
+    tip:'ยืดเหยียดและนอนให้พอ',
+    coach:'พักให้เต็มที่ครับ ร่างกายต้องการเวลาฟื้นฟู',
+    realDate:'03/07/2026',
+    blocks:[]
+  },
+  { w:1, d:'เสาร์', name:'Easy Run', type:'easy', dur:'35-45 นาที', dist:'5-7 กม.', zone:'HR 135-145', hr:'135-145',
+    tip:'Easy Run คือพื้นฐานสำคัญที่สุด วิ่งช้าพอคุยได้ตลอดการวิ่ง',
+    coach:'วิ่งสบายๆ คุยได้ตลอดครับ เก็บแรงไว้สำหรับวันสำคัญ',
+    realDate:'04/07/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'1', main:'เดินเร็ว/วิ่งเหยาะ 5 นาที', type:'เดิน · เตรียมร่างกาย', icon:'ti-shoe', timer:300}]},
+    { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'5-7 กม.',
+      steps:[{n:'2', main:'5-7 กม.', type:'Zone 2 · HR 135-145 · พูดคุยได้', icon:'ti-run', timer:1500}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'3', main:'เดินช้า + ยืดเหยียด 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}]}]
+  },
+  { w:1, d:'อาทิตย์', name:'Long Run', type:'mod', dur:'~65 นาที', dist:'10 กม.', zone:'HR 135-145', hr:'135-145',
+    tip:'ถ้าวิ่งเกิน 90 นาที เติมน้ำและคาร์บทุก 45-60 นาที',
+    coach:'Long Run คือหัวใจของการซ้อมฮาล์ฟมาราธอน ทำให้ครบเวลาครับ',
+    realDate:'05/07/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'1', main:'เดินเร็ว 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}]},
+    { title:'Long Run', icon:'ti-run', style:'dark', badge:'LONG', sub:'10 กม.',
+      steps:[{n:'2', main:'วิ่ง 10 กม. ต่อเนื่อง', type:'Zone 2 · HR 135-145 · ช้าและสม่ำเสมอ', icon:'ti-run', timer:3000},
+        {n:'3', main:'ถ้าวิ่งเกิน 90 นาที เติมน้ำและคาร์บทุก 45-60 นาที', type:'Hydration & Fuel', icon:'ti-droplet', timer:0}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'4', main:'เดินช้า + ยืดเหยียด 10 นาที', type:'เดิน', icon:'ti-shoe', timer:600}]}]
+  },
+  { w:1, d:'จันทร์', name:'พักผ่อน', type:'rest', dur:'30 นาที', dist:'—', zone:'—', hr:'—',
+    tip:'เตรียมพร้อมสำหรับสัปดาห์ใหม่',
+    coach:'พักให้เต็มที่ครับ ร่างกายต้องการเวลาฟื้นฟู',
+    realDate:'06/07/2026',
+    blocks:[]
+  },
+  { w:2, d:'อังคาร', name:'Easy Run', type:'easy', dur:'35-45 นาที', dist:'6-7 กม.', zone:'HR 135-145', hr:'135-145',
+    tip:'Easy Run คือพื้นฐานสำคัญที่สุด วิ่งช้าพอคุยได้ตลอดการวิ่ง',
+    coach:'วิ่งสบายๆ คุยได้ตลอดครับ เก็บแรงไว้สำหรับวันสำคัญ',
+    realDate:'07/07/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'1', main:'เดินเร็ว/วิ่งเหยาะ 5 นาที', type:'เดิน · เตรียมร่างกาย', icon:'ti-shoe', timer:300}]},
+    { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'6-7 กม.',
+      steps:[{n:'2', main:'วิ่ง 6-7 กม.', type:'Zone 2 · HR 135-145 · พูดคุยได้', icon:'ti-run', timer:1500}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'3', main:'เดินช้า + ยืดเหยียด 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}]}]
+  },
+  { w:2, d:'พุธ', name:'พักฟื้น', type:'rest', dur:'30-40 นาที', dist:'—', zone:'—', hr:'—',
+    tip:'เวทเทรนนิ่งช่วยป้องกันการบาดเจ็บและเสริมความแข็งแรงให้นักวิ่ง',
+    coach:'วันนี้เสริมความแข็งแรงด้วยเวทเทรนนิ่งครับ',
+    realDate:'08/07/2026',
+    blocks:[],
+    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30-40 นาที',
       steps:[
         {n:'1', main:'วอร์มอัพ — ยืดเหยียด 5 นาที', type:'เตรียมกล้ามเนื้อ', icon:'ti-body-scan', timer:300},
-        {n:'2', main:'เวทเทรนนิ่ง 20 นาที', type:'Full body · น้ำหนักปานกลาง', icon:'ti-barbell', timer:1200},
+        {n:'2', main:'Squat, Lunge, Core, Calf Raise', type:'Full body · 20-25 นาที', icon:'ti-barbell', timer:1350},
         {n:'3', main:'คูลดาวน์ยืดเหยียด 5 นาที', type:'ลดความตึงกล้ามเนื้อ', icon:'ti-heart', timer:300}
       ]}
   },
-  { w:1, d:'ศุกร์', name:'Easy Run', type:'easy', dur:'30 นาที', dist:'4–5 กม.', zone:'Zone 2', hr:'65–75%',
-    tip:'วันศุกร์วิ่งเบา เก็บแรงไว้สำหรับ Long Run วันเสาร์',
-    coach:'วิ่งสบายๆ คุยได้ตลอด อย่าฝืนเลย',
-    blocks:[
-      { title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
-        steps:[{n:'1', main:'เดินเร็ว 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] },
-      { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'20 นาที',
-        steps:[{n:'2', main:'วิ่งเบา 20 นาที', type:'Zone 2 · คุยได้ตลอด', icon:'ti-run', timer:1200}] },
-      { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
-        steps:[{n:'3', main:'เดินช้า 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] }
-    ]
+  { w:2, d:'พฤหัส', name:'Tempo Run', type:'hard', dur:'20-30 นาที', dist:'—', zone:'HR 150-160', hr:'150-160',
+    tip:'วอร์มอัป 15 นาที + คูลดาวน์',
+    coach:'วันคุณภาพ! หนักได้แต่ต้องทนได้ตลอดครับ',
+    realDate:'09/07/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'EASY', sub:'15 นาที',
+      steps:[{n:'1', main:'วอร์มอัพ 15 นาที', type:'Zone 2 · เตรียมกล้ามเนื้อ', icon:'ti-run', timer:900}]},
+    { title:'Tempo / Quality', icon:'ti-bolt', style:'lime', badge:'TEMPO', sub:'Tempo 20-30 นาที',
+      steps:[{n:'2', main:'Tempo 20-30 นาที', type:'Zone 3-4 · HR 150-160', icon:'ti-run', timer:1500}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'10 นาที',
+      steps:[{n:'3', main:'คูลดาวน์ 10 นาที', type:'Zone 1', icon:'ti-shoe', timer:600}]}]
   },
-  { w:1, d:'เสาร์', name:'Long Run', type:'mod', dur:'40–45 นาที', dist:'6–7 กม.', zone:'Zone 2', hr:'65–75%',
-    tip:'Long Run เน้นเวลา ไม่ใช่ความเร็ว วิ่งช้าพอคุยได้ตลอด',
-    coach:'Long Run แรก! เป็น milestone สำคัญมาก ทำได้ดีมากครับ',
-    blocks:[
-      { title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
-        steps:[{n:'1', main:'เดินเร็ว 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] },
-      { title:'Long Run', icon:'ti-run', style:'dark', badge:'LONG', sub:'35–40 นาที',
-        steps:[{n:'2', main:'วิ่งเบายาว 35–40 นาที', type:'Zone 2 · ช้าแต่ต่อเนื่อง', icon:'ti-run', timer:2100},
-               {n:'3', main:'ดื่มน้ำทุก 15 นาที', type:'Hydration', icon:'ti-droplet', timer:0}] },
-      { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
-        steps:[{n:'4', main:'เดินช้า 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] }
-    ]
+  { w:2, d:'ศุกร์', name:'พักผ่อน', type:'rest', dur:'30 นาที', dist:'—', zone:'—', hr:'—',
+    tip:'ยืดเหยียดและนอนให้พอ',
+    coach:'พักให้เต็มที่ครับ ร่างกายต้องการเวลาฟื้นฟู',
+    realDate:'10/07/2026',
+    blocks:[]
   },
-  { w:1, d:'อาทิตย์', name:'พักผ่อน', type:'rest', dur:'—', dist:'—', zone:'—', hr:'—',
-    tip:'พักสมบูรณ์ทุกอาทิตย์ ร่างกายต้องการเวลาซ่อมแซมและแข็งแกร่ง',
-    coach:'สัปดาห์แรกจบแล้ว! คุณทำได้ดีมากครับ 🎉',
-    blocks:[
-      { title:'พักผ่อนสมบูรณ์', icon:'ti-moon', style:'dark', badge:'REST', sub:'Full Rest',
-        steps:[{n:'1', main:'นอนหลับพักผ่อนให้เต็มที่', type:'Recovery', icon:'ti-moon', timer:0},
-               {n:'2', main:'เตรียมใจสำหรับสัปดาห์หน้า', type:'Mental prep', icon:'ti-brain', timer:0}] }
-    ],
-    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30 นาที',
+  { w:2, d:'เสาร์', name:'Easy Run', type:'easy', dur:'35-45 นาที', dist:'5-7 กม.', zone:'HR 135-145', hr:'135-145',
+    tip:'Easy Run คือพื้นฐานสำคัญที่สุด วิ่งช้าพอคุยได้ตลอดการวิ่ง',
+    coach:'วิ่งสบายๆ คุยได้ตลอดครับ เก็บแรงไว้สำหรับวันสำคัญ',
+    realDate:'11/07/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'1', main:'เดินเร็ว/วิ่งเหยาะ 5 นาที', type:'เดิน · เตรียมร่างกาย', icon:'ti-shoe', timer:300}]},
+    { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'5-7 กม.',
+      steps:[{n:'2', main:'5-7 กม.', type:'Zone 2 · HR 135-145 · พูดคุยได้', icon:'ti-run', timer:1500}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'3', main:'เดินช้า + ยืดเหยียด 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}]}]
+  },
+  { w:2, d:'อาทิตย์', name:'Long Run', type:'mod', dur:'~71 นาที', dist:'11 กม.', zone:'HR 135-145', hr:'135-145',
+    tip:'ถ้าวิ่งเกิน 90 นาที เติมน้ำและคาร์บทุก 45-60 นาที',
+    coach:'Long Run คือหัวใจของการซ้อมฮาล์ฟมาราธอน ทำให้ครบเวลาครับ',
+    realDate:'12/07/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'1', main:'เดินเร็ว 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}]},
+    { title:'Long Run', icon:'ti-run', style:'dark', badge:'LONG', sub:'11 กม.',
+      steps:[{n:'2', main:'วิ่ง 11 กม. ต่อเนื่อง', type:'Zone 2 · HR 135-145 · ช้าและสม่ำเสมอ', icon:'ti-run', timer:3000},
+        {n:'3', main:'ถ้าวิ่งเกิน 90 นาที เติมน้ำและคาร์บทุก 45-60 นาที', type:'Hydration & Fuel', icon:'ti-droplet', timer:0}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'4', main:'เดินช้า + ยืดเหยียด 10 นาที', type:'เดิน', icon:'ti-shoe', timer:600}]}]
+  },
+  { w:2, d:'จันทร์', name:'พักผ่อน', type:'rest', dur:'30 นาที', dist:'—', zone:'—', hr:'—',
+    tip:'เตรียมพร้อมสำหรับสัปดาห์ใหม่',
+    coach:'พักให้เต็มที่ครับ ร่างกายต้องการเวลาฟื้นฟู',
+    realDate:'13/07/2026',
+    blocks:[]
+  },
+  { w:3, d:'อังคาร', name:'Easy Run', type:'easy', dur:'35-45 นาที', dist:'6-7 กม.', zone:'HR 135-145', hr:'135-145',
+    tip:'Easy Run คือพื้นฐานสำคัญที่สุด วิ่งช้าพอคุยได้ตลอดการวิ่ง',
+    coach:'วิ่งสบายๆ คุยได้ตลอดครับ เก็บแรงไว้สำหรับวันสำคัญ',
+    realDate:'14/07/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'1', main:'เดินเร็ว/วิ่งเหยาะ 5 นาที', type:'เดิน · เตรียมร่างกาย', icon:'ti-shoe', timer:300}]},
+    { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'6-7 กม.',
+      steps:[{n:'2', main:'วิ่ง 6-7 กม.', type:'Zone 2 · HR 135-145 · พูดคุยได้', icon:'ti-run', timer:1500}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'3', main:'เดินช้า + ยืดเหยียด 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}]}]
+  },
+  { w:3, d:'พุธ', name:'พักฟื้น', type:'rest', dur:'30-40 นาที', dist:'—', zone:'—', hr:'—',
+    tip:'เวทเทรนนิ่งช่วยป้องกันการบาดเจ็บและเสริมความแข็งแรงให้นักวิ่ง',
+    coach:'วันนี้เสริมความแข็งแรงด้วยเวทเทรนนิ่งครับ',
+    realDate:'15/07/2026',
+    blocks:[],
+    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30-40 นาที',
       steps:[
         {n:'1', main:'วอร์มอัพ — ยืดเหยียด 5 นาที', type:'เตรียมกล้ามเนื้อ', icon:'ti-body-scan', timer:300},
-        {n:'2', main:'เวทเทรนนิ่ง 20 นาที', type:'Full body · น้ำหนักปานกลาง', icon:'ti-barbell', timer:1200},
+        {n:'2', main:'Squat, Lunge, Core, Calf Raise', type:'Full body · 20-25 นาที', icon:'ti-barbell', timer:1350},
         {n:'3', main:'คูลดาวน์ยืดเหยียด 5 นาที', type:'ลดความตึงกล้ามเนื้อ', icon:'ti-heart', timer:300}
       ]}
   },
-
-  // Week 2
-  { w:2, d:'จันทร์', name:'Easy Run', type:'easy', dur:'35 นาที', dist:'5 กม.', zone:'Zone 2', hr:'65–75%',
-    tip:'เพิ่มระยะเล็กน้อย ยังคงวิ่งเบาๆ สบาย',
-    coach:'สัปดาห์ 2 เริ่มแล้ว! เพิ่มระยะนิดหน่อย',
-    blocks:[
-      { title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
-        steps:[{n:'1', main:'เดินเร็ว 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] },
-      { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'25 นาที',
-        steps:[{n:'2', main:'วิ่งเบา 25 นาที', type:'Zone 2', icon:'ti-run', timer:1500}] },
-      { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
-        steps:[{n:'3', main:'เดินช้า 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] }
-    ]
+  { w:3, d:'พฤหัส', name:'Tempo Run', type:'hard', dur:'20-30 นาที', dist:'—', zone:'HR 150-160', hr:'150-160',
+    tip:'วอร์มอัป 15 นาที + คูลดาวน์',
+    coach:'วันคุณภาพ! หนักได้แต่ต้องทนได้ตลอดครับ',
+    realDate:'16/07/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'EASY', sub:'15 นาที',
+      steps:[{n:'1', main:'วอร์มอัพ 15 นาที', type:'Zone 2 · เตรียมกล้ามเนื้อ', icon:'ti-run', timer:900}]},
+    { title:'Tempo / Quality', icon:'ti-bolt', style:'lime', badge:'TEMPO', sub:'Tempo 20-30 นาที',
+      steps:[{n:'2', main:'Tempo 20-30 นาที', type:'Zone 3-4 · HR 150-160', icon:'ti-run', timer:1500}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'10 นาที',
+      steps:[{n:'3', main:'คูลดาวน์ 10 นาที', type:'Zone 1', icon:'ti-shoe', timer:600}]}]
   },
-  { w:2, d:'อังคาร', name:'พักฟื้น', type:'rest', dur:'—', dist:'—', zone:'—', hr:'—',
-    tip:'พักและยืดเหยียด',
+  { w:3, d:'ศุกร์', name:'พักผ่อน', type:'rest', dur:'30 นาที', dist:'—', zone:'—', hr:'—',
+    tip:'ยืดเหยียดและนอนให้พอ',
+    coach:'พักให้เต็มที่ครับ ร่างกายต้องการเวลาฟื้นฟู',
+    realDate:'17/07/2026',
+    blocks:[]
+  },
+  { w:3, d:'เสาร์', name:'Easy Run', type:'easy', dur:'35-45 นาที', dist:'5-7 กม.', zone:'HR 135-145', hr:'135-145',
+    tip:'Easy Run คือพื้นฐานสำคัญที่สุด วิ่งช้าพอคุยได้ตลอดการวิ่ง',
+    coach:'วิ่งสบายๆ คุยได้ตลอดครับ เก็บแรงไว้สำหรับวันสำคัญ',
+    realDate:'18/07/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'1', main:'เดินเร็ว/วิ่งเหยาะ 5 นาที', type:'เดิน · เตรียมร่างกาย', icon:'ti-shoe', timer:300}]},
+    { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'5-7 กม.',
+      steps:[{n:'2', main:'5-7 กม.', type:'Zone 2 · HR 135-145 · พูดคุยได้', icon:'ti-run', timer:1500}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'3', main:'เดินช้า + ยืดเหยียด 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}]}]
+  },
+  { w:3, d:'อาทิตย์', name:'Long Run', type:'mod', dur:'~78 นาที', dist:'12 กม.', zone:'HR 135-145', hr:'135-145',
+    tip:'ถ้าวิ่งเกิน 90 นาที เติมน้ำและคาร์บทุก 45-60 นาที',
+    coach:'Long Run คือหัวใจของการซ้อมฮาล์ฟมาราธอน ทำให้ครบเวลาครับ',
+    realDate:'19/07/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'1', main:'เดินเร็ว 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}]},
+    { title:'Long Run', icon:'ti-run', style:'dark', badge:'LONG', sub:'12 กม.',
+      steps:[{n:'2', main:'วิ่ง 12 กม. ต่อเนื่อง', type:'Zone 2 · HR 135-145 · ช้าและสม่ำเสมอ', icon:'ti-run', timer:3000},
+        {n:'3', main:'ถ้าวิ่งเกิน 90 นาที เติมน้ำและคาร์บทุก 45-60 นาที', type:'Hydration & Fuel', icon:'ti-droplet', timer:0}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'4', main:'เดินช้า + ยืดเหยียด 10 นาที', type:'เดิน', icon:'ti-shoe', timer:600}]}]
+  },
+  { w:3, d:'จันทร์', name:'พักผ่อน', type:'rest', dur:'30 นาที', dist:'—', zone:'—', hr:'—',
+    tip:'เตรียมพร้อมสำหรับสัปดาห์ใหม่',
+    coach:'พักให้เต็มที่ครับ ร่างกายต้องการเวลาฟื้นฟู',
+    realDate:'20/07/2026',
+    blocks:[]
+  },
+  { w:4, d:'อังคาร', name:'Easy Run', type:'easy', dur:'35-45 นาที', dist:'6-7 กม.', zone:'HR 135-145', hr:'135-145',
+    tip:'Easy Run คือพื้นฐานสำคัญที่สุด วิ่งช้าพอคุยได้ตลอดการวิ่ง',
+    coach:'วิ่งสบายๆ คุยได้ตลอดครับ เก็บแรงไว้สำหรับวันสำคัญ',
+    realDate:'21/07/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'1', main:'เดินเร็ว/วิ่งเหยาะ 5 นาที', type:'เดิน · เตรียมร่างกาย', icon:'ti-shoe', timer:300}]},
+    { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'6-7 กม.',
+      steps:[{n:'2', main:'วิ่ง 6-7 กม.', type:'Zone 2 · HR 135-145 · พูดคุยได้', icon:'ti-run', timer:1500}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'3', main:'เดินช้า + ยืดเหยียด 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}]}]
+  },
+  { w:4, d:'พุธ', name:'พักฟื้น', type:'rest', dur:'30-40 นาที', dist:'—', zone:'—', hr:'—',
+    tip:'เวทเทรนนิ่งช่วยป้องกันการบาดเจ็บและเสริมความแข็งแรงให้นักวิ่ง',
+    coach:'วันนี้เสริมความแข็งแรงด้วยเวทเทรนนิ่งครับ',
+    realDate:'22/07/2026',
+    blocks:[],
+    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30-40 นาที',
+      steps:[
+        {n:'1', main:'วอร์มอัพ — ยืดเหยียด 5 นาที', type:'เตรียมกล้ามเนื้อ', icon:'ti-body-scan', timer:300},
+        {n:'2', main:'Squat, Lunge, Core, Calf Raise', type:'Full body · 20-25 นาที', icon:'ti-barbell', timer:1350},
+        {n:'3', main:'คูลดาวน์ยืดเหยียด 5 นาที', type:'ลดความตึงกล้ามเนื้อ', icon:'ti-heart', timer:300}
+      ]}
+  },
+  { w:4, d:'พฤหัส', name:'Tempo Run', type:'hard', dur:'20-30 นาที', dist:'—', zone:'HR 150-160', hr:'150-160',
+    tip:'วอร์มอัป 15 นาที + คูลดาวน์',
+    coach:'วันคุณภาพ! หนักได้แต่ต้องทนได้ตลอดครับ',
+    realDate:'23/07/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'EASY', sub:'15 นาที',
+      steps:[{n:'1', main:'วอร์มอัพ 15 นาที', type:'Zone 2 · เตรียมกล้ามเนื้อ', icon:'ti-run', timer:900}]},
+    { title:'Tempo / Quality', icon:'ti-bolt', style:'lime', badge:'TEMPO', sub:'Tempo 20-30 นาที',
+      steps:[{n:'2', main:'Tempo 20-30 นาที', type:'Zone 3-4 · HR 150-160', icon:'ti-run', timer:1500}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'10 นาที',
+      steps:[{n:'3', main:'คูลดาวน์ 10 นาที', type:'Zone 1', icon:'ti-shoe', timer:600}]}]
+  },
+  { w:4, d:'ศุกร์', name:'พักผ่อน', type:'rest', dur:'30 นาที', dist:'—', zone:'—', hr:'—',
+    tip:'ยืดเหยียดและนอนให้พอ',
+    coach:'พักให้เต็มที่ครับ ร่างกายต้องการเวลาฟื้นฟู',
+    realDate:'24/07/2026',
+    blocks:[]
+  },
+  { w:4, d:'เสาร์', name:'Easy Run', type:'easy', dur:'35-45 นาที', dist:'5-7 กม.', zone:'HR 135-145', hr:'135-145',
+    tip:'Easy Run คือพื้นฐานสำคัญที่สุด วิ่งช้าพอคุยได้ตลอดการวิ่ง',
+    coach:'วิ่งสบายๆ คุยได้ตลอดครับ เก็บแรงไว้สำหรับวันสำคัญ',
+    realDate:'25/07/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'1', main:'เดินเร็ว/วิ่งเหยาะ 5 นาที', type:'เดิน · เตรียมร่างกาย', icon:'ti-shoe', timer:300}]},
+    { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'5-7 กม.',
+      steps:[{n:'2', main:'5-7 กม.', type:'Zone 2 · HR 135-145 · พูดคุยได้', icon:'ti-run', timer:1500}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'3', main:'เดินช้า + ยืดเหยียด 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}]}]
+  },
+  { w:4, d:'อาทิตย์', name:'Long Run', type:'mod', dur:'~84 นาที', dist:'13 กม.', zone:'HR 135-145', hr:'135-145',
+    tip:'ถ้าวิ่งเกิน 90 นาที เติมน้ำและคาร์บทุก 45-60 นาที',
+    coach:'Long Run คือหัวใจของการซ้อมฮาล์ฟมาราธอน ทำให้ครบเวลาครับ',
+    realDate:'26/07/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'1', main:'เดินเร็ว 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}]},
+    { title:'Long Run', icon:'ti-run', style:'dark', badge:'LONG', sub:'13 กม.',
+      steps:[{n:'2', main:'วิ่ง 13 กม. ต่อเนื่อง', type:'Zone 2 · HR 135-145 · ช้าและสม่ำเสมอ', icon:'ti-run', timer:3000},
+        {n:'3', main:'ถ้าวิ่งเกิน 90 นาที เติมน้ำและคาร์บทุก 45-60 นาที', type:'Hydration & Fuel', icon:'ti-droplet', timer:0}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'4', main:'เดินช้า + ยืดเหยียด 10 นาที', type:'เดิน', icon:'ti-shoe', timer:600}]}]
+  },
+  { w:4, d:'จันทร์', name:'พักผ่อน', type:'rest', dur:'30 นาที', dist:'—', zone:'—', hr:'—',
+    tip:'เตรียมพร้อมสำหรับสัปดาห์ใหม่',
+    coach:'พักให้เต็มที่ครับ ร่างกายต้องการเวลาฟื้นฟู',
+    realDate:'27/07/2026',
+    blocks:[]
+  },
+  { w:5, d:'อังคาร', name:'Easy Run', type:'easy', dur:'35-45 นาที', dist:'6-7 กม.', zone:'HR 135-145', hr:'135-145',
+    tip:'Easy Run คือพื้นฐานสำคัญที่สุด วิ่งช้าพอคุยได้ตลอดการวิ่ง',
+    coach:'วิ่งสบายๆ คุยได้ตลอดครับ เก็บแรงไว้สำหรับวันสำคัญ',
+    realDate:'28/07/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'1', main:'เดินเร็ว/วิ่งเหยาะ 5 นาที', type:'เดิน · เตรียมร่างกาย', icon:'ti-shoe', timer:300}]},
+    { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'6-7 กม.',
+      steps:[{n:'2', main:'วิ่ง 6-7 กม.', type:'Zone 2 · HR 135-145 · พูดคุยได้', icon:'ti-run', timer:1500}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'3', main:'เดินช้า + ยืดเหยียด 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}]}]
+  },
+  { w:5, d:'พุธ', name:'พักฟื้น', type:'rest', dur:'30-40 นาที', dist:'—', zone:'—', hr:'—',
+    tip:'เวทเทรนนิ่งช่วยป้องกันการบาดเจ็บและเสริมความแข็งแรงให้นักวิ่ง',
+    coach:'วันนี้เสริมความแข็งแรงด้วยเวทเทรนนิ่งครับ',
+    realDate:'29/07/2026',
+    blocks:[],
+    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30-40 นาที',
+      steps:[
+        {n:'1', main:'วอร์มอัพ — ยืดเหยียด 5 นาที', type:'เตรียมกล้ามเนื้อ', icon:'ti-body-scan', timer:300},
+        {n:'2', main:'Squat, Lunge, Core, Calf Raise', type:'Full body · 20-25 นาที', icon:'ti-barbell', timer:1350},
+        {n:'3', main:'คูลดาวน์ยืดเหยียด 5 นาที', type:'ลดความตึงกล้ามเนื้อ', icon:'ti-heart', timer:300}
+      ]}
+  },
+  { w:5, d:'พฤหัส', name:'Tempo Run', type:'hard', dur:'20-30 นาที', dist:'—', zone:'HR 150-160', hr:'150-160',
+    tip:'วอร์มอัป 15 นาที + คูลดาวน์',
+    coach:'วันคุณภาพ! หนักได้แต่ต้องทนได้ตลอดครับ',
+    realDate:'30/07/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'EASY', sub:'15 นาที',
+      steps:[{n:'1', main:'วอร์มอัพ 15 นาที', type:'Zone 2 · เตรียมกล้ามเนื้อ', icon:'ti-run', timer:900}]},
+    { title:'Tempo / Quality', icon:'ti-bolt', style:'lime', badge:'TEMPO', sub:'Tempo 20-30 นาที',
+      steps:[{n:'2', main:'Tempo 20-30 นาที', type:'Zone 3-4 · HR 150-160', icon:'ti-run', timer:1500}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'10 นาที',
+      steps:[{n:'3', main:'คูลดาวน์ 10 นาที', type:'Zone 1', icon:'ti-shoe', timer:600}]}]
+  },
+  { w:5, d:'ศุกร์', name:'พักผ่อน', type:'rest', dur:'30 นาที', dist:'—', zone:'—', hr:'—',
+    tip:'ยืดเหยียดและนอนให้พอ',
+    coach:'พักให้เต็มที่ครับ ร่างกายต้องการเวลาฟื้นฟู',
+    realDate:'31/07/2026',
+    blocks:[]
+  },
+  { w:5, d:'เสาร์', name:'Easy Run', type:'easy', dur:'35-45 นาที', dist:'5-7 กม.', zone:'HR 135-145', hr:'135-145',
+    tip:'Easy Run คือพื้นฐานสำคัญที่สุด วิ่งช้าพอคุยได้ตลอดการวิ่ง',
+    coach:'วิ่งสบายๆ คุยได้ตลอดครับ เก็บแรงไว้สำหรับวันสำคัญ',
+    realDate:'01/08/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'1', main:'เดินเร็ว/วิ่งเหยาะ 5 นาที', type:'เดิน · เตรียมร่างกาย', icon:'ti-shoe', timer:300}]},
+    { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'5-7 กม.',
+      steps:[{n:'2', main:'5-7 กม.', type:'Zone 2 · HR 135-145 · พูดคุยได้', icon:'ti-run', timer:1500}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'3', main:'เดินช้า + ยืดเหยียด 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}]}]
+  },
+  { w:5, d:'อาทิตย์', name:'Long Run', type:'mod', dur:'~91 นาที', dist:'14 กม.', zone:'HR 135-145', hr:'135-145',
+    tip:'ถ้าวิ่งเกิน 90 นาที เติมน้ำและคาร์บทุก 45-60 นาที',
+    coach:'Long Run คือหัวใจของการซ้อมฮาล์ฟมาราธอน ทำให้ครบเวลาครับ',
+    realDate:'02/08/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'1', main:'เดินเร็ว 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}]},
+    { title:'Long Run', icon:'ti-run', style:'dark', badge:'LONG', sub:'14 กม.',
+      steps:[{n:'2', main:'วิ่ง 14 กม. ต่อเนื่อง', type:'Zone 2 · HR 135-145 · ช้าและสม่ำเสมอ', icon:'ti-run', timer:3000},
+        {n:'3', main:'ถ้าวิ่งเกิน 90 นาที เติมน้ำและคาร์บทุก 45-60 นาที', type:'Hydration & Fuel', icon:'ti-droplet', timer:0}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'4', main:'เดินช้า + ยืดเหยียด 10 นาที', type:'เดิน', icon:'ti-shoe', timer:600}]}]
+  },
+  { w:5, d:'จันทร์', name:'พักผ่อน', type:'rest', dur:'30 นาที', dist:'—', zone:'—', hr:'—',
+    tip:'เตรียมพร้อมสำหรับสัปดาห์ใหม่',
+    coach:'พักให้เต็มที่ครับ ร่างกายต้องการเวลาฟื้นฟู',
+    realDate:'03/08/2026',
+    blocks:[]
+  },
+  { w:6, d:'อังคาร', name:'Easy Run', type:'easy', dur:'35-45 นาที', dist:'6-7 กม.', zone:'HR 135-145', hr:'135-145',
+    tip:'Easy Run คือพื้นฐานสำคัญที่สุด วิ่งช้าพอคุยได้ตลอดการวิ่ง',
+    coach:'วิ่งสบายๆ คุยได้ตลอดครับ เก็บแรงไว้สำหรับวันสำคัญ',
+    realDate:'04/08/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'1', main:'เดินเร็ว/วิ่งเหยาะ 5 นาที', type:'เดิน · เตรียมร่างกาย', icon:'ti-shoe', timer:300}]},
+    { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'6-7 กม.',
+      steps:[{n:'2', main:'วิ่ง 6-7 กม.', type:'Zone 2 · HR 135-145 · พูดคุยได้', icon:'ti-run', timer:1500}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'3', main:'เดินช้า + ยืดเหยียด 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}]}]
+  },
+  { w:6, d:'พุธ', name:'พักฟื้น', type:'rest', dur:'30-40 นาที', dist:'—', zone:'—', hr:'—',
+    tip:'เวทเทรนนิ่งช่วยป้องกันการบาดเจ็บและเสริมความแข็งแรงให้นักวิ่ง',
+    coach:'วันนี้เสริมความแข็งแรงด้วยเวทเทรนนิ่งครับ',
+    realDate:'05/08/2026',
+    blocks:[],
+    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30-40 นาที',
+      steps:[
+        {n:'1', main:'วอร์มอัพ — ยืดเหยียด 5 นาที', type:'เตรียมกล้ามเนื้อ', icon:'ti-body-scan', timer:300},
+        {n:'2', main:'Squat, Lunge, Core, Calf Raise', type:'Full body · 20-25 นาที', icon:'ti-barbell', timer:1350},
+        {n:'3', main:'คูลดาวน์ยืดเหยียด 5 นาที', type:'ลดความตึงกล้ามเนื้อ', icon:'ti-heart', timer:300}
+      ]}
+  },
+  { w:6, d:'พฤหัส', name:'Tempo Run', type:'hard', dur:'20-30 นาที', dist:'—', zone:'HR 150-160', hr:'150-160',
+    tip:'วอร์มอัป 15 นาที + คูลดาวน์',
+    coach:'วันคุณภาพ! หนักได้แต่ต้องทนได้ตลอดครับ',
+    realDate:'06/08/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'EASY', sub:'15 นาที',
+      steps:[{n:'1', main:'วอร์มอัพ 15 นาที', type:'Zone 2 · เตรียมกล้ามเนื้อ', icon:'ti-run', timer:900}]},
+    { title:'Tempo / Quality', icon:'ti-bolt', style:'lime', badge:'TEMPO', sub:'Tempo 20-30 นาที',
+      steps:[{n:'2', main:'Tempo 20-30 นาที', type:'Zone 3-4 · HR 150-160', icon:'ti-run', timer:1500}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'10 นาที',
+      steps:[{n:'3', main:'คูลดาวน์ 10 นาที', type:'Zone 1', icon:'ti-shoe', timer:600}]}]
+  },
+  { w:6, d:'ศุกร์', name:'พักผ่อน', type:'rest', dur:'30 นาที', dist:'—', zone:'—', hr:'—',
+    tip:'ยืดเหยียดและนอนให้พอ',
+    coach:'พักให้เต็มที่ครับ ร่างกายต้องการเวลาฟื้นฟู',
+    realDate:'07/08/2026',
+    blocks:[]
+  },
+  { w:6, d:'เสาร์', name:'Easy Run', type:'easy', dur:'35-45 นาที', dist:'5-7 กม.', zone:'HR 135-145', hr:'135-145',
+    tip:'Easy Run คือพื้นฐานสำคัญที่สุด วิ่งช้าพอคุยได้ตลอดการวิ่ง',
+    coach:'วิ่งสบายๆ คุยได้ตลอดครับ เก็บแรงไว้สำหรับวันสำคัญ',
+    realDate:'08/08/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'1', main:'เดินเร็ว/วิ่งเหยาะ 5 นาที', type:'เดิน · เตรียมร่างกาย', icon:'ti-shoe', timer:300}]},
+    { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'5-7 กม.',
+      steps:[{n:'2', main:'5-7 กม.', type:'Zone 2 · HR 135-145 · พูดคุยได้', icon:'ti-run', timer:1500}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'3', main:'เดินช้า + ยืดเหยียด 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}]}]
+  },
+  { w:6, d:'อาทิตย์', name:'Long Run', type:'mod', dur:'~91 นาที', dist:'14 กม.', zone:'HR 135-145', hr:'135-145',
+    tip:'ถ้าวิ่งเกิน 90 นาที เติมน้ำและคาร์บทุก 45-60 นาที',
+    coach:'Long Run คือหัวใจของการซ้อมฮาล์ฟมาราธอน ทำให้ครบเวลาครับ',
+    realDate:'09/08/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'1', main:'เดินเร็ว 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}]},
+    { title:'Long Run', icon:'ti-run', style:'dark', badge:'LONG', sub:'14 กม.',
+      steps:[{n:'2', main:'วิ่ง 14 กม. ต่อเนื่อง', type:'Zone 2 · HR 135-145 · ช้าและสม่ำเสมอ', icon:'ti-run', timer:3000},
+        {n:'3', main:'ถ้าวิ่งเกิน 90 นาที เติมน้ำและคาร์บทุก 45-60 นาที', type:'Hydration & Fuel', icon:'ti-droplet', timer:0}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'4', main:'เดินช้า + ยืดเหยียด 10 นาที', type:'เดิน', icon:'ti-shoe', timer:600}]}]
+  },
+  { w:6, d:'จันทร์', name:'พักผ่อน', type:'rest', dur:'30 นาที', dist:'—', zone:'—', hr:'—',
+    tip:'เตรียมพร้อมสำหรับสัปดาห์ใหม่',
+    coach:'พักให้เต็มที่ครับ ร่างกายต้องการเวลาฟื้นฟู',
+    realDate:'10/08/2026',
+    blocks:[]
+  },
+  { w:7, d:'อังคาร', name:'Easy Run', type:'easy', dur:'35-45 นาที', dist:'6-7 กม.', zone:'HR 135-145', hr:'135-145',
+    tip:'Easy Run คือพื้นฐานสำคัญที่สุด วิ่งช้าพอคุยได้ตลอดการวิ่ง',
+    coach:'วิ่งสบายๆ คุยได้ตลอดครับ เก็บแรงไว้สำหรับวันสำคัญ',
+    realDate:'11/08/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'1', main:'เดินเร็ว/วิ่งเหยาะ 5 นาที', type:'เดิน · เตรียมร่างกาย', icon:'ti-shoe', timer:300}]},
+    { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'6-7 กม.',
+      steps:[{n:'2', main:'วิ่ง 6-7 กม.', type:'Zone 2 · HR 135-145 · พูดคุยได้', icon:'ti-run', timer:1500}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'3', main:'เดินช้า + ยืดเหยียด 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}]}]
+  },
+  { w:7, d:'พุธ', name:'พักฟื้น', type:'rest', dur:'30-40 นาที', dist:'—', zone:'—', hr:'—',
+    tip:'เวทเทรนนิ่งช่วยป้องกันการบาดเจ็บและเสริมความแข็งแรงให้นักวิ่ง',
+    coach:'วันนี้เสริมความแข็งแรงด้วยเวทเทรนนิ่งครับ',
+    realDate:'12/08/2026',
+    blocks:[],
+    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30-40 นาที',
+      steps:[
+        {n:'1', main:'วอร์มอัพ — ยืดเหยียด 5 นาที', type:'เตรียมกล้ามเนื้อ', icon:'ti-body-scan', timer:300},
+        {n:'2', main:'Squat, Lunge, Core, Calf Raise', type:'Full body · 20-25 นาที', icon:'ti-barbell', timer:1350},
+        {n:'3', main:'คูลดาวน์ยืดเหยียด 5 นาที', type:'ลดความตึงกล้ามเนื้อ', icon:'ti-heart', timer:300}
+      ]}
+  },
+  { w:7, d:'พฤหัส', name:'Tempo Run', type:'hard', dur:'20-30 นาที', dist:'—', zone:'HR 150-160', hr:'150-160',
+    tip:'วอร์มอัป 15 นาที + คูลดาวน์',
+    coach:'วันคุณภาพ! หนักได้แต่ต้องทนได้ตลอดครับ',
+    realDate:'13/08/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'EASY', sub:'15 นาที',
+      steps:[{n:'1', main:'วอร์มอัพ 15 นาที', type:'Zone 2 · เตรียมกล้ามเนื้อ', icon:'ti-run', timer:900}]},
+    { title:'Tempo / Quality', icon:'ti-bolt', style:'lime', badge:'TEMPO', sub:'Tempo 20-30 นาที',
+      steps:[{n:'2', main:'Tempo 20-30 นาที', type:'Zone 3-4 · HR 150-160', icon:'ti-run', timer:1500}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'10 นาที',
+      steps:[{n:'3', main:'คูลดาวน์ 10 นาที', type:'Zone 1', icon:'ti-shoe', timer:600}]}]
+  },
+  { w:7, d:'ศุกร์', name:'พักผ่อน', type:'rest', dur:'30 นาที', dist:'—', zone:'—', hr:'—',
+    tip:'ยืดเหยียดและนอนให้พอ',
+    coach:'พักให้เต็มที่ครับ ร่างกายต้องการเวลาฟื้นฟู',
+    realDate:'14/08/2026',
+    blocks:[]
+  },
+  { w:7, d:'เสาร์', name:'Easy Run', type:'easy', dur:'35-45 นาที', dist:'5-7 กม.', zone:'HR 135-145', hr:'135-145',
+    tip:'Easy Run คือพื้นฐานสำคัญที่สุด วิ่งช้าพอคุยได้ตลอดการวิ่ง',
+    coach:'วิ่งสบายๆ คุยได้ตลอดครับ เก็บแรงไว้สำหรับวันสำคัญ',
+    realDate:'15/08/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'1', main:'เดินเร็ว/วิ่งเหยาะ 5 นาที', type:'เดิน · เตรียมร่างกาย', icon:'ti-shoe', timer:300}]},
+    { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'5-7 กม.',
+      steps:[{n:'2', main:'5-7 กม.', type:'Zone 2 · HR 135-145 · พูดคุยได้', icon:'ti-run', timer:1500}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'3', main:'เดินช้า + ยืดเหยียด 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}]}]
+  },
+  { w:7, d:'อาทิตย์', name:'Long Run', type:'mod', dur:'~97 นาที', dist:'15 กม.', zone:'HR 135-145', hr:'135-145',
+    tip:'ถ้าวิ่งเกิน 90 นาที เติมน้ำและคาร์บทุก 45-60 นาที',
+    coach:'Long Run คือหัวใจของการซ้อมฮาล์ฟมาราธอน ทำให้ครบเวลาครับ',
+    realDate:'16/08/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'1', main:'เดินเร็ว 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}]},
+    { title:'Long Run', icon:'ti-run', style:'dark', badge:'LONG', sub:'15 กม.',
+      steps:[{n:'2', main:'วิ่ง 15 กม. ต่อเนื่อง', type:'Zone 2 · HR 135-145 · ช้าและสม่ำเสมอ', icon:'ti-run', timer:3000},
+        {n:'3', main:'ถ้าวิ่งเกิน 90 นาที เติมน้ำและคาร์บทุก 45-60 นาที', type:'Hydration & Fuel', icon:'ti-droplet', timer:0}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'4', main:'เดินช้า + ยืดเหยียด 10 นาที', type:'เดิน', icon:'ti-shoe', timer:600}]}]
+  },
+  { w:7, d:'จันทร์', name:'พักผ่อน', type:'rest', dur:'30 นาที', dist:'—', zone:'—', hr:'—',
+    tip:'เตรียมพร้อมสำหรับสัปดาห์ใหม่',
+    coach:'พักให้เต็มที่ครับ ร่างกายต้องการเวลาฟื้นฟู',
+    realDate:'17/08/2026',
+    blocks:[]
+  },
+  { w:8, d:'อังคาร', name:'Easy Run', type:'easy', dur:'35-45 นาที', dist:'6-7 กม.', zone:'HR 135-145', hr:'135-145',
+    tip:'Easy Run คือพื้นฐานสำคัญที่สุด วิ่งช้าพอคุยได้ตลอดการวิ่ง',
+    coach:'วิ่งสบายๆ คุยได้ตลอดครับ เก็บแรงไว้สำหรับวันสำคัญ',
+    realDate:'18/08/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'1', main:'เดินเร็ว/วิ่งเหยาะ 5 นาที', type:'เดิน · เตรียมร่างกาย', icon:'ti-shoe', timer:300}]},
+    { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'6-7 กม.',
+      steps:[{n:'2', main:'วิ่ง 6-7 กม.', type:'Zone 2 · HR 135-145 · พูดคุยได้', icon:'ti-run', timer:1500}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'3', main:'เดินช้า + ยืดเหยียด 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}]}]
+  },
+  { w:8, d:'พุธ', name:'พักฟื้น', type:'rest', dur:'30-40 นาที', dist:'—', zone:'—', hr:'—',
+    tip:'เวทเทรนนิ่งช่วยป้องกันการบาดเจ็บและเสริมความแข็งแรงให้นักวิ่ง',
+    coach:'วันนี้เสริมความแข็งแรงด้วยเวทเทรนนิ่งครับ',
+    realDate:'19/08/2026',
+    blocks:[],
+    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30-40 นาที',
+      steps:[
+        {n:'1', main:'วอร์มอัพ — ยืดเหยียด 5 นาที', type:'เตรียมกล้ามเนื้อ', icon:'ti-body-scan', timer:300},
+        {n:'2', main:'Squat, Lunge, Core, Calf Raise', type:'Full body · 20-25 นาที', icon:'ti-barbell', timer:1350},
+        {n:'3', main:'คูลดาวน์ยืดเหยียด 5 นาที', type:'ลดความตึงกล้ามเนื้อ', icon:'ti-heart', timer:300}
+      ]}
+  },
+  { w:8, d:'พฤหัส', name:'Tempo Run', type:'hard', dur:'20-30 นาที', dist:'—', zone:'HR 150-160', hr:'150-160',
+    tip:'วอร์มอัป 15 นาที + คูลดาวน์',
+    coach:'วันคุณภาพ! หนักได้แต่ต้องทนได้ตลอดครับ',
+    realDate:'20/08/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'EASY', sub:'15 นาที',
+      steps:[{n:'1', main:'วอร์มอัพ 15 นาที', type:'Zone 2 · เตรียมกล้ามเนื้อ', icon:'ti-run', timer:900}]},
+    { title:'Tempo / Quality', icon:'ti-bolt', style:'lime', badge:'TEMPO', sub:'Tempo 20-30 นาที',
+      steps:[{n:'2', main:'Tempo 20-30 นาที', type:'Zone 3-4 · HR 150-160', icon:'ti-run', timer:1500}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'10 นาที',
+      steps:[{n:'3', main:'คูลดาวน์ 10 นาที', type:'Zone 1', icon:'ti-shoe', timer:600}]}]
+  },
+  { w:8, d:'ศุกร์', name:'พักผ่อน', type:'rest', dur:'30 นาที', dist:'—', zone:'—', hr:'—',
+    tip:'ยืดเหยียดและนอนให้พอ',
+    coach:'พักให้เต็มที่ครับ ร่างกายต้องการเวลาฟื้นฟู',
+    realDate:'21/08/2026',
+    blocks:[]
+  },
+  { w:8, d:'เสาร์', name:'Easy Run', type:'easy', dur:'35-45 นาที', dist:'5-7 กม.', zone:'HR 135-145', hr:'135-145',
+    tip:'Easy Run คือพื้นฐานสำคัญที่สุด วิ่งช้าพอคุยได้ตลอดการวิ่ง',
+    coach:'วิ่งสบายๆ คุยได้ตลอดครับ เก็บแรงไว้สำหรับวันสำคัญ',
+    realDate:'22/08/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'1', main:'เดินเร็ว/วิ่งเหยาะ 5 นาที', type:'เดิน · เตรียมร่างกาย', icon:'ti-shoe', timer:300}]},
+    { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'5-7 กม.',
+      steps:[{n:'2', main:'5-7 กม.', type:'Zone 2 · HR 135-145 · พูดคุยได้', icon:'ti-run', timer:1500}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'3', main:'เดินช้า + ยืดเหยียด 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}]}]
+  },
+  { w:8, d:'อาทิตย์', name:'Long Run', type:'mod', dur:'~104 นาที', dist:'16 กม.', zone:'HR 135-145', hr:'135-145',
+    tip:'ถ้าวิ่งเกิน 90 นาที เติมน้ำและคาร์บทุก 45-60 นาที',
+    coach:'Long Run คือหัวใจของการซ้อมฮาล์ฟมาราธอน ทำให้ครบเวลาครับ',
+    realDate:'23/08/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'1', main:'เดินเร็ว 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}]},
+    { title:'Long Run', icon:'ti-run', style:'dark', badge:'LONG', sub:'16 กม.',
+      steps:[{n:'2', main:'วิ่ง 16 กม. ต่อเนื่อง', type:'Zone 2 · HR 135-145 · ช้าและสม่ำเสมอ', icon:'ti-run', timer:3000},
+        {n:'3', main:'ถ้าวิ่งเกิน 90 นาที เติมน้ำและคาร์บทุก 45-60 นาที', type:'Hydration & Fuel', icon:'ti-droplet', timer:0}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'4', main:'เดินช้า + ยืดเหยียด 10 นาที', type:'เดิน', icon:'ti-shoe', timer:600}]}]
+  },
+  { w:8, d:'จันทร์', name:'พักผ่อน', type:'rest', dur:'30 นาที', dist:'—', zone:'—', hr:'—',
+    tip:'เตรียมพร้อมสำหรับสัปดาห์ใหม่',
+    coach:'พักให้เต็มที่ครับ ร่างกายต้องการเวลาฟื้นฟู',
+    realDate:'24/08/2026',
+    blocks:[]
+  },
+  { w:9, d:'อังคาร', name:'Easy Run', type:'easy', dur:'35-45 นาที', dist:'7-8 กม.', zone:'HR 135-145', hr:'135-145',
+    tip:'Easy Run คือพื้นฐานสำคัญที่สุด วิ่งช้าพอคุยได้ตลอดการวิ่ง',
+    coach:'วิ่งสบายๆ คุยได้ตลอดครับ เก็บแรงไว้สำหรับวันสำคัญ',
+    realDate:'25/08/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'1', main:'เดินเร็ว/วิ่งเหยาะ 5 นาที', type:'เดิน · เตรียมร่างกาย', icon:'ti-shoe', timer:300}]},
+    { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'7-8 กม.',
+      steps:[{n:'2', main:'วิ่ง 7-8 กม.', type:'Zone 2 · HR 135-145 · พูดคุยได้', icon:'ti-run', timer:1500}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'3', main:'เดินช้า + ยืดเหยียด 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}]}]
+  },
+  { w:9, d:'พุธ', name:'พักฟื้น', type:'rest', dur:'30-40 นาที', dist:'—', zone:'—', hr:'—',
+    tip:'เวทเทรนนิ่งช่วยป้องกันการบาดเจ็บและเสริมความแข็งแรงให้นักวิ่ง',
+    coach:'วันนี้เสริมความแข็งแรงด้วยเวทเทรนนิ่งครับ',
+    realDate:'26/08/2026',
+    blocks:[],
+    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30-40 นาที',
+      steps:[
+        {n:'1', main:'วอร์มอัพ — ยืดเหยียด 5 นาที', type:'เตรียมกล้ามเนื้อ', icon:'ti-body-scan', timer:300},
+        {n:'2', main:'Squat, Lunge, Core, Calf Raise', type:'Full body · 20-25 นาที', icon:'ti-barbell', timer:1350},
+        {n:'3', main:'คูลดาวน์ยืดเหยียด 5 นาที', type:'ลดความตึงกล้ามเนื้อ', icon:'ti-heart', timer:300}
+      ]}
+  },
+  { w:9, d:'พฤหัส', name:'Tempo Run', type:'hard', dur:'30 นาที', dist:'—', zone:'HR 150-160', hr:'150-160',
+    tip:'วอร์มอัป 15 นาที + คูลดาวน์',
+    coach:'วันคุณภาพ! หนักได้แต่ต้องทนได้ตลอดครับ',
+    realDate:'27/08/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'EASY', sub:'15 นาที',
+      steps:[{n:'1', main:'วอร์มอัพ 15 นาที', type:'Zone 2 · เตรียมกล้ามเนื้อ', icon:'ti-run', timer:900}]},
+    { title:'Tempo / Quality', icon:'ti-bolt', style:'lime', badge:'TEMPO', sub:'Interval / Tempo',
+      steps:[{n:'2', main:'Interval / Tempo', type:'Zone 3-4 · HR 150-160', icon:'ti-run', timer:1500}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'10 นาที',
+      steps:[{n:'3', main:'คูลดาวน์ 10 นาที', type:'Zone 1', icon:'ti-shoe', timer:600}]}]
+  },
+  { w:9, d:'ศุกร์', name:'พักผ่อน', type:'rest', dur:'30 นาที', dist:'—', zone:'—', hr:'—',
+    tip:'ยืดเหยียดและนอนให้พอ',
+    coach:'พักให้เต็มที่ครับ ร่างกายต้องการเวลาฟื้นฟู',
+    realDate:'28/08/2026',
+    blocks:[]
+  },
+  { w:9, d:'เสาร์', name:'Easy Run', type:'easy', dur:'35-45 นาที', dist:'5-7 กม.', zone:'HR 135-145', hr:'135-145',
+    tip:'Easy Run คือพื้นฐานสำคัญที่สุด วิ่งช้าพอคุยได้ตลอดการวิ่ง',
+    coach:'วิ่งสบายๆ คุยได้ตลอดครับ เก็บแรงไว้สำหรับวันสำคัญ',
+    realDate:'29/08/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'1', main:'เดินเร็ว/วิ่งเหยาะ 5 นาที', type:'เดิน · เตรียมร่างกาย', icon:'ti-shoe', timer:300}]},
+    { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'5-7 กม.',
+      steps:[{n:'2', main:'5-7 กม.', type:'Zone 2 · HR 135-145 · พูดคุยได้', icon:'ti-run', timer:1500}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'3', main:'เดินช้า + ยืดเหยียด 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}]}]
+  },
+  { w:9, d:'อาทิตย์', name:'Long Run', type:'mod', dur:'~110 นาที', dist:'17 กม.', zone:'HR 135-145', hr:'135-145',
+    tip:'ถ้าวิ่งเกิน 90 นาที เติมน้ำและคาร์บทุก 45-60 นาที',
+    coach:'Long Run คือหัวใจของการซ้อมฮาล์ฟมาราธอน ทำให้ครบเวลาครับ',
+    realDate:'30/08/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'1', main:'เดินเร็ว 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}]},
+    { title:'Long Run', icon:'ti-run', style:'dark', badge:'LONG', sub:'17 กม.',
+      steps:[{n:'2', main:'วิ่ง 17 กม. ต่อเนื่อง', type:'Zone 2 · HR 135-145 · ช้าและสม่ำเสมอ', icon:'ti-run', timer:3000},
+        {n:'3', main:'ถ้าวิ่งเกิน 90 นาที เติมน้ำและคาร์บทุก 45-60 นาที', type:'Hydration & Fuel', icon:'ti-droplet', timer:0}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'4', main:'เดินช้า + ยืดเหยียด 10 นาที', type:'เดิน', icon:'ti-shoe', timer:600}]}]
+  },
+  { w:9, d:'จันทร์', name:'พักผ่อน', type:'rest', dur:'30 นาที', dist:'—', zone:'—', hr:'—',
+    tip:'เตรียมพร้อมสำหรับสัปดาห์ใหม่',
+    coach:'พักให้เต็มที่ครับ ร่างกายต้องการเวลาฟื้นฟู',
+    realDate:'31/08/2026',
+    blocks:[]
+  },
+  { w:10, d:'อังคาร', name:'Easy Run', type:'easy', dur:'35-45 นาที', dist:'7-8 กม.', zone:'HR 135-145', hr:'135-145',
+    tip:'Easy Run คือพื้นฐานสำคัญที่สุด วิ่งช้าพอคุยได้ตลอดการวิ่ง',
+    coach:'วิ่งสบายๆ คุยได้ตลอดครับ เก็บแรงไว้สำหรับวันสำคัญ',
+    realDate:'01/09/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'1', main:'เดินเร็ว/วิ่งเหยาะ 5 นาที', type:'เดิน · เตรียมร่างกาย', icon:'ti-shoe', timer:300}]},
+    { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'7-8 กม.',
+      steps:[{n:'2', main:'วิ่ง 7-8 กม.', type:'Zone 2 · HR 135-145 · พูดคุยได้', icon:'ti-run', timer:1500}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'3', main:'เดินช้า + ยืดเหยียด 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}]}]
+  },
+  { w:10, d:'พุธ', name:'พักฟื้น', type:'rest', dur:'30-40 นาที', dist:'—', zone:'—', hr:'—',
+    tip:'เวทเทรนนิ่งช่วยป้องกันการบาดเจ็บและเสริมความแข็งแรงให้นักวิ่ง',
+    coach:'วันนี้เสริมความแข็งแรงด้วยเวทเทรนนิ่งครับ',
+    realDate:'02/09/2026',
+    blocks:[],
+    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30-40 นาที',
+      steps:[
+        {n:'1', main:'วอร์มอัพ — ยืดเหยียด 5 นาที', type:'เตรียมกล้ามเนื้อ', icon:'ti-body-scan', timer:300},
+        {n:'2', main:'Squat, Lunge, Core, Calf Raise', type:'Full body · 20-25 นาที', icon:'ti-barbell', timer:1350},
+        {n:'3', main:'คูลดาวน์ยืดเหยียด 5 นาที', type:'ลดความตึงกล้ามเนื้อ', icon:'ti-heart', timer:300}
+      ]}
+  },
+  { w:10, d:'พฤหัส', name:'Tempo Run', type:'hard', dur:'30 นาที', dist:'—', zone:'HR 150-160', hr:'150-160',
+    tip:'วอร์มอัป 15 นาที + คูลดาวน์',
+    coach:'วันคุณภาพ! หนักได้แต่ต้องทนได้ตลอดครับ',
+    realDate:'03/09/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'EASY', sub:'15 นาที',
+      steps:[{n:'1', main:'วอร์มอัพ 15 นาที', type:'Zone 2 · เตรียมกล้ามเนื้อ', icon:'ti-run', timer:900}]},
+    { title:'Tempo / Quality', icon:'ti-bolt', style:'lime', badge:'TEMPO', sub:'Interval / Tempo',
+      steps:[{n:'2', main:'Interval / Tempo', type:'Zone 3-4 · HR 150-160', icon:'ti-run', timer:1500}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'10 นาที',
+      steps:[{n:'3', main:'คูลดาวน์ 10 นาที', type:'Zone 1', icon:'ti-shoe', timer:600}]}]
+  },
+  { w:10, d:'ศุกร์', name:'พักผ่อน', type:'rest', dur:'30 นาที', dist:'—', zone:'—', hr:'—',
+    tip:'ยืดเหยียดและนอนให้พอ',
+    coach:'พักให้เต็มที่ครับ ร่างกายต้องการเวลาฟื้นฟู',
+    realDate:'04/09/2026',
+    blocks:[]
+  },
+  { w:10, d:'เสาร์', name:'Easy Run', type:'easy', dur:'35-45 นาที', dist:'5-7 กม.', zone:'HR 135-145', hr:'135-145',
+    tip:'Easy Run คือพื้นฐานสำคัญที่สุด วิ่งช้าพอคุยได้ตลอดการวิ่ง',
+    coach:'วิ่งสบายๆ คุยได้ตลอดครับ เก็บแรงไว้สำหรับวันสำคัญ',
+    realDate:'05/09/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'1', main:'เดินเร็ว/วิ่งเหยาะ 5 นาที', type:'เดิน · เตรียมร่างกาย', icon:'ti-shoe', timer:300}]},
+    { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'5-7 กม.',
+      steps:[{n:'2', main:'5-7 กม.', type:'Zone 2 · HR 135-145 · พูดคุยได้', icon:'ti-run', timer:1500}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'3', main:'เดินช้า + ยืดเหยียด 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}]}]
+  },
+  { w:10, d:'อาทิตย์', name:'Long Run', type:'mod', dur:'~117 นาที', dist:'18 กม.', zone:'HR 135-145', hr:'135-145',
+    tip:'ถ้าวิ่งเกิน 90 นาที เติมน้ำและคาร์บทุก 45-60 นาที',
+    coach:'Long Run คือหัวใจของการซ้อมฮาล์ฟมาราธอน ทำให้ครบเวลาครับ',
+    realDate:'06/09/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'1', main:'เดินเร็ว 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}]},
+    { title:'Long Run', icon:'ti-run', style:'dark', badge:'LONG', sub:'18 กม.',
+      steps:[{n:'2', main:'วิ่ง 18 กม. ต่อเนื่อง', type:'Zone 2 · HR 135-145 · ช้าและสม่ำเสมอ', icon:'ti-run', timer:3000},
+        {n:'3', main:'ถ้าวิ่งเกิน 90 นาที เติมน้ำและคาร์บทุก 45-60 นาที', type:'Hydration & Fuel', icon:'ti-droplet', timer:0}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'4', main:'เดินช้า + ยืดเหยียด 10 นาที', type:'เดิน', icon:'ti-shoe', timer:600}]}]
+  },
+  { w:10, d:'จันทร์', name:'พักผ่อน', type:'rest', dur:'30 นาที', dist:'—', zone:'—', hr:'—',
+    tip:'เตรียมพร้อมสำหรับสัปดาห์ใหม่',
+    coach:'พักให้เต็มที่ครับ ร่างกายต้องการเวลาฟื้นฟู',
+    realDate:'07/09/2026',
+    blocks:[]
+  },
+  { w:11, d:'อังคาร', name:'Easy Run', type:'easy', dur:'35-45 นาที', dist:'7-8 กม.', zone:'HR 135-145', hr:'135-145',
+    tip:'Easy Run คือพื้นฐานสำคัญที่สุด วิ่งช้าพอคุยได้ตลอดการวิ่ง',
+    coach:'วิ่งสบายๆ คุยได้ตลอดครับ เก็บแรงไว้สำหรับวันสำคัญ',
+    realDate:'08/09/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'1', main:'เดินเร็ว/วิ่งเหยาะ 5 นาที', type:'เดิน · เตรียมร่างกาย', icon:'ti-shoe', timer:300}]},
+    { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'7-8 กม.',
+      steps:[{n:'2', main:'วิ่ง 7-8 กม.', type:'Zone 2 · HR 135-145 · พูดคุยได้', icon:'ti-run', timer:1500}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'3', main:'เดินช้า + ยืดเหยียด 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}]}]
+  },
+  { w:11, d:'พุธ', name:'พักฟื้น', type:'rest', dur:'30-40 นาที', dist:'—', zone:'—', hr:'—',
+    tip:'เวทเทรนนิ่งช่วยป้องกันการบาดเจ็บและเสริมความแข็งแรงให้นักวิ่ง',
+    coach:'วันนี้เสริมความแข็งแรงด้วยเวทเทรนนิ่งครับ',
+    realDate:'09/09/2026',
+    blocks:[],
+    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30-40 นาที',
+      steps:[
+        {n:'1', main:'วอร์มอัพ — ยืดเหยียด 5 นาที', type:'เตรียมกล้ามเนื้อ', icon:'ti-body-scan', timer:300},
+        {n:'2', main:'Squat, Lunge, Core, Calf Raise', type:'Full body · 20-25 นาที', icon:'ti-barbell', timer:1350},
+        {n:'3', main:'คูลดาวน์ยืดเหยียด 5 นาที', type:'ลดความตึงกล้ามเนื้อ', icon:'ti-heart', timer:300}
+      ]}
+  },
+  { w:11, d:'พฤหัส', name:'Tempo Run', type:'hard', dur:'30 นาที', dist:'—', zone:'HR 150-160', hr:'150-160',
+    tip:'วอร์มอัป 15 นาที + คูลดาวน์',
+    coach:'วันคุณภาพ! หนักได้แต่ต้องทนได้ตลอดครับ',
+    realDate:'10/09/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'EASY', sub:'15 นาที',
+      steps:[{n:'1', main:'วอร์มอัพ 15 นาที', type:'Zone 2 · เตรียมกล้ามเนื้อ', icon:'ti-run', timer:900}]},
+    { title:'Tempo / Quality', icon:'ti-bolt', style:'lime', badge:'TEMPO', sub:'Interval / Tempo',
+      steps:[{n:'2', main:'Interval / Tempo', type:'Zone 3-4 · HR 150-160', icon:'ti-run', timer:1500}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'10 นาที',
+      steps:[{n:'3', main:'คูลดาวน์ 10 นาที', type:'Zone 1', icon:'ti-shoe', timer:600}]}]
+  },
+  { w:11, d:'ศุกร์', name:'พักผ่อน', type:'rest', dur:'30 นาที', dist:'—', zone:'—', hr:'—',
+    tip:'ยืดเหยียดและนอนให้พอ',
+    coach:'พักให้เต็มที่ครับ ร่างกายต้องการเวลาฟื้นฟู',
+    realDate:'11/09/2026',
+    blocks:[]
+  },
+  { w:11, d:'เสาร์', name:'Easy Run', type:'easy', dur:'35-45 นาที', dist:'5-7 กม.', zone:'HR 135-145', hr:'135-145',
+    tip:'Easy Run คือพื้นฐานสำคัญที่สุด วิ่งช้าพอคุยได้ตลอดการวิ่ง',
+    coach:'วิ่งสบายๆ คุยได้ตลอดครับ เก็บแรงไว้สำหรับวันสำคัญ',
+    realDate:'12/09/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'1', main:'เดินเร็ว/วิ่งเหยาะ 5 นาที', type:'เดิน · เตรียมร่างกาย', icon:'ti-shoe', timer:300}]},
+    { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'5-7 กม.',
+      steps:[{n:'2', main:'5-7 กม.', type:'Zone 2 · HR 135-145 · พูดคุยได้', icon:'ti-run', timer:1500}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'3', main:'เดินช้า + ยืดเหยียด 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}]}]
+  },
+  { w:11, d:'อาทิตย์', name:'Long Run', type:'mod', dur:'~117 นาที', dist:'18 กม.', zone:'HR 135-145', hr:'135-145',
+    tip:'ถ้าวิ่งเกิน 90 นาที เติมน้ำและคาร์บทุก 45-60 นาที',
+    coach:'Long Run คือหัวใจของการซ้อมฮาล์ฟมาราธอน ทำให้ครบเวลาครับ',
+    realDate:'13/09/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'1', main:'เดินเร็ว 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}]},
+    { title:'Long Run', icon:'ti-run', style:'dark', badge:'LONG', sub:'18 กม.',
+      steps:[{n:'2', main:'วิ่ง 18 กม. ต่อเนื่อง', type:'Zone 2 · HR 135-145 · ช้าและสม่ำเสมอ', icon:'ti-run', timer:3000},
+        {n:'3', main:'ถ้าวิ่งเกิน 90 นาที เติมน้ำและคาร์บทุก 45-60 นาที', type:'Hydration & Fuel', icon:'ti-droplet', timer:0}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'4', main:'เดินช้า + ยืดเหยียด 10 นาที', type:'เดิน', icon:'ti-shoe', timer:600}]}]
+  },
+  { w:11, d:'จันทร์', name:'พักผ่อน', type:'rest', dur:'30 นาที', dist:'—', zone:'—', hr:'—',
+    tip:'เตรียมพร้อมสำหรับสัปดาห์ใหม่',
+    coach:'พักให้เต็มที่ครับ ร่างกายต้องการเวลาฟื้นฟู',
+    realDate:'14/09/2026',
+    blocks:[]
+  },
+  { w:12, d:'อังคาร', name:'Easy Run', type:'easy', dur:'35-45 นาที', dist:'7-8 กม.', zone:'HR 135-145', hr:'135-145',
+    tip:'Easy Run คือพื้นฐานสำคัญที่สุด วิ่งช้าพอคุยได้ตลอดการวิ่ง',
+    coach:'วิ่งสบายๆ คุยได้ตลอดครับ เก็บแรงไว้สำหรับวันสำคัญ',
+    realDate:'15/09/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'1', main:'เดินเร็ว/วิ่งเหยาะ 5 นาที', type:'เดิน · เตรียมร่างกาย', icon:'ti-shoe', timer:300}]},
+    { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'7-8 กม.',
+      steps:[{n:'2', main:'วิ่ง 7-8 กม.', type:'Zone 2 · HR 135-145 · พูดคุยได้', icon:'ti-run', timer:1500}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'3', main:'เดินช้า + ยืดเหยียด 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}]}]
+  },
+  { w:12, d:'พุธ', name:'พักฟื้น', type:'rest', dur:'30-40 นาที', dist:'—', zone:'—', hr:'—',
+    tip:'เวทเทรนนิ่งช่วยป้องกันการบาดเจ็บและเสริมความแข็งแรงให้นักวิ่ง',
+    coach:'วันนี้เสริมความแข็งแรงด้วยเวทเทรนนิ่งครับ',
+    realDate:'16/09/2026',
+    blocks:[],
+    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30-40 นาที',
+      steps:[
+        {n:'1', main:'วอร์มอัพ — ยืดเหยียด 5 นาที', type:'เตรียมกล้ามเนื้อ', icon:'ti-body-scan', timer:300},
+        {n:'2', main:'Squat, Lunge, Core, Calf Raise', type:'Full body · 20-25 นาที', icon:'ti-barbell', timer:1350},
+        {n:'3', main:'คูลดาวน์ยืดเหยียด 5 นาที', type:'ลดความตึงกล้ามเนื้อ', icon:'ti-heart', timer:300}
+      ]}
+  },
+  { w:12, d:'พฤหัส', name:'Tempo Run', type:'hard', dur:'30 นาที', dist:'—', zone:'HR 150-160', hr:'150-160',
+    tip:'วอร์มอัป 15 นาที + คูลดาวน์',
+    coach:'วันคุณภาพ! หนักได้แต่ต้องทนได้ตลอดครับ',
+    realDate:'17/09/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'EASY', sub:'15 นาที',
+      steps:[{n:'1', main:'วอร์มอัพ 15 นาที', type:'Zone 2 · เตรียมกล้ามเนื้อ', icon:'ti-run', timer:900}]},
+    { title:'Tempo / Quality', icon:'ti-bolt', style:'lime', badge:'TEMPO', sub:'Interval / Tempo',
+      steps:[{n:'2', main:'Interval / Tempo', type:'Zone 3-4 · HR 150-160', icon:'ti-run', timer:1500}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'10 นาที',
+      steps:[{n:'3', main:'คูลดาวน์ 10 นาที', type:'Zone 1', icon:'ti-shoe', timer:600}]}]
+  },
+  { w:12, d:'ศุกร์', name:'พักผ่อน', type:'rest', dur:'30 นาที', dist:'—', zone:'—', hr:'—',
+    tip:'ยืดเหยียดและนอนให้พอ',
+    coach:'พักให้เต็มที่ครับ ร่างกายต้องการเวลาฟื้นฟู',
+    realDate:'18/09/2026',
+    blocks:[]
+  },
+  { w:12, d:'เสาร์', name:'Easy Run', type:'easy', dur:'35-45 นาที', dist:'5-7 กม.', zone:'HR 135-145', hr:'135-145',
+    tip:'Easy Run คือพื้นฐานสำคัญที่สุด วิ่งช้าพอคุยได้ตลอดการวิ่ง',
+    coach:'วิ่งสบายๆ คุยได้ตลอดครับ เก็บแรงไว้สำหรับวันสำคัญ',
+    realDate:'19/09/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'1', main:'เดินเร็ว/วิ่งเหยาะ 5 นาที', type:'เดิน · เตรียมร่างกาย', icon:'ti-shoe', timer:300}]},
+    { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'5-7 กม.',
+      steps:[{n:'2', main:'5-7 กม.', type:'Zone 2 · HR 135-145 · พูดคุยได้', icon:'ti-run', timer:1500}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'3', main:'เดินช้า + ยืดเหยียด 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}]}]
+  },
+  { w:12, d:'อาทิตย์', name:'Long Run', type:'mod', dur:'~123 นาที', dist:'19 กม.', zone:'HR 135-145', hr:'135-145',
+    tip:'ถ้าวิ่งเกิน 90 นาที เติมน้ำและคาร์บทุก 45-60 นาที',
+    coach:'Long Run คือหัวใจของการซ้อมฮาล์ฟมาราธอน ทำให้ครบเวลาครับ',
+    realDate:'20/09/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'1', main:'เดินเร็ว 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}]},
+    { title:'Long Run', icon:'ti-run', style:'dark', badge:'LONG', sub:'19 กม.',
+      steps:[{n:'2', main:'วิ่ง 19 กม. ต่อเนื่อง', type:'Zone 2 · HR 135-145 · ช้าและสม่ำเสมอ', icon:'ti-run', timer:3000},
+        {n:'3', main:'ถ้าวิ่งเกิน 90 นาที เติมน้ำและคาร์บทุก 45-60 นาที', type:'Hydration & Fuel', icon:'ti-droplet', timer:0}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'4', main:'เดินช้า + ยืดเหยียด 10 นาที', type:'เดิน', icon:'ti-shoe', timer:600}]}]
+  },
+  { w:12, d:'จันทร์', name:'พักผ่อน', type:'rest', dur:'30 นาที', dist:'—', zone:'—', hr:'—',
+    tip:'เตรียมพร้อมสำหรับสัปดาห์ใหม่',
+    coach:'พักให้เต็มที่ครับ ร่างกายต้องการเวลาฟื้นฟู',
+    realDate:'21/09/2026',
+    blocks:[]
+  },
+  { w:13, d:'อังคาร', name:'Easy Run', type:'easy', dur:'35-45 นาที', dist:'7-8 กม.', zone:'HR 135-145', hr:'135-145',
+    tip:'Easy Run คือพื้นฐานสำคัญที่สุด วิ่งช้าพอคุยได้ตลอดการวิ่ง',
+    coach:'วิ่งสบายๆ คุยได้ตลอดครับ เก็บแรงไว้สำหรับวันสำคัญ',
+    realDate:'22/09/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'1', main:'เดินเร็ว/วิ่งเหยาะ 5 นาที', type:'เดิน · เตรียมร่างกาย', icon:'ti-shoe', timer:300}]},
+    { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'7-8 กม.',
+      steps:[{n:'2', main:'วิ่ง 7-8 กม.', type:'Zone 2 · HR 135-145 · พูดคุยได้', icon:'ti-run', timer:1500}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'3', main:'เดินช้า + ยืดเหยียด 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}]}]
+  },
+  { w:13, d:'พุธ', name:'พักฟื้น', type:'rest', dur:'30-40 นาที', dist:'—', zone:'—', hr:'—',
+    tip:'เวทเทรนนิ่งช่วยป้องกันการบาดเจ็บและเสริมความแข็งแรงให้นักวิ่ง',
+    coach:'วันนี้เสริมความแข็งแรงด้วยเวทเทรนนิ่งครับ',
+    realDate:'23/09/2026',
+    blocks:[],
+    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30-40 นาที',
+      steps:[
+        {n:'1', main:'วอร์มอัพ — ยืดเหยียด 5 นาที', type:'เตรียมกล้ามเนื้อ', icon:'ti-body-scan', timer:300},
+        {n:'2', main:'Squat, Lunge, Core, Calf Raise', type:'Full body · 20-25 นาที', icon:'ti-barbell', timer:1350},
+        {n:'3', main:'คูลดาวน์ยืดเหยียด 5 นาที', type:'ลดความตึงกล้ามเนื้อ', icon:'ti-heart', timer:300}
+      ]}
+  },
+  { w:13, d:'พฤหัส', name:'Tempo Run', type:'hard', dur:'30 นาที', dist:'—', zone:'HR 150-160', hr:'150-160',
+    tip:'วอร์มอัป 15 นาที + คูลดาวน์',
+    coach:'วันคุณภาพ! หนักได้แต่ต้องทนได้ตลอดครับ',
+    realDate:'24/09/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'EASY', sub:'15 นาที',
+      steps:[{n:'1', main:'วอร์มอัพ 15 นาที', type:'Zone 2 · เตรียมกล้ามเนื้อ', icon:'ti-run', timer:900}]},
+    { title:'Tempo / Quality', icon:'ti-bolt', style:'lime', badge:'TEMPO', sub:'Interval / Tempo',
+      steps:[{n:'2', main:'Interval / Tempo', type:'Zone 3-4 · HR 150-160', icon:'ti-run', timer:1500}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'10 นาที',
+      steps:[{n:'3', main:'คูลดาวน์ 10 นาที', type:'Zone 1', icon:'ti-shoe', timer:600}]}]
+  },
+  { w:13, d:'ศุกร์', name:'พักผ่อน', type:'rest', dur:'30 นาที', dist:'—', zone:'—', hr:'—',
+    tip:'ยืดเหยียดและนอนให้พอ',
+    coach:'พักให้เต็มที่ครับ ร่างกายต้องการเวลาฟื้นฟู',
+    realDate:'25/09/2026',
+    blocks:[]
+  },
+  { w:13, d:'เสาร์', name:'Easy Run', type:'easy', dur:'35-45 นาที', dist:'5-7 กม.', zone:'HR 135-145', hr:'135-145',
+    tip:'Easy Run คือพื้นฐานสำคัญที่สุด วิ่งช้าพอคุยได้ตลอดการวิ่ง',
+    coach:'วิ่งสบายๆ คุยได้ตลอดครับ เก็บแรงไว้สำหรับวันสำคัญ',
+    realDate:'26/09/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'1', main:'เดินเร็ว/วิ่งเหยาะ 5 นาที', type:'เดิน · เตรียมร่างกาย', icon:'ti-shoe', timer:300}]},
+    { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'5-7 กม.',
+      steps:[{n:'2', main:'5-7 กม.', type:'Zone 2 · HR 135-145 · พูดคุยได้', icon:'ti-run', timer:1500}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'3', main:'เดินช้า + ยืดเหยียด 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}]}]
+  },
+  { w:13, d:'อาทิตย์', name:'Long Run', type:'mod', dur:'~123 นาที', dist:'19 กม.', zone:'HR 135-145', hr:'135-145',
+    tip:'ถ้าวิ่งเกิน 90 นาที เติมน้ำและคาร์บทุก 45-60 นาที',
+    coach:'Long Run คือหัวใจของการซ้อมฮาล์ฟมาราธอน ทำให้ครบเวลาครับ',
+    realDate:'27/09/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'1', main:'เดินเร็ว 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}]},
+    { title:'Long Run', icon:'ti-run', style:'dark', badge:'LONG', sub:'19 กม.',
+      steps:[{n:'2', main:'วิ่ง 19 กม. ต่อเนื่อง', type:'Zone 2 · HR 135-145 · ช้าและสม่ำเสมอ', icon:'ti-run', timer:3000},
+        {n:'3', main:'ถ้าวิ่งเกิน 90 นาที เติมน้ำและคาร์บทุก 45-60 นาที', type:'Hydration & Fuel', icon:'ti-droplet', timer:0}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'4', main:'เดินช้า + ยืดเหยียด 10 นาที', type:'เดิน', icon:'ti-shoe', timer:600}]}]
+  },
+  { w:13, d:'จันทร์', name:'พักผ่อน', type:'rest', dur:'30 นาที', dist:'—', zone:'—', hr:'—',
+    tip:'เตรียมพร้อมสำหรับสัปดาห์ใหม่',
+    coach:'พักให้เต็มที่ครับ ร่างกายต้องการเวลาฟื้นฟู',
+    realDate:'28/09/2026',
+    blocks:[]
+  },
+  { w:14, d:'อังคาร', name:'Easy Run', type:'easy', dur:'35-45 นาที', dist:'7-8 กม.', zone:'HR 135-145', hr:'135-145',
+    tip:'Easy Run คือพื้นฐานสำคัญที่สุด วิ่งช้าพอคุยได้ตลอดการวิ่ง',
+    coach:'วิ่งสบายๆ คุยได้ตลอดครับ เก็บแรงไว้สำหรับวันสำคัญ',
+    realDate:'29/09/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'1', main:'เดินเร็ว/วิ่งเหยาะ 5 นาที', type:'เดิน · เตรียมร่างกาย', icon:'ti-shoe', timer:300}]},
+    { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'7-8 กม.',
+      steps:[{n:'2', main:'วิ่ง 7-8 กม.', type:'Zone 2 · HR 135-145 · พูดคุยได้', icon:'ti-run', timer:1500}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'3', main:'เดินช้า + ยืดเหยียด 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}]}]
+  },
+  { w:14, d:'พุธ', name:'พักฟื้น', type:'rest', dur:'30-40 นาที', dist:'—', zone:'—', hr:'—',
+    tip:'เวทเทรนนิ่งช่วยป้องกันการบาดเจ็บและเสริมความแข็งแรงให้นักวิ่ง',
+    coach:'วันนี้เสริมความแข็งแรงด้วยเวทเทรนนิ่งครับ',
+    realDate:'30/09/2026',
+    blocks:[],
+    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30-40 นาที',
+      steps:[
+        {n:'1', main:'วอร์มอัพ — ยืดเหยียด 5 นาที', type:'เตรียมกล้ามเนื้อ', icon:'ti-body-scan', timer:300},
+        {n:'2', main:'Squat, Lunge, Core, Calf Raise', type:'Full body · 20-25 นาที', icon:'ti-barbell', timer:1350},
+        {n:'3', main:'คูลดาวน์ยืดเหยียด 5 นาที', type:'ลดความตึงกล้ามเนื้อ', icon:'ti-heart', timer:300}
+      ]}
+  },
+  { w:14, d:'พฤหัส', name:'Tempo Run', type:'hard', dur:'30 นาที', dist:'—', zone:'HR 150-160', hr:'150-160',
+    tip:'วอร์มอัป 15 นาที + คูลดาวน์',
+    coach:'วันคุณภาพ! หนักได้แต่ต้องทนได้ตลอดครับ',
+    realDate:'01/10/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'EASY', sub:'15 นาที',
+      steps:[{n:'1', main:'วอร์มอัพ 15 นาที', type:'Zone 2 · เตรียมกล้ามเนื้อ', icon:'ti-run', timer:900}]},
+    { title:'Tempo / Quality', icon:'ti-bolt', style:'lime', badge:'TEMPO', sub:'Interval / Tempo',
+      steps:[{n:'2', main:'Interval / Tempo', type:'Zone 3-4 · HR 150-160', icon:'ti-run', timer:1500}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'10 นาที',
+      steps:[{n:'3', main:'คูลดาวน์ 10 นาที', type:'Zone 1', icon:'ti-shoe', timer:600}]}]
+  },
+  { w:14, d:'ศุกร์', name:'พักผ่อน', type:'rest', dur:'30 นาที', dist:'—', zone:'—', hr:'—',
+    tip:'ยืดเหยียดและนอนให้พอ',
+    coach:'พักให้เต็มที่ครับ ร่างกายต้องการเวลาฟื้นฟู',
+    realDate:'02/10/2026',
+    blocks:[]
+  },
+  { w:14, d:'เสาร์', name:'Easy Run', type:'easy', dur:'35-45 นาที', dist:'5-7 กม.', zone:'HR 135-145', hr:'135-145',
+    tip:'Easy Run คือพื้นฐานสำคัญที่สุด วิ่งช้าพอคุยได้ตลอดการวิ่ง',
+    coach:'วิ่งสบายๆ คุยได้ตลอดครับ เก็บแรงไว้สำหรับวันสำคัญ',
+    realDate:'03/10/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'1', main:'เดินเร็ว/วิ่งเหยาะ 5 นาที', type:'เดิน · เตรียมร่างกาย', icon:'ti-shoe', timer:300}]},
+    { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'5-7 กม.',
+      steps:[{n:'2', main:'5-7 กม.', type:'Zone 2 · HR 135-145 · พูดคุยได้', icon:'ti-run', timer:1500}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'3', main:'เดินช้า + ยืดเหยียด 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}]}]
+  },
+  { w:14, d:'อาทิตย์', name:'Long Run', type:'mod', dur:'~130 นาที', dist:'20 กม.', zone:'HR 135-145', hr:'135-145',
+    tip:'ถ้าวิ่งเกิน 90 นาที เติมน้ำและคาร์บทุก 45-60 นาที',
+    coach:'Long Run คือหัวใจของการซ้อมฮาล์ฟมาราธอน ทำให้ครบเวลาครับ',
+    realDate:'04/10/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'1', main:'เดินเร็ว 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}]},
+    { title:'Long Run', icon:'ti-run', style:'dark', badge:'LONG', sub:'20 กม.',
+      steps:[{n:'2', main:'วิ่ง 20 กม. ต่อเนื่อง', type:'Zone 2 · HR 135-145 · ช้าและสม่ำเสมอ', icon:'ti-run', timer:3000},
+        {n:'3', main:'ถ้าวิ่งเกิน 90 นาที เติมน้ำและคาร์บทุก 45-60 นาที', type:'Hydration & Fuel', icon:'ti-droplet', timer:0}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'4', main:'เดินช้า + ยืดเหยียด 10 นาที', type:'เดิน', icon:'ti-shoe', timer:600}]}]
+  },
+  { w:14, d:'จันทร์', name:'พักผ่อน', type:'rest', dur:'30 นาที', dist:'—', zone:'—', hr:'—',
+    tip:'เตรียมพร้อมสำหรับสัปดาห์ใหม่',
+    coach:'พักให้เต็มที่ครับ ร่างกายต้องการเวลาฟื้นฟู',
+    realDate:'05/10/2026',
+    blocks:[]
+  },
+  { w:15, d:'อังคาร', name:'Easy Run', type:'easy', dur:'35-45 นาที', dist:'7-8 กม.', zone:'HR 135-145', hr:'135-145',
+    tip:'Easy Run คือพื้นฐานสำคัญที่สุด วิ่งช้าพอคุยได้ตลอดการวิ่ง',
+    coach:'วิ่งสบายๆ คุยได้ตลอดครับ เก็บแรงไว้สำหรับวันสำคัญ',
+    realDate:'06/10/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'1', main:'เดินเร็ว/วิ่งเหยาะ 5 นาที', type:'เดิน · เตรียมร่างกาย', icon:'ti-shoe', timer:300}]},
+    { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'7-8 กม.',
+      steps:[{n:'2', main:'วิ่ง 7-8 กม.', type:'Zone 2 · HR 135-145 · พูดคุยได้', icon:'ti-run', timer:1500}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'3', main:'เดินช้า + ยืดเหยียด 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}]}]
+  },
+  { w:15, d:'พุธ', name:'พักฟื้น', type:'rest', dur:'30-40 นาที', dist:'—', zone:'—', hr:'—',
+    tip:'เวทเทรนนิ่งช่วยป้องกันการบาดเจ็บและเสริมความแข็งแรงให้นักวิ่ง',
+    coach:'วันนี้เสริมความแข็งแรงด้วยเวทเทรนนิ่งครับ',
+    realDate:'07/10/2026',
+    blocks:[],
+    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30-40 นาที',
+      steps:[
+        {n:'1', main:'วอร์มอัพ — ยืดเหยียด 5 นาที', type:'เตรียมกล้ามเนื้อ', icon:'ti-body-scan', timer:300},
+        {n:'2', main:'Squat, Lunge, Core, Calf Raise', type:'Full body · 20-25 นาที', icon:'ti-barbell', timer:1350},
+        {n:'3', main:'คูลดาวน์ยืดเหยียด 5 นาที', type:'ลดความตึงกล้ามเนื้อ', icon:'ti-heart', timer:300}
+      ]}
+  },
+  { w:15, d:'พฤหัส', name:'Tempo Run', type:'hard', dur:'30 นาที', dist:'—', zone:'HR 150-160', hr:'150-160',
+    tip:'วอร์มอัป 15 นาที + คูลดาวน์',
+    coach:'วันคุณภาพ! หนักได้แต่ต้องทนได้ตลอดครับ',
+    realDate:'08/10/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'EASY', sub:'15 นาที',
+      steps:[{n:'1', main:'วอร์มอัพ 15 นาที', type:'Zone 2 · เตรียมกล้ามเนื้อ', icon:'ti-run', timer:900}]},
+    { title:'Tempo / Quality', icon:'ti-bolt', style:'lime', badge:'TEMPO', sub:'Interval / Tempo',
+      steps:[{n:'2', main:'Interval / Tempo', type:'Zone 3-4 · HR 150-160', icon:'ti-run', timer:1500}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'10 นาที',
+      steps:[{n:'3', main:'คูลดาวน์ 10 นาที', type:'Zone 1', icon:'ti-shoe', timer:600}]}]
+  },
+  { w:15, d:'ศุกร์', name:'พักผ่อน', type:'rest', dur:'30 นาที', dist:'—', zone:'—', hr:'—',
+    tip:'ยืดเหยียดและนอนให้พอ',
+    coach:'พักให้เต็มที่ครับ ร่างกายต้องการเวลาฟื้นฟู',
+    realDate:'09/10/2026',
+    blocks:[]
+  },
+  { w:15, d:'เสาร์', name:'Easy Run', type:'easy', dur:'35-45 นาที', dist:'5-7 กม.', zone:'HR 135-145', hr:'135-145',
+    tip:'Easy Run คือพื้นฐานสำคัญที่สุด วิ่งช้าพอคุยได้ตลอดการวิ่ง',
+    coach:'วิ่งสบายๆ คุยได้ตลอดครับ เก็บแรงไว้สำหรับวันสำคัญ',
+    realDate:'10/10/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'1', main:'เดินเร็ว/วิ่งเหยาะ 5 นาที', type:'เดิน · เตรียมร่างกาย', icon:'ti-shoe', timer:300}]},
+    { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'5-7 กม.',
+      steps:[{n:'2', main:'5-7 กม.', type:'Zone 2 · HR 135-145 · พูดคุยได้', icon:'ti-run', timer:1500}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'3', main:'เดินช้า + ยืดเหยียด 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}]}]
+  },
+  { w:15, d:'อาทิตย์', name:'Long Run', type:'mod', dur:'~130 นาที', dist:'20 กม.', zone:'HR 135-145', hr:'135-145',
+    tip:'ถ้าวิ่งเกิน 90 นาที เติมน้ำและคาร์บทุก 45-60 นาที',
+    coach:'Long Run คือหัวใจของการซ้อมฮาล์ฟมาราธอน ทำให้ครบเวลาครับ',
+    realDate:'11/10/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'1', main:'เดินเร็ว 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}]},
+    { title:'Long Run', icon:'ti-run', style:'dark', badge:'LONG', sub:'20 กม.',
+      steps:[{n:'2', main:'วิ่ง 20 กม. ต่อเนื่อง', type:'Zone 2 · HR 135-145 · ช้าและสม่ำเสมอ', icon:'ti-run', timer:3000},
+        {n:'3', main:'ถ้าวิ่งเกิน 90 นาที เติมน้ำและคาร์บทุก 45-60 นาที', type:'Hydration & Fuel', icon:'ti-droplet', timer:0}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'4', main:'เดินช้า + ยืดเหยียด 10 นาที', type:'เดิน', icon:'ti-shoe', timer:600}]}]
+  },
+  { w:15, d:'จันทร์', name:'พักผ่อน', type:'rest', dur:'30 นาที', dist:'—', zone:'—', hr:'—',
+    tip:'เตรียมพร้อมสำหรับสัปดาห์ใหม่',
+    coach:'พักให้เต็มที่ครับ ร่างกายต้องการเวลาฟื้นฟู',
+    realDate:'12/10/2026',
+    blocks:[]
+  },
+  { w:16, d:'อังคาร', name:'Easy Run', type:'easy', dur:'35-45 นาที', dist:'7-8 กม.', zone:'HR 135-145', hr:'135-145',
+    tip:'Easy Run คือพื้นฐานสำคัญที่สุด วิ่งช้าพอคุยได้ตลอดการวิ่ง',
+    coach:'วิ่งสบายๆ คุยได้ตลอดครับ เก็บแรงไว้สำหรับวันสำคัญ',
+    realDate:'13/10/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'1', main:'เดินเร็ว/วิ่งเหยาะ 5 นาที', type:'เดิน · เตรียมร่างกาย', icon:'ti-shoe', timer:300}]},
+    { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'7-8 กม.',
+      steps:[{n:'2', main:'วิ่ง 7-8 กม.', type:'Zone 2 · HR 135-145 · พูดคุยได้', icon:'ti-run', timer:1500}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'3', main:'เดินช้า + ยืดเหยียด 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}]}]
+  },
+  { w:16, d:'พุธ', name:'พักฟื้น', type:'rest', dur:'30-40 นาที', dist:'—', zone:'—', hr:'—',
+    tip:'เวทเทรนนิ่งช่วยป้องกันการบาดเจ็บและเสริมความแข็งแรงให้นักวิ่ง',
+    coach:'วันนี้เสริมความแข็งแรงด้วยเวทเทรนนิ่งครับ',
+    realDate:'14/10/2026',
+    blocks:[],
+    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30-40 นาที',
+      steps:[
+        {n:'1', main:'วอร์มอัพ — ยืดเหยียด 5 นาที', type:'เตรียมกล้ามเนื้อ', icon:'ti-body-scan', timer:300},
+        {n:'2', main:'Squat, Lunge, Core, Calf Raise', type:'Full body · 20-25 นาที', icon:'ti-barbell', timer:1350},
+        {n:'3', main:'คูลดาวน์ยืดเหยียด 5 นาที', type:'ลดความตึงกล้ามเนื้อ', icon:'ti-heart', timer:300}
+      ]}
+  },
+  { w:16, d:'พฤหัส', name:'Tempo Run', type:'hard', dur:'30 นาที', dist:'—', zone:'HR 150-160', hr:'150-160',
+    tip:'วอร์มอัป 15 นาที + คูลดาวน์',
+    coach:'วันคุณภาพ! หนักได้แต่ต้องทนได้ตลอดครับ',
+    realDate:'15/10/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'EASY', sub:'15 นาที',
+      steps:[{n:'1', main:'วอร์มอัพ 15 นาที', type:'Zone 2 · เตรียมกล้ามเนื้อ', icon:'ti-run', timer:900}]},
+    { title:'Tempo / Quality', icon:'ti-bolt', style:'lime', badge:'TEMPO', sub:'Interval / Tempo',
+      steps:[{n:'2', main:'Interval / Tempo', type:'Zone 3-4 · HR 150-160', icon:'ti-run', timer:1500}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'10 นาที',
+      steps:[{n:'3', main:'คูลดาวน์ 10 นาที', type:'Zone 1', icon:'ti-shoe', timer:600}]}]
+  },
+  { w:16, d:'ศุกร์', name:'พักผ่อน', type:'rest', dur:'30 นาที', dist:'—', zone:'—', hr:'—',
+    tip:'ยืดเหยียดและนอนให้พอ',
+    coach:'พักให้เต็มที่ครับ ร่างกายต้องการเวลาฟื้นฟู',
+    realDate:'16/10/2026',
+    blocks:[]
+  },
+  { w:16, d:'เสาร์', name:'Easy Run', type:'easy', dur:'35-45 นาที', dist:'5-7 กม.', zone:'HR 135-145', hr:'135-145',
+    tip:'Easy Run คือพื้นฐานสำคัญที่สุด วิ่งช้าพอคุยได้ตลอดการวิ่ง',
+    coach:'วิ่งสบายๆ คุยได้ตลอดครับ เก็บแรงไว้สำหรับวันสำคัญ',
+    realDate:'17/10/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'1', main:'เดินเร็ว/วิ่งเหยาะ 5 นาที', type:'เดิน · เตรียมร่างกาย', icon:'ti-shoe', timer:300}]},
+    { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'5-7 กม.',
+      steps:[{n:'2', main:'5-7 กม.', type:'Zone 2 · HR 135-145 · พูดคุยได้', icon:'ti-run', timer:1500}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'3', main:'เดินช้า + ยืดเหยียด 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}]}]
+  },
+  { w:16, d:'อาทิตย์', name:'Long Run', type:'mod', dur:'~117 นาที', dist:'18 กม.', zone:'HR 135-145', hr:'135-145',
+    tip:'ถ้าวิ่งเกิน 90 นาที เติมน้ำและคาร์บทุก 45-60 นาที',
+    coach:'Long Run คือหัวใจของการซ้อมฮาล์ฟมาราธอน ทำให้ครบเวลาครับ',
+    realDate:'18/10/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'1', main:'เดินเร็ว 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}]},
+    { title:'Long Run', icon:'ti-run', style:'dark', badge:'LONG', sub:'18 กม.',
+      steps:[{n:'2', main:'วิ่ง 18 กม. ต่อเนื่อง', type:'Zone 2 · HR 135-145 · ช้าและสม่ำเสมอ', icon:'ti-run', timer:3000},
+        {n:'3', main:'ถ้าวิ่งเกิน 90 นาที เติมน้ำและคาร์บทุก 45-60 นาที', type:'Hydration & Fuel', icon:'ti-droplet', timer:0}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'4', main:'เดินช้า + ยืดเหยียด 10 นาที', type:'เดิน', icon:'ti-shoe', timer:600}]}]
+  },
+  { w:16, d:'จันทร์', name:'พักผ่อน', type:'rest', dur:'30 นาที', dist:'—', zone:'—', hr:'—',
+    tip:'เตรียมพร้อมสำหรับสัปดาห์ใหม่',
+    coach:'พักให้เต็มที่ครับ ร่างกายต้องการเวลาฟื้นฟู',
+    realDate:'19/10/2026',
+    blocks:[]
+  },
+  { w:17, d:'อังคาร', name:'Easy Run', type:'easy', dur:'35-45 นาที', dist:'7-8 กม.', zone:'HR 135-145', hr:'135-145',
+    tip:'Easy Run คือพื้นฐานสำคัญที่สุด วิ่งช้าพอคุยได้ตลอดการวิ่ง',
+    coach:'วิ่งสบายๆ คุยได้ตลอดครับ เก็บแรงไว้สำหรับวันสำคัญ',
+    realDate:'20/10/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'1', main:'เดินเร็ว/วิ่งเหยาะ 5 นาที', type:'เดิน · เตรียมร่างกาย', icon:'ti-shoe', timer:300}]},
+    { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'7-8 กม.',
+      steps:[{n:'2', main:'วิ่ง 7-8 กม.', type:'Zone 2 · HR 135-145 · พูดคุยได้', icon:'ti-run', timer:1500}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'3', main:'เดินช้า + ยืดเหยียด 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}]}]
+  },
+  { w:17, d:'พุธ', name:'พักฟื้น', type:'rest', dur:'30-40 นาที', dist:'—', zone:'—', hr:'—',
+    tip:'เวทเทรนนิ่งช่วยป้องกันการบาดเจ็บและเสริมความแข็งแรงให้นักวิ่ง',
+    coach:'วันนี้เสริมความแข็งแรงด้วยเวทเทรนนิ่งครับ',
+    realDate:'21/10/2026',
+    blocks:[],
+    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30-40 นาที',
+      steps:[
+        {n:'1', main:'วอร์มอัพ — ยืดเหยียด 5 นาที', type:'เตรียมกล้ามเนื้อ', icon:'ti-body-scan', timer:300},
+        {n:'2', main:'Squat, Lunge, Core, Calf Raise', type:'Full body · 20-25 นาที', icon:'ti-barbell', timer:1350},
+        {n:'3', main:'คูลดาวน์ยืดเหยียด 5 นาที', type:'ลดความตึงกล้ามเนื้อ', icon:'ti-heart', timer:300}
+      ]}
+  },
+  { w:17, d:'พฤหัส', name:'Tempo Run', type:'hard', dur:'30 นาที', dist:'—', zone:'HR 150-160', hr:'150-160',
+    tip:'วอร์มอัป 15 นาที + คูลดาวน์',
+    coach:'วันคุณภาพ! หนักได้แต่ต้องทนได้ตลอดครับ',
+    realDate:'22/10/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'EASY', sub:'15 นาที',
+      steps:[{n:'1', main:'วอร์มอัพ 15 นาที', type:'Zone 2 · เตรียมกล้ามเนื้อ', icon:'ti-run', timer:900}]},
+    { title:'Tempo / Quality', icon:'ti-bolt', style:'lime', badge:'TEMPO', sub:'Tempo เบา / ลดระยะ',
+      steps:[{n:'2', main:'Tempo เบา / ลดระยะ', type:'Zone 3-4 · HR 150-160', icon:'ti-run', timer:1500}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'10 นาที',
+      steps:[{n:'3', main:'คูลดาวน์ 10 นาที', type:'Zone 1', icon:'ti-shoe', timer:600}]}]
+  },
+  { w:17, d:'ศุกร์', name:'พักผ่อน', type:'rest', dur:'30 นาที', dist:'—', zone:'—', hr:'—',
+    tip:'ยืดเหยียดและนอนให้พอ',
+    coach:'พักให้เต็มที่ครับ ร่างกายต้องการเวลาฟื้นฟู',
+    realDate:'23/10/2026',
+    blocks:[]
+  },
+  { w:17, d:'เสาร์', name:'Easy Run', type:'easy', dur:'35-45 นาที', dist:'5-7 กม.', zone:'HR 135-145', hr:'135-145',
+    tip:'Easy Run คือพื้นฐานสำคัญที่สุด วิ่งช้าพอคุยได้ตลอดการวิ่ง',
+    coach:'วิ่งสบายๆ คุยได้ตลอดครับ เก็บแรงไว้สำหรับวันสำคัญ',
+    realDate:'24/10/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'1', main:'เดินเร็ว/วิ่งเหยาะ 5 นาที', type:'เดิน · เตรียมร่างกาย', icon:'ti-shoe', timer:300}]},
+    { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'5-7 กม.',
+      steps:[{n:'2', main:'5-7 กม.', type:'Zone 2 · HR 135-145 · พูดคุยได้', icon:'ti-run', timer:1500}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'3', main:'เดินช้า + ยืดเหยียด 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}]}]
+  },
+  { w:17, d:'อาทิตย์', name:'Long Run', type:'mod', dur:'~136 นาที', dist:'21 กม.', zone:'HR 135-145', hr:'135-145',
+    tip:'ถ้าวิ่งเกิน 90 นาที เติมน้ำและคาร์บทุก 45-60 นาที',
+    coach:'Long Run คือหัวใจของการซ้อมฮาล์ฟมาราธอน ทำให้ครบเวลาครับ',
+    realDate:'25/10/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'1', main:'เดินเร็ว 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}]},
+    { title:'Long Run', icon:'ti-run', style:'dark', badge:'LONG', sub:'21 กม.',
+      steps:[{n:'2', main:'วิ่ง 21 กม. ต่อเนื่อง', type:'Zone 2 · HR 135-145 · ช้าและสม่ำเสมอ', icon:'ti-run', timer:3000},
+        {n:'3', main:'ถ้าวิ่งเกิน 90 นาที เติมน้ำและคาร์บทุก 45-60 นาที', type:'Hydration & Fuel', icon:'ti-droplet', timer:0}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'4', main:'เดินช้า + ยืดเหยียด 10 นาที', type:'เดิน', icon:'ti-shoe', timer:600}]}]
+  },
+  { w:17, d:'จันทร์', name:'พักผ่อน', type:'rest', dur:'30 นาที', dist:'—', zone:'—', hr:'—',
+    tip:'เตรียมพร้อมสำหรับสัปดาห์ใหม่',
+    coach:'พักให้เต็มที่ครับ ร่างกายต้องการเวลาฟื้นฟู',
+    realDate:'26/10/2026',
+    blocks:[]
+  },
+  { w:18, d:'อังคาร', name:'Easy Run', type:'easy', dur:'35-45 นาที', dist:'7-8 กม.', zone:'HR 135-145', hr:'135-145',
+    tip:'Easy Run คือพื้นฐานสำคัญที่สุด วิ่งช้าพอคุยได้ตลอดการวิ่ง',
+    coach:'วิ่งสบายๆ คุยได้ตลอดครับ เก็บแรงไว้สำหรับวันสำคัญ',
+    realDate:'27/10/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'1', main:'เดินเร็ว/วิ่งเหยาะ 5 นาที', type:'เดิน · เตรียมร่างกาย', icon:'ti-shoe', timer:300}]},
+    { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'7-8 กม.',
+      steps:[{n:'2', main:'วิ่ง 7-8 กม.', type:'Zone 2 · HR 135-145 · พูดคุยได้', icon:'ti-run', timer:1500}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'3', main:'เดินช้า + ยืดเหยียด 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}]}]
+  },
+  { w:18, d:'พุธ', name:'พักฟื้น', type:'rest', dur:'30-40 นาที', dist:'—', zone:'—', hr:'—',
+    tip:'เวทเทรนนิ่งช่วยป้องกันการบาดเจ็บและเสริมความแข็งแรงให้นักวิ่ง',
+    coach:'วันนี้เสริมความแข็งแรงด้วยเวทเทรนนิ่งครับ',
+    realDate:'28/10/2026',
+    blocks:[],
+    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30-40 นาที',
+      steps:[
+        {n:'1', main:'วอร์มอัพ — ยืดเหยียด 5 นาที', type:'เตรียมกล้ามเนื้อ', icon:'ti-body-scan', timer:300},
+        {n:'2', main:'Squat, Lunge, Core, Calf Raise', type:'Full body · 20-25 นาที', icon:'ti-barbell', timer:1350},
+        {n:'3', main:'คูลดาวน์ยืดเหยียด 5 นาที', type:'ลดความตึงกล้ามเนื้อ', icon:'ti-heart', timer:300}
+      ]}
+  },
+  { w:18, d:'พฤหัส', name:'Tempo Run', type:'hard', dur:'30 นาที', dist:'—', zone:'HR 150-160', hr:'150-160',
+    tip:'วอร์มอัป 15 นาที + คูลดาวน์',
+    coach:'วันคุณภาพ! หนักได้แต่ต้องทนได้ตลอดครับ',
+    realDate:'29/10/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'EASY', sub:'15 นาที',
+      steps:[{n:'1', main:'วอร์มอัพ 15 นาที', type:'Zone 2 · เตรียมกล้ามเนื้อ', icon:'ti-run', timer:900}]},
+    { title:'Tempo / Quality', icon:'ti-bolt', style:'lime', badge:'TEMPO', sub:'Tempo เบา / ลดระยะ',
+      steps:[{n:'2', main:'Tempo เบา / ลดระยะ', type:'Zone 3-4 · HR 150-160', icon:'ti-run', timer:1500}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'10 นาที',
+      steps:[{n:'3', main:'คูลดาวน์ 10 นาที', type:'Zone 1', icon:'ti-shoe', timer:600}]}]
+  },
+  { w:18, d:'ศุกร์', name:'พักผ่อน', type:'rest', dur:'30 นาที', dist:'—', zone:'—', hr:'—',
+    tip:'ยืดเหยียดและนอนให้พอ',
+    coach:'พักให้เต็มที่ครับ ร่างกายต้องการเวลาฟื้นฟู',
+    realDate:'30/10/2026',
+    blocks:[]
+  },
+  { w:18, d:'เสาร์', name:'Easy Run', type:'easy', dur:'35-45 นาที', dist:'5-7 กม.', zone:'HR 135-145', hr:'135-145',
+    tip:'Easy Run คือพื้นฐานสำคัญที่สุด วิ่งช้าพอคุยได้ตลอดการวิ่ง',
+    coach:'วิ่งสบายๆ คุยได้ตลอดครับ เก็บแรงไว้สำหรับวันสำคัญ',
+    realDate:'31/10/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'1', main:'เดินเร็ว/วิ่งเหยาะ 5 นาที', type:'เดิน · เตรียมร่างกาย', icon:'ti-shoe', timer:300}]},
+    { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'5-7 กม.',
+      steps:[{n:'2', main:'5-7 กม.', type:'Zone 2 · HR 135-145 · พูดคุยได้', icon:'ti-run', timer:1500}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'3', main:'เดินช้า + ยืดเหยียด 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}]}]
+  },
+  { w:18, d:'อาทิตย์', name:'Long Run', type:'mod', dur:'~117 นาที', dist:'18 กม.', zone:'HR 135-145', hr:'135-145',
+    tip:'ถ้าวิ่งเกิน 90 นาที เติมน้ำและคาร์บทุก 45-60 นาที',
+    coach:'Long Run คือหัวใจของการซ้อมฮาล์ฟมาราธอน ทำให้ครบเวลาครับ',
+    realDate:'01/11/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'1', main:'เดินเร็ว 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}]},
+    { title:'Long Run', icon:'ti-run', style:'dark', badge:'LONG', sub:'18 กม.',
+      steps:[{n:'2', main:'วิ่ง 18 กม. ต่อเนื่อง', type:'Zone 2 · HR 135-145 · ช้าและสม่ำเสมอ', icon:'ti-run', timer:3000},
+        {n:'3', main:'ถ้าวิ่งเกิน 90 นาที เติมน้ำและคาร์บทุก 45-60 นาที', type:'Hydration & Fuel', icon:'ti-droplet', timer:0}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'4', main:'เดินช้า + ยืดเหยียด 10 นาที', type:'เดิน', icon:'ti-shoe', timer:600}]}]
+  },
+  { w:18, d:'จันทร์', name:'พักผ่อน', type:'rest', dur:'30 นาที', dist:'—', zone:'—', hr:'—',
+    tip:'เตรียมพร้อมสำหรับสัปดาห์ใหม่',
+    coach:'พักให้เต็มที่ครับ ร่างกายต้องการเวลาฟื้นฟู',
+    realDate:'02/11/2026',
+    blocks:[]
+  },
+  { w:19, d:'อังคาร', name:'Easy Run', type:'easy', dur:'35-45 นาที', dist:'7-8 กม.', zone:'HR 135-145', hr:'135-145',
+    tip:'Easy Run คือพื้นฐานสำคัญที่สุด วิ่งช้าพอคุยได้ตลอดการวิ่ง',
+    coach:'วิ่งสบายๆ คุยได้ตลอดครับ เก็บแรงไว้สำหรับวันสำคัญ',
+    realDate:'03/11/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'1', main:'เดินเร็ว/วิ่งเหยาะ 5 นาที', type:'เดิน · เตรียมร่างกาย', icon:'ti-shoe', timer:300}]},
+    { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'7-8 กม.',
+      steps:[{n:'2', main:'วิ่ง 7-8 กม.', type:'Zone 2 · HR 135-145 · พูดคุยได้', icon:'ti-run', timer:1500}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'3', main:'เดินช้า + ยืดเหยียด 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}]}]
+  },
+  { w:19, d:'พุธ', name:'พักฟื้น', type:'rest', dur:'30-40 นาที', dist:'—', zone:'—', hr:'—',
+    tip:'เวทเทรนนิ่งช่วยป้องกันการบาดเจ็บและเสริมความแข็งแรงให้นักวิ่ง',
+    coach:'วันนี้เสริมความแข็งแรงด้วยเวทเทรนนิ่งครับ',
+    realDate:'04/11/2026',
+    blocks:[],
+    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30-40 นาที',
+      steps:[
+        {n:'1', main:'วอร์มอัพ — ยืดเหยียด 5 นาที', type:'เตรียมกล้ามเนื้อ', icon:'ti-body-scan', timer:300},
+        {n:'2', main:'Squat, Lunge, Core, Calf Raise', type:'Full body · 20-25 นาที', icon:'ti-barbell', timer:1350},
+        {n:'3', main:'คูลดาวน์ยืดเหยียด 5 นาที', type:'ลดความตึงกล้ามเนื้อ', icon:'ti-heart', timer:300}
+      ]}
+  },
+  { w:19, d:'พฤหัส', name:'Tempo Run', type:'hard', dur:'30 นาที', dist:'—', zone:'HR 150-160', hr:'150-160',
+    tip:'วอร์มอัป 15 นาที + คูลดาวน์',
+    coach:'วันคุณภาพ! หนักได้แต่ต้องทนได้ตลอดครับ',
+    realDate:'05/11/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'EASY', sub:'15 นาที',
+      steps:[{n:'1', main:'วอร์มอัพ 15 นาที', type:'Zone 2 · เตรียมกล้ามเนื้อ', icon:'ti-run', timer:900}]},
+    { title:'Tempo / Quality', icon:'ti-bolt', style:'lime', badge:'TEMPO', sub:'Tempo เบา / ลดระยะ',
+      steps:[{n:'2', main:'Tempo เบา / ลดระยะ', type:'Zone 3-4 · HR 150-160', icon:'ti-run', timer:1500}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'10 นาที',
+      steps:[{n:'3', main:'คูลดาวน์ 10 นาที', type:'Zone 1', icon:'ti-shoe', timer:600}]}]
+  },
+  { w:19, d:'ศุกร์', name:'พักผ่อน', type:'rest', dur:'30 นาที', dist:'—', zone:'—', hr:'—',
+    tip:'ยืดเหยียดและนอนให้พอ',
+    coach:'พักให้เต็มที่ครับ ร่างกายต้องการเวลาฟื้นฟู',
+    realDate:'06/11/2026',
+    blocks:[]
+  },
+  { w:19, d:'เสาร์', name:'Easy Run', type:'easy', dur:'35-45 นาที', dist:'5-7 กม.', zone:'HR 135-145', hr:'135-145',
+    tip:'Easy Run คือพื้นฐานสำคัญที่สุด วิ่งช้าพอคุยได้ตลอดการวิ่ง',
+    coach:'วิ่งสบายๆ คุยได้ตลอดครับ เก็บแรงไว้สำหรับวันสำคัญ',
+    realDate:'07/11/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'1', main:'เดินเร็ว/วิ่งเหยาะ 5 นาที', type:'เดิน · เตรียมร่างกาย', icon:'ti-shoe', timer:300}]},
+    { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'5-7 กม.',
+      steps:[{n:'2', main:'5-7 กม.', type:'Zone 2 · HR 135-145 · พูดคุยได้', icon:'ti-run', timer:1500}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'3', main:'เดินช้า + ยืดเหยียด 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}]}]
+  },
+  { w:19, d:'อาทิตย์', name:'Long Run', type:'mod', dur:'~91 นาที', dist:'14 กม.', zone:'HR 135-145', hr:'135-145',
+    tip:'ถ้าวิ่งเกิน 90 นาที เติมน้ำและคาร์บทุก 45-60 นาที',
+    coach:'Long Run คือหัวใจของการซ้อมฮาล์ฟมาราธอน ทำให้ครบเวลาครับ',
+    realDate:'08/11/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'1', main:'เดินเร็ว 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}]},
+    { title:'Long Run', icon:'ti-run', style:'dark', badge:'LONG', sub:'14 กม.',
+      steps:[{n:'2', main:'วิ่ง 14 กม. ต่อเนื่อง', type:'Zone 2 · HR 135-145 · ช้าและสม่ำเสมอ', icon:'ti-run', timer:3000},
+        {n:'3', main:'ถ้าวิ่งเกิน 90 นาที เติมน้ำและคาร์บทุก 45-60 นาที', type:'Hydration & Fuel', icon:'ti-droplet', timer:0}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'4', main:'เดินช้า + ยืดเหยียด 10 นาที', type:'เดิน', icon:'ti-shoe', timer:600}]}]
+  },
+  { w:19, d:'จันทร์', name:'พักผ่อน', type:'rest', dur:'30 นาที', dist:'—', zone:'—', hr:'—',
+    tip:'เตรียมพร้อมสำหรับสัปดาห์ใหม่',
+    coach:'พักให้เต็มที่ครับ ร่างกายต้องการเวลาฟื้นฟู',
+    realDate:'09/11/2026',
+    blocks:[]
+  },
+  { w:20, d:'อังคาร', name:'Easy Run', type:'easy', dur:'35-45 นาที', dist:'7-8 กม.', zone:'HR 135-145', hr:'135-145',
+    tip:'Easy Run คือพื้นฐานสำคัญที่สุด วิ่งช้าพอคุยได้ตลอดการวิ่ง',
+    coach:'วิ่งสบายๆ คุยได้ตลอดครับ เก็บแรงไว้สำหรับวันสำคัญ',
+    realDate:'10/11/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'1', main:'เดินเร็ว/วิ่งเหยาะ 5 นาที', type:'เดิน · เตรียมร่างกาย', icon:'ti-shoe', timer:300}]},
+    { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'7-8 กม.',
+      steps:[{n:'2', main:'วิ่ง 7-8 กม.', type:'Zone 2 · HR 135-145 · พูดคุยได้', icon:'ti-run', timer:1500}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'3', main:'เดินช้า + ยืดเหยียด 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}]}]
+  },
+  { w:20, d:'พุธ', name:'พักฟื้น', type:'rest', dur:'30-40 นาที', dist:'—', zone:'—', hr:'—',
+    tip:'เวทเทรนนิ่งช่วยป้องกันการบาดเจ็บและเสริมความแข็งแรงให้นักวิ่ง',
+    coach:'วันนี้เสริมความแข็งแรงด้วยเวทเทรนนิ่งครับ',
+    realDate:'11/11/2026',
+    blocks:[],
+    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30-40 นาที',
+      steps:[
+        {n:'1', main:'วอร์มอัพ — ยืดเหยียด 5 นาที', type:'เตรียมกล้ามเนื้อ', icon:'ti-body-scan', timer:300},
+        {n:'2', main:'Squat, Lunge, Core, Calf Raise', type:'Full body · 20-25 นาที', icon:'ti-barbell', timer:1350},
+        {n:'3', main:'คูลดาวน์ยืดเหยียด 5 นาที', type:'ลดความตึงกล้ามเนื้อ', icon:'ti-heart', timer:300}
+      ]}
+  },
+  { w:20, d:'พฤหัส', name:'Tempo Run', type:'hard', dur:'30 นาที', dist:'—', zone:'HR 150-160', hr:'150-160',
+    tip:'วอร์มอัป 15 นาที + คูลดาวน์',
+    coach:'วันคุณภาพ! หนักได้แต่ต้องทนได้ตลอดครับ',
+    realDate:'12/11/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'EASY', sub:'15 นาที',
+      steps:[{n:'1', main:'วอร์มอัพ 15 นาที', type:'Zone 2 · เตรียมกล้ามเนื้อ', icon:'ti-run', timer:900}]},
+    { title:'Tempo / Quality', icon:'ti-bolt', style:'lime', badge:'TEMPO', sub:'Tempo เบา / ลดระยะ',
+      steps:[{n:'2', main:'Tempo เบา / ลดระยะ', type:'Zone 3-4 · HR 150-160', icon:'ti-run', timer:1500}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'10 นาที',
+      steps:[{n:'3', main:'คูลดาวน์ 10 นาที', type:'Zone 1', icon:'ti-shoe', timer:600}]}]
+  },
+  { w:20, d:'ศุกร์', name:'พักผ่อน', type:'rest', dur:'30 นาที', dist:'—', zone:'—', hr:'—',
+    tip:'ยืดเหยียดและนอนให้พอ',
+    coach:'พักให้เต็มที่ครับ ร่างกายต้องการเวลาฟื้นฟู',
+    realDate:'13/11/2026',
+    blocks:[]
+  },
+  { w:20, d:'เสาร์', name:'Easy Run', type:'easy', dur:'35-45 นาที', dist:'5-7 กม.', zone:'HR 135-145', hr:'135-145',
+    tip:'Easy Run คือพื้นฐานสำคัญที่สุด วิ่งช้าพอคุยได้ตลอดการวิ่ง',
+    coach:'วิ่งสบายๆ คุยได้ตลอดครับ เก็บแรงไว้สำหรับวันสำคัญ',
+    realDate:'14/11/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'1', main:'เดินเร็ว/วิ่งเหยาะ 5 นาที', type:'เดิน · เตรียมร่างกาย', icon:'ti-shoe', timer:300}]},
+    { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'5-7 กม.',
+      steps:[{n:'2', main:'5-7 กม.', type:'Zone 2 · HR 135-145 · พูดคุยได้', icon:'ti-run', timer:1500}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'3', main:'เดินช้า + ยืดเหยียด 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}]}]
+  },
+  { w:20, d:'อาทิตย์', name:'Long Run', type:'mod', dur:'~65 นาที', dist:'10 กม.', zone:'HR 135-145', hr:'135-145',
+    tip:'ถ้าวิ่งเกิน 90 นาที เติมน้ำและคาร์บทุก 45-60 นาที',
+    coach:'Long Run คือหัวใจของการซ้อมฮาล์ฟมาราธอน ทำให้ครบเวลาครับ',
+    realDate:'15/11/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'1', main:'เดินเร็ว 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}]},
+    { title:'Long Run', icon:'ti-run', style:'dark', badge:'LONG', sub:'10 กม.',
+      steps:[{n:'2', main:'วิ่ง 10 กม. ต่อเนื่อง', type:'Zone 2 · HR 135-145 · ช้าและสม่ำเสมอ', icon:'ti-run', timer:3000},
+        {n:'3', main:'ถ้าวิ่งเกิน 90 นาที เติมน้ำและคาร์บทุก 45-60 นาที', type:'Hydration & Fuel', icon:'ti-droplet', timer:0}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
+      steps:[{n:'4', main:'เดินช้า + ยืดเหยียด 10 นาที', type:'เดิน', icon:'ti-shoe', timer:600}]}]
+  },
+  { w:20, d:'จันทร์', name:'พักผ่อน', type:'rest', dur:'30 นาที', dist:'—', zone:'—', hr:'—',
+    tip:'เตรียมพร้อมสำหรับสัปดาห์ใหม่',
+    coach:'พักให้เต็มที่ครับ ร่างกายต้องการเวลาฟื้นฟู',
+    realDate:'16/11/2026',
+    blocks:[]
+  },
+  { w:21, d:'อังคาร', name:'Easy Run', type:'easy', dur:'20-25 นาที', dist:'3-4 กม.', zone:'HR 130-140', hr:'130-140',
+    tip:'สัปดาห์สุดท้ายก่อนแข่งจริง วิ่งเบามากๆ เก็บแรงให้เต็มที่',
+    coach:'อีกไม่กี่วันแล้ว! เบาๆ ครับ เก็บแรงไว้',
+    realDate:'17/11/2026',
+    blocks:[{ title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'20 นาที',
+      steps:[{n:'1', main:'วิ่งเบามากๆ 20 นาที', type:'Zone 2 · เก็บแรง', icon:'ti-run', timer:1200}]}]
+  },
+  { w:21, d:'พุธ', name:'พักฟื้น', type:'rest', dur:'20-30 นาที', dist:'—', zone:'—', hr:'—',
+    tip:'เวทเทรนนิ่งเบาๆ เน้น mobility ไม่ต้องหนัก',
+    coach:'เวทเบาๆ วันนี้ เน้นยืดเหยียดมากกว่า',
+    realDate:'18/11/2026',
+    blocks:[],
+    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30-40 นาที',
+      steps:[
+        {n:'1', main:'วอร์มอัพ — ยืดเหยียด 5 นาที', type:'เตรียมกล้ามเนื้อ', icon:'ti-body-scan', timer:300},
+        {n:'2', main:'Squat, Lunge, Core, Calf Raise', type:'Full body · 20-25 นาที', icon:'ti-barbell', timer:1350},
+        {n:'3', main:'คูลดาวน์ยืดเหยียด 5 นาที', type:'ลดความตึงกล้ามเนื้อ', icon:'ti-heart', timer:300}
+      ]}
+  },
+  { w:21, d:'พฤหัส', name:'Strides เบาๆ', type:'hard', dur:'20 นาที', dist:'—', zone:'HR 140-155', hr:'140-155',
+    tip:'Strides สั้นๆ ปลุกขาให้ตื่นตัว ไม่ใช่การซ้อมหนัก',
+    coach:'Strides เบาๆ ปลุกขาให้พร้อมก่อนวันแข่ง',
+    realDate:'19/11/2026',
+    blocks:[{ title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'EASY', sub:'10 นาที',
+      steps:[{n:'1', main:'วิ่งเบา 10 นาที', type:'Zone 2', icon:'ti-run', timer:600}]},
+    { title:'Strides x4', icon:'ti-bolt', style:'lime', badge:'STRIDES', sub:'4 ครั้ง',
+      steps:[{n:'2a', main:'วิ่งเร็ว 20 วินาที', type:'Zone 4', icon:'ti-run', timer:20},
+        {n:'2b', main:'พักเดิน 60 วินาที', type:'Rest', icon:'ti-shoe', timer:60}]},
+    { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'10 นาที',
+      steps:[{n:'3', main:'เดินช้า 10 นาที', type:'Zone 1', icon:'ti-shoe', timer:600}]}]
+  },
+  { w:21, d:'ศุกร์', name:'พักผ่อน', type:'rest', dur:'—', dist:'—', zone:'—', hr:'—',
+    tip:'พักเต็มที่ ยืดเหยียดเบาๆ',
     coach:'พักให้เต็มที่ครับ',
-    blocks:[{ title:'พัก', icon:'ti-heart', style:'dark', badge:'REST', sub:'Recovery',
-      steps:[{n:'1', main:'ยืดเหยียด', type:'Stretching', icon:'ti-body-scan', timer:0}] }],
-    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30 นาที',
-      steps:[
-        {n:'1', main:'วอร์มอัพ — ยืดเหยียด 5 นาที', type:'เตรียมกล้ามเนื้อ', icon:'ti-body-scan', timer:300},
-        {n:'2', main:'เวทเทรนนิ่ง 20 นาที', type:'Full body · น้ำหนักปานกลาง', icon:'ti-barbell', timer:1200},
-        {n:'3', main:'คูลดาวน์ยืดเหยียด 5 นาที', type:'ลดความตึงกล้ามเนื้อ', icon:'ti-heart', timer:300}
-      ]}
+    realDate:'20/11/2026',
+    blocks:[]
   },
-  { w:2, d:'พุธ', name:'Interval 400m', type:'hard', dur:'40 นาที', dist:'5 กม.', zone:'Zone 5', hr:'90–95%',
-    tip:'Interval ครั้งแรก! วิ่ง 400m เร็วสุดๆ แล้วพัก ทำซ้ำ 4–5 รอบ นี่คือกุญแจ VO2max',
-    coach:'Interval คือหัวใจของ VO2max training! ทำเต็มที่ทุกรอบ',
-    blocks:[
-      { title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'10 นาที',
-        steps:[{n:'1', main:'วิ่งเบา 10 นาที', type:'Zone 2', icon:'ti-run', timer:600}] },
-      { title:'Interval × 4–5 รอบ', icon:'ti-bolt', style:'lime', badge:'INTERVAL', sub:'400m × 4–5',
-        steps:[
-          {n:'2a', main:'วิ่ง 400m เร็วสุดๆ', type:'วิ่ง · Zone 5 · 90–95% max HR', icon:'ti-run', timer:120},
-          {n:'2b', main:'พักเดิน 90 วินาที', type:'เดิน · Active Rest', icon:'ti-shoe', timer:90}
-        ]},
-      { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'10 นาที',
-        steps:[{n:'3', main:'วิ่งเบา/เดิน 10 นาที', type:'Zone 1', icon:'ti-shoe', timer:600}] }
-    ]
-  },
-  { w:2, d:'พฤหัส', name:'พักฟื้น Active', type:'rest', dur:'—', dist:'—', zone:'—', hr:'—',
-    tip:'หลัง Interval ต้องพักดีๆ',
-    coach:'พักหลัง Interval ครับ ร่างกายกำลัง supercompensate',
-    blocks:[{ title:'Active Recovery', icon:'ti-heart', style:'dark', badge:'REST', sub:'Active',
-      steps:[{n:'1', main:'เดิน 20 นาที หรือยืดเหยียด', type:'Active Rest', icon:'ti-shoe', timer:0}] }],
-    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30 นาที',
-      steps:[
-        {n:'1', main:'วอร์มอัพ — ยืดเหยียด 5 นาที', type:'เตรียมกล้ามเนื้อ', icon:'ti-body-scan', timer:300},
-        {n:'2', main:'เวทเทรนนิ่ง 20 นาที', type:'Full body · น้ำหนักปานกลาง', icon:'ti-barbell', timer:1200},
-        {n:'3', main:'คูลดาวน์ยืดเหยียด 5 นาที', type:'ลดความตึงกล้ามเนื้อ', icon:'ti-heart', timer:300}
-      ]}
-  },
-  { w:2, d:'ศุกร์', name:'Easy Run', type:'easy', dur:'35 นาที', dist:'5 กม.', zone:'Zone 2', hr:'65–75%',
-    tip:'หลัง Interval วิ่งเบาช่วยฟื้นฟูดีมาก',
-    coach:'วิ่งเบาๆ ให้ขากลับมาสดครับ',
-    blocks:[
-      { title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
-        steps:[{n:'1', main:'เดินเร็ว 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] },
-      { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'25 นาที',
-        steps:[{n:'2', main:'วิ่งเบา 25 นาที', type:'Zone 2', icon:'ti-run', timer:1500}] },
-      { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
-        steps:[{n:'3', main:'เดินช้า 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] }
-    ]
-  },
-  { w:2, d:'เสาร์', name:'Long Run', type:'mod', dur:'50 นาที', dist:'7–8 กม.', zone:'Zone 2', hr:'65–75%',
-    tip:'Long Run เพิ่มขึ้น 10 นาที เน้นเวลาและ consistency',
-    coach:'Long Run สัปดาห์ 2 เพิ่มระยะแล้ว ทำได้แน่นอน!',
-    blocks:[
-      { title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
-        steps:[{n:'1', main:'เดินเร็ว 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] },
-      { title:'Long Run', icon:'ti-run', style:'dark', badge:'LONG', sub:'40–45 นาที',
-        steps:[{n:'2', main:'วิ่งเบายาว 40–45 นาที', type:'Zone 2', icon:'ti-run', timer:2400}] },
-      { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
-        steps:[{n:'3', main:'เดินช้า 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] }
-    ]
-  },
-  { w:2, d:'อาทิตย์', name:'พักผ่อน', type:'rest', dur:'—', dist:'—', zone:'—', hr:'—',
-    tip:'พักสมบูรณ์ก่อนสัปดาห์หนักขึ้น',
-    coach:'สัปดาห์ 2 เสร็จแล้ว! ยอดเยี่ยมมากครับ',
-    blocks:[{ title:'พักผ่อน', icon:'ti-moon', style:'dark', badge:'REST', sub:'Full Rest',
-      steps:[{n:'1', main:'พักเต็มที่', type:'Recovery', icon:'ti-moon', timer:0}] }],
-    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30 นาที',
-      steps:[
-        {n:'1', main:'วอร์มอัพ — ยืดเหยียด 5 นาที', type:'เตรียมกล้ามเนื้อ', icon:'ti-body-scan', timer:300},
-        {n:'2', main:'เวทเทรนนิ่ง 20 นาที', type:'Full body · น้ำหนักปานกลาง', icon:'ti-barbell', timer:1200},
-        {n:'3', main:'คูลดาวน์ยืดเหยียด 5 นาที', type:'ลดความตึงกล้ามเนื้อ', icon:'ti-heart', timer:300}
-      ]}
-  },
-
-  // Week 3
-  { w:3, d:'จันทร์', name:'Easy Run', type:'easy', dur:'30 นาที', dist:'4–5 กม.', zone:'Zone 2', hr:'65–75%',
-    tip:'เริ่มสัปดาห์ด้วย easy run เพื่อเตรียมร่างกายสำหรับ interval หนักๆ',
-    coach:'Easy run เพื่อเตรียมพร้อมสัปดาห์หนักที่สุดจนถึงตอนนี้',
-    blocks:[
-      { title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
-        steps:[{n:'1', main:'เดินเร็ว 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] },
-      { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'20 นาที',
-        steps:[{n:'2', main:'วิ่งเบา 20 นาที', type:'Zone 2', icon:'ti-run', timer:1200}] },
-      { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
-        steps:[{n:'3', main:'เดินช้า 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] }
-    ]
-  },
-  { w:3, d:'อังคาร', name:'Interval 1 นาที', type:'hard', dur:'45 นาที', dist:'6 กม.', zone:'Zone 5', hr:'95–100%',
-    tip:'นี่คือ King of VO2max Training! วิ่ง 1 นาทีเร็วสุด พัก 1 นาที ทำ 8–10 รอบ',
-    coach:'1-1 Interval คือสูตรที่ดีที่สุดสำหรับ VO2max ทำให้ครบทุกรอบ!',
-    blocks:[
-      { title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'EASY', sub:'10 นาที',
-        steps:[{n:'1', main:'วิ่งเบา 10 นาที', type:'Zone 2', icon:'ti-run', timer:600}] },
-      { title:'1:1 Interval × 8–10 รอบ', icon:'ti-bolt', style:'lime', badge:'VO2MAX', sub:'16–20 นาที',
-        steps:[
-          {n:'2a', main:'วิ่ง 1 นาที เร็วสุดๆ (sprint)', type:'Zone 5 · 95–100% max HR', icon:'ti-run', timer:60},
-          {n:'2b', main:'พักเดิน 1 นาที', type:'Active Rest · ลดหัวใจ', icon:'ti-shoe', timer:60}
-        ]},
-      { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'10 นาที',
-        steps:[{n:'3', main:'วิ่งเบา/เดิน 10 นาที', type:'Zone 1', icon:'ti-shoe', timer:600}] }
-    ]
-  },
-  { w:3, d:'พุธ', name:'Easy Recovery', type:'easy', dur:'25 นาที', dist:'3–4 กม.', zone:'Zone 1', hr:'60–65%',
-    tip:'Recovery run ช้ามากๆ หลัง Interval หนัก อย่าสนใจความเร็วเลย',
-    coach:'ช้าๆ วันนี้ครับ ร่างกายกำลังซ่อมแซม',
-    blocks:[
-      { title:'Recovery Run', icon:'ti-run', style:'dark', badge:'SLOW', sub:'25 นาที',
-        steps:[{n:'1', main:'วิ่งช้ามากๆ 25 นาที', type:'Zone 1 · ช้ากว่า easy ปกติ', icon:'ti-run', timer:1500}] }
-    ]
-  },
-  { w:3, d:'พฤหัส', name:'Tempo Run', type:'hard', dur:'35 นาที', dist:'5 กม.', zone:'Zone 4', hr:'85–90%',
-    tip:'Tempo ยาวขึ้น เป็น 20 นาที รักษาจังหวะให้สม่ำเสมอตลอด',
-    coach:'Tempo 20 นาที ท้าทายขึ้น แต่คุณพร้อมแล้ว!',
-    blocks:[
-      { title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'EASY', sub:'5 นาที',
-        steps:[{n:'1', main:'วิ่งเบา 5 นาที', type:'Zone 2', icon:'ti-run', timer:300}] },
-      { title:'Tempo Run', icon:'ti-bolt', style:'lime', badge:'TEMPO', sub:'20 นาที',
-        steps:[{n:'2', main:'Tempo 20 นาที ต่อเนื่อง', type:'Zone 4 · หนักแต่ทนได้', icon:'ti-run', timer:1200}] },
-      { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'10 นาที',
-        steps:[{n:'3', main:'วิ่งเบา/เดิน 10 นาที', type:'Zone 1', icon:'ti-shoe', timer:600}] }
-    ]
-  },
-  { w:3, d:'ศุกร์', name:'พัก', type:'rest', dur:'—', dist:'—', zone:'—', hr:'—',
-    tip:'พักหลังจากสองวันหนักติดกัน',
-    coach:'พักจริงๆ วันนี้ครับ ไม่ต้องวิ่ง',
-    blocks:[{ title:'พักเต็มที่', icon:'ti-moon', style:'dark', badge:'REST', sub:'Full Rest',
-      steps:[{n:'1', main:'พักและนอนหลับ', type:'Recovery', icon:'ti-moon', timer:0}] }],
-    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30 นาที',
-      steps:[
-        {n:'1', main:'วอร์มอัพ — ยืดเหยียด 5 นาที', type:'เตรียมกล้ามเนื้อ', icon:'ti-body-scan', timer:300},
-        {n:'2', main:'เวทเทรนนิ่ง 20 นาที', type:'Full body · น้ำหนักปานกลาง', icon:'ti-barbell', timer:1200},
-        {n:'3', main:'คูลดาวน์ยืดเหยียด 5 นาที', type:'ลดความตึงกล้ามเนื้อ', icon:'ti-heart', timer:300}
-      ]}
-  },
-  { w:3, d:'เสาร์', name:'Long Run', type:'mod', dur:'55 นาที', dist:'8–9 กม.', zone:'Zone 2', hr:'65–75%',
-    tip:'Long Run ยาวขึ้นอีก เน้น consistency ไม่ใช่ความเร็ว',
-    coach:'55 นาที! คุณกำลังพัฒนาอย่างดีมากครับ',
-    blocks:[
-      { title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
-        steps:[{n:'1', main:'เดินเร็ว 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] },
-      { title:'Long Run', icon:'ti-run', style:'dark', badge:'LONG', sub:'45–50 นาที',
-        steps:[{n:'2', main:'วิ่งเบายาว 45–50 นาที', type:'Zone 2 · ช้าและต่อเนื่อง', icon:'ti-run', timer:2700}] },
-      { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
-        steps:[{n:'3', main:'เดินช้า 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] }
-    ]
-  },
-  { w:3, d:'อาทิตย์', name:'พักผ่อน', type:'rest', dur:'—', dist:'—', zone:'—', hr:'—',
-    tip:'สัปดาห์ที่หนักที่สุดจนถึงตอนนี้ พักให้เต็มที่',
-    coach:'สัปดาห์ 3 เสร็จ! คุณทำสิ่งที่ยากมากได้สำเร็จ',
-    blocks:[{ title:'พักผ่อน', icon:'ti-moon', style:'dark', badge:'REST', sub:'Full Rest',
-      steps:[{n:'1', main:'พักเต็มที่', type:'Recovery', icon:'ti-moon', timer:0}] }],
-    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30 นาที',
-      steps:[
-        {n:'1', main:'วอร์มอัพ — ยืดเหยียด 5 นาที', type:'เตรียมกล้ามเนื้อ', icon:'ti-body-scan', timer:300},
-        {n:'2', main:'เวทเทรนนิ่ง 20 นาที', type:'Full body · น้ำหนักปานกลาง', icon:'ti-barbell', timer:1200},
-        {n:'3', main:'คูลดาวน์ยืดเหยียด 5 นาที', type:'ลดความตึงกล้ามเนื้อ', icon:'ti-heart', timer:300}
-      ]}
-  },
-
-  // Week 4 – Deload
-  { w:4, d:'จันทร์', name:'Easy Run (สั้น)', type:'easy', dur:'25 นาที', dist:'3–4 กม.', zone:'Zone 2', hr:'60–70%',
-    tip:'สัปดาห์ Deload ลดภาระ 30–40% ร่างกายจะแข็งแกร่งขึ้นระหว่างพักนี้',
-    coach:'Deload week! ลดปริมาณ แต่รักษาคุณภาพ',
-    blocks:[
-      { title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
-        steps:[{n:'1', main:'เดินเร็ว 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] },
-      { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'15–20 นาที',
-        steps:[{n:'2', main:'วิ่งเบา 15–20 นาที', type:'Zone 2 · เบามากๆ', icon:'ti-run', timer:1050}] },
-      { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
-        steps:[{n:'3', main:'เดินช้า 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] }
-    ]
-  },
-  { w:4, d:'อังคาร', name:'พัก', type:'rest', dur:'—', dist:'—', zone:'—', hr:'—',
-    tip:'พักเต็มที่ Deload คือการลงทุนสำหรับอนาคต',
-    coach:'พักครับ นี่คือสัปดาห์ที่ร่างกายจะ supercompensate',
-    blocks:[{ title:'พักเต็มที่', icon:'ti-moon', style:'dark', badge:'REST', sub:'Full Rest',
-      steps:[{n:'1', main:'พักและฟื้นฟู', type:'Recovery', icon:'ti-moon', timer:0}] }],
-    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30 นาที',
-      steps:[
-        {n:'1', main:'วอร์มอัพ — ยืดเหยียด 5 นาที', type:'เตรียมกล้ามเนื้อ', icon:'ti-body-scan', timer:300},
-        {n:'2', main:'เวทเทรนนิ่ง 20 นาที', type:'Full body · น้ำหนักปานกลาง', icon:'ti-barbell', timer:1200},
-        {n:'3', main:'คูลดาวน์ยืดเหยียด 5 นาที', type:'ลดความตึงกล้ามเนื้อ', icon:'ti-heart', timer:300}
-      ]}
-  },
-  { w:4, d:'พุธ', name:'Easy Run', type:'easy', dur:'30 นาที', dist:'4 กม.', zone:'Zone 2', hr:'65–75%',
-    tip:'วิ่งสบายๆ ฟังร่างกายตัวเอง',
-    coach:'สบายๆ วันนี้ครับ',
-    blocks:[
-      { title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
-        steps:[{n:'1', main:'เดินเร็ว 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] },
-      { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'20 นาที',
-        steps:[{n:'2', main:'วิ่งเบา 20 นาที', type:'Zone 2', icon:'ti-run', timer:1200}] },
-      { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
-        steps:[{n:'3', main:'เดินช้า 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] }
-    ]
-  },
-  { w:4, d:'พฤหัส', name:'พัก', type:'rest', dur:'—', dist:'—', zone:'—', hr:'—',
-    tip:'โฟมโรลและนวดช่วยฟื้นฟูดีมาก',
-    coach:'ยืดเหยียดและนวดครับ',
-    blocks:[{ title:'Recovery', icon:'ti-heart', style:'dark', badge:'REST', sub:'Active',
-      steps:[{n:'1', main:'โฟมโรล / นวด 15 นาที', type:'Recovery', icon:'ti-massage', timer:0}] }],
-    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30 นาที',
-      steps:[
-        {n:'1', main:'วอร์มอัพ — ยืดเหยียด 5 นาที', type:'เตรียมกล้ามเนื้อ', icon:'ti-body-scan', timer:300},
-        {n:'2', main:'เวทเทรนนิ่ง 20 นาที', type:'Full body · น้ำหนักปานกลาง', icon:'ti-barbell', timer:1200},
-        {n:'3', main:'คูลดาวน์ยืดเหยียด 5 นาที', type:'ลดความตึงกล้ามเนื้อ', icon:'ti-heart', timer:300}
-      ]}
-  },
-  { w:4, d:'ศุกร์', name:'Easy Run', type:'easy', dur:'30 นาที', dist:'4 กม.', zone:'Zone 2', hr:'65–75%',
-    tip:'เตรียมพร้อมสำหรับช่วงเข้มข้นหลัง Deload',
-    coach:'ร่างกายกำลังพร้อมสำหรับสัปดาห์หน้า!',
-    blocks:[
-      { title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
-        steps:[{n:'1', main:'เดินเร็ว 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] },
-      { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'20 นาที',
-        steps:[{n:'2', main:'วิ่งเบา 20 นาที', type:'Zone 2', icon:'ti-run', timer:1200}] },
-      { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
-        steps:[{n:'3', main:'เดินช้า 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] }
-    ]
-  },
-  { w:4, d:'เสาร์', name:'Long Run (สั้นลง)', type:'mod', dur:'40 นาที', dist:'6 กม.', zone:'Zone 2', hr:'65–75%',
-    tip:'Long Run Deload สั้นลง แต่รักษาจังหวะ',
-    coach:'Deload Long Run สบายๆ ครับ',
-    blocks:[
-      { title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
-        steps:[{n:'1', main:'เดินเร็ว 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] },
-      { title:'Long Run', icon:'ti-run', style:'dark', badge:'LONG', sub:'30 นาที',
-        steps:[{n:'2', main:'วิ่งเบา 30 นาที', type:'Zone 2', icon:'ti-run', timer:1800}] },
-      { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
-        steps:[{n:'3', main:'เดินช้า 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] }
-    ]
-  },
-  { w:4, d:'อาทิตย์', name:'พักผ่อน', type:'rest', dur:'—', dist:'—', zone:'—', hr:'—',
-    tip:'Deload สัปดาห์เสร็จแล้ว พักเต็มที่ก่อนช่วงหนักจริงๆ',
-    coach:'สัปดาห์ 4 เสร็จ! ครึ่งทางแล้วครับ 💪',
-    blocks:[{ title:'พักผ่อน', icon:'ti-moon', style:'dark', badge:'REST', sub:'Full Rest',
-      steps:[{n:'1', main:'พักเต็มที่', type:'Recovery', icon:'ti-moon', timer:0}] }],
-    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30 นาที',
-      steps:[
-        {n:'1', main:'วอร์มอัพ — ยืดเหยียด 5 นาที', type:'เตรียมกล้ามเนื้อ', icon:'ti-body-scan', timer:300},
-        {n:'2', main:'เวทเทรนนิ่ง 20 นาที', type:'Full body · น้ำหนักปานกลาง', icon:'ti-barbell', timer:1200},
-        {n:'3', main:'คูลดาวน์ยืดเหยียด 5 นาที', type:'ลดความตึงกล้ามเนื้อ', icon:'ti-heart', timer:300}
-      ]}
-  },
-
-  // Week 5
-  { w:5, d:'จันทร์', name:'Easy Run', type:'easy', dur:'35 นาที', dist:'5 กม.', zone:'Zone 2', hr:'65–75%',
-    tip:'กลับมาหลัง Deload ร่างกายแข็งแกร่งขึ้น!',
-    coach:'ยินดีต้อนรับกลับ! สัปดาห์นี้เข้มข้นขึ้นอีก',
-    blocks:[
-      { title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
-        steps:[{n:'1', main:'เดินเร็ว 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] },
-      { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'25 นาที',
-        steps:[{n:'2', main:'วิ่งเบา 25 นาที', type:'Zone 2', icon:'ti-run', timer:1500}] },
-      { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
-        steps:[{n:'3', main:'เดินช้า 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] }
-    ]
-  },
-  { w:5, d:'อังคาร', name:'Interval 800m', type:'hard', dur:'50 นาที', dist:'7 กม.', zone:'Zone 5', hr:'90–95%',
-    tip:'800m Interval ยาวกว่า 400m แต่ยังเร็วมาก ช่วย VO2max ได้ดีมาก',
-    coach:'800m Interval ท้าทายขึ้น แต่คุณแข็งแกร่งพอแล้ว!',
-    blocks:[
-      { title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'EASY', sub:'10 นาที',
-        steps:[{n:'1', main:'วิ่งเบา 10 นาที', type:'Zone 2', icon:'ti-run', timer:600}] },
-      { title:'800m Interval × 4–5 รอบ', icon:'ti-bolt', style:'lime', badge:'INTERVAL', sub:'800m × 4–5',
-        steps:[
-          {n:'2a', main:'วิ่ง 800m เร็วมาก', type:'Zone 5 · 90–95% max HR', icon:'ti-run', timer:240},
-          {n:'2b', main:'พักเดิน 2–3 นาที', type:'Active Rest', icon:'ti-shoe', timer:150}
-        ]},
-      { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'10 นาที',
-        steps:[{n:'3', main:'วิ่งเบา/เดิน 10 นาที', type:'Zone 1', icon:'ti-shoe', timer:600}] }
-    ]
-  },
-  { w:5, d:'พุธ', name:'Easy Recovery', type:'easy', dur:'30 นาที', dist:'4 กม.', zone:'Zone 1', hr:'60–65%',
-    tip:'Recovery run ช้ามากๆ ห้ามหนักวันนี้',
-    coach:'ช้าๆ ครับ ร่างกายกำลังฟื้นฟู',
-    blocks:[
-      { title:'Recovery Run', icon:'ti-run', style:'dark', badge:'SLOW', sub:'30 นาที',
-        steps:[{n:'1', main:'วิ่งช้ามากๆ 30 นาที', type:'Zone 1 · ห้ามหักโหม', icon:'ti-run', timer:1800}] }
-    ]
-  },
-  { w:5, d:'พฤหัส', name:'Tempo Run', type:'hard', dur:'40 นาที', dist:'6 กม.', zone:'Zone 4', hr:'85–90%',
-    tip:'Tempo 25 นาที รักษาจังหวะสม่ำเสมอตลอด',
-    coach:'Tempo 25 นาที! เพิ่มขึ้น 5 นาทีจากสัปดาห์ก่อน',
-    blocks:[
-      { title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'EASY', sub:'5 นาที',
-        steps:[{n:'1', main:'วิ่งเบา 5 นาที', type:'Zone 2', icon:'ti-run', timer:300}] },
-      { title:'Tempo Run', icon:'ti-bolt', style:'lime', badge:'TEMPO', sub:'25 นาที',
-        steps:[{n:'2', main:'Tempo 25 นาที ต่อเนื่อง', type:'Zone 4 · หนักแต่ทนได้', icon:'ti-run', timer:1500}] },
-      { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'10 นาที',
-        steps:[{n:'3', main:'วิ่งเบา/เดิน 10 นาที', type:'Zone 1', icon:'ti-shoe', timer:600}] }
-    ]
-  },
-  { w:5, d:'ศุกร์', name:'พัก', type:'rest', dur:'—', dist:'—', zone:'—', hr:'—',
-    tip:'พักหลัง 2 วันหนัก เตรียมพร้อม Long Run',
-    coach:'พักดีๆ ครับ Long Run พรุ่งนี้',
-    blocks:[{ title:'พักเต็มที่', icon:'ti-moon', style:'dark', badge:'REST', sub:'Full Rest',
-      steps:[{n:'1', main:'พักและเตรียม Long Run', type:'Recovery', icon:'ti-moon', timer:0}] }],
-    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30 นาที',
-      steps:[
-        {n:'1', main:'วอร์มอัพ — ยืดเหยียด 5 นาที', type:'เตรียมกล้ามเนื้อ', icon:'ti-body-scan', timer:300},
-        {n:'2', main:'เวทเทรนนิ่ง 20 นาที', type:'Full body · น้ำหนักปานกลาง', icon:'ti-barbell', timer:1200},
-        {n:'3', main:'คูลดาวน์ยืดเหยียด 5 นาที', type:'ลดความตึงกล้ามเนื้อ', icon:'ti-heart', timer:300}
-      ]}
-  },
-  { w:5, d:'เสาร์', name:'Long Run', type:'mod', dur:'60 นาที', dist:'9–10 กม.', zone:'Zone 2', hr:'65–75%',
-    tip:'Long Run 1 ชั่วโมง! Milestone ใหญ่ เน้น consistency',
-    coach:'1 ชั่วโมง! คุณกำลังกลายเป็นนักวิ่งจริงๆ 🏃',
-    blocks:[
-      { title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
-        steps:[{n:'1', main:'เดินเร็ว 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] },
-      { title:'Long Run', icon:'ti-run', style:'dark', badge:'LONG', sub:'50–55 นาที',
-        steps:[{n:'2', main:'วิ่งเบายาว 50–55 นาที', type:'Zone 2 · ช้าและต่อเนื่อง', icon:'ti-run', timer:3150},
-               {n:'3', main:'ดื่มน้ำทุก 15 นาที', type:'Hydration', icon:'ti-droplet', timer:0}] },
-      { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
-        steps:[{n:'4', main:'เดินช้า 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] }
-    ]
-  },
-  { w:5, d:'อาทิตย์', name:'พักผ่อน', type:'rest', dur:'—', dist:'—', zone:'—', hr:'—',
-    tip:'พักหลัง Long Run 1 ชั่วโมง ร่างกายต้องการ',
-    coach:'สัปดาห์ 5 เสร็จ! ยอดเยี่ยมมากครับ',
-    blocks:[{ title:'พักผ่อน', icon:'ti-moon', style:'dark', badge:'REST', sub:'Full Rest',
-      steps:[{n:'1', main:'พักเต็มที่', type:'Recovery', icon:'ti-moon', timer:0}] }],
-    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30 นาที',
-      steps:[
-        {n:'1', main:'วอร์มอัพ — ยืดเหยียด 5 นาที', type:'เตรียมกล้ามเนื้อ', icon:'ti-body-scan', timer:300},
-        {n:'2', main:'เวทเทรนนิ่ง 20 นาที', type:'Full body · น้ำหนักปานกลาง', icon:'ti-barbell', timer:1200},
-        {n:'3', main:'คูลดาวน์ยืดเหยียด 5 นาที', type:'ลดความตึงกล้ามเนื้อ', icon:'ti-heart', timer:300}
-      ]}
-  },
-
-  // Week 6 – Peak
-  { w:6, d:'จันทร์', name:'Easy Run', type:'easy', dur:'35 นาที', dist:'5 กม.', zone:'Zone 2', hr:'65–75%',
-    tip:'สัปดาห์ Peak เริ่มด้วย easy เพื่อเก็บแรงสำหรับ interval หนักๆ',
-    coach:'Peak week เริ่มแล้ว! นี่คือสัปดาห์สำคัญที่สุด',
-    blocks:[
-      { title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
-        steps:[{n:'1', main:'เดินเร็ว 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] },
-      { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'25 นาที',
-        steps:[{n:'2', main:'วิ่งเบา 25 นาที', type:'Zone 2', icon:'ti-run', timer:1500}] },
-      { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
-        steps:[{n:'3', main:'เดินช้า 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] }
-    ]
-  },
-  { w:6, d:'อังคาร', name:'Interval 1 min MAX', type:'hard', dur:'50 นาที', dist:'7 กม.', zone:'Zone 5', hr:'100%',
-    tip:'Peak Interval! 10–12 รอบ เต็มสุดๆ ทุกรอบ นี่คือวันที่สำคัญที่สุดของโปรแกรม',
-    coach:'เต็มสุดๆ ทุกรอบ! นี่คือวันที่จะทำให้ VO2max ของคุณพุ่ง!',
-    blocks:[
-      { title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'EASY', sub:'10 นาที',
-        steps:[{n:'1', main:'วิ่งเบา 10 นาที', type:'Zone 2', icon:'ti-run', timer:600}] },
-      { title:'1:1 Interval × 10–12 รอบ', icon:'ti-bolt', style:'lime', badge:'PEAK', sub:'20–24 นาที',
-        steps:[
-          {n:'2a', main:'วิ่ง 1 นาที FULL SPRINT', type:'Zone 5 · 100% max HR · สุดแรง!', icon:'ti-run', timer:60},
-          {n:'2b', main:'พักเดิน 1 นาที', type:'Active Rest', icon:'ti-shoe', timer:60}
-        ]},
-      { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'10 นาที',
-        steps:[{n:'3', main:'วิ่งเบา/เดิน 10 นาที', type:'Zone 1', icon:'ti-shoe', timer:600}] }
-    ]
-  },
-  { w:6, d:'พุธ', name:'Easy Recovery', type:'easy', dur:'30 นาที', dist:'4 กม.', zone:'Zone 1', hr:'60–65%',
-    tip:'Recovery run ช้ามากๆ หลัง peak interval',
-    coach:'ช้ามากๆ ครับ ร่างกายกำลังซ่อมแซมหนักๆ',
-    blocks:[
-      { title:'Recovery Run', icon:'ti-run', style:'dark', badge:'SLOW', sub:'30 นาที',
-        steps:[{n:'1', main:'วิ่งช้ามากๆ 30 นาที', type:'Zone 1 · ห้ามหักโหม', icon:'ti-run', timer:1800}] }
-    ]
-  },
-  { w:6, d:'พฤหัส', name:'Tempo + Hills', type:'hard', dur:'45 นาที', dist:'6 กม.', zone:'Zone 4', hr:'85–90%',
-    tip:'เพิ่มการวิ่งขึ้นเขา/ทางชัน ช่วยสร้างความแข็งแกร่งและ VO2max',
-    coach:'Tempo + Hills วันนี้! ถ้าไม่มีเขา ใช้ลู่วิ่ง incline แทน',
-    blocks:[
-      { title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'EASY', sub:'5 นาที',
-        steps:[{n:'1', main:'วิ่งเบา 5 นาที', type:'Zone 2', icon:'ti-run', timer:300}] },
-      { title:'Tempo Run', icon:'ti-bolt', style:'lime', badge:'TEMPO', sub:'20 นาที',
-        steps:[{n:'2', main:'Tempo 20 นาที ต่อเนื่อง', type:'Zone 4', icon:'ti-run', timer:1200}] },
-      { title:'Hills / Incline', icon:'ti-trending-up', style:'lime', badge:'HILLS', sub:'5 นาที',
-        steps:[{n:'3', main:'วิ่งขึ้นเขา/ทางชัน 5 นาที', type:'Zone 4–5 · ความชัน 5–8%', icon:'ti-mountain', timer:300}] },
-      { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'10 นาที',
-        steps:[{n:'4', main:'วิ่งเบา/เดิน 10 นาที', type:'Zone 1', icon:'ti-shoe', timer:600}] }
-    ]
-  },
-  { w:6, d:'ศุกร์', name:'พัก', type:'rest', dur:'—', dist:'—', zone:'—', hr:'—',
-    tip:'พักเต็มที่ก่อน Long Run ยาวที่สุดในโปรแกรม',
-    coach:'พักดีๆ Long Run พรุ่งนี้ยาวที่สุด!',
-    blocks:[{ title:'พักเต็มที่', icon:'ti-moon', style:'dark', badge:'REST', sub:'Full Rest',
-      steps:[{n:'1', main:'พักและเตรียม Long Run', type:'Recovery', icon:'ti-moon', timer:0}] }],
-    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30 นาที',
-      steps:[
-        {n:'1', main:'วอร์มอัพ — ยืดเหยียด 5 นาที', type:'เตรียมกล้ามเนื้อ', icon:'ti-body-scan', timer:300},
-        {n:'2', main:'เวทเทรนนิ่ง 20 นาที', type:'Full body · น้ำหนักปานกลาง', icon:'ti-barbell', timer:1200},
-        {n:'3', main:'คูลดาวน์ยืดเหยียด 5 นาที', type:'ลดความตึงกล้ามเนื้อ', icon:'ti-heart', timer:300}
-      ]}
-  },
-  { w:6, d:'เสาร์', name:'Long Run (Peak)', type:'mod', dur:'65–70 นาที', dist:'10–11 กม.', zone:'Zone 2', hr:'65–75%',
-    tip:'Long Run ยาวที่สุดในโปรแกรม! เน้นวิ่งต่อเนื่อง เดิน 2–3 นาทีได้ถ้าเหนื่อยมาก',
-    coach:'Peak Long Run! ถ้าทำได้ คุณพร้อมสำหรับ VO2max ที่ดีขึ้นมากแล้ว! 🔥',
-    blocks:[
-      { title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
-        steps:[{n:'1', main:'เดินเร็ว 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] },
-      { title:'Peak Long Run', icon:'ti-run', style:'dark', badge:'PEAK', sub:'60–65 นาที',
-        steps:[{n:'2', main:'วิ่งเบายาว 60–65 นาที', type:'Zone 2 · ยาวที่สุดในโปรแกรม', icon:'ti-run', timer:3750},
-               {n:'3', main:'ดื่มน้ำทุก 15 นาที', type:'Hydration', icon:'ti-droplet', timer:0}] },
-      { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
-        steps:[{n:'4', main:'เดินช้า 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] }
-    ]
-  },
-  { w:6, d:'อาทิตย์', name:'พักผ่อน', type:'rest', dur:'—', dist:'—', zone:'—', hr:'—',
-    tip:'Peak week เสร็จแล้ว! คุณทำสิ่งที่ยากที่สุดสำเร็จแล้ว',
-    coach:'สัปดาห์ 6 เสร็จ! คุณคือนักวิ่งตัวจริงแล้วครับ 🏆',
-    blocks:[{ title:'พักผ่อนสมบูรณ์', icon:'ti-moon', style:'dark', badge:'REST', sub:'Full Rest',
-      steps:[{n:'1', main:'พักและฉลอง Peak Week', type:'Recovery', icon:'ti-moon', timer:0}] }],
-    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30 นาที',
-      steps:[
-        {n:'1', main:'วอร์มอัพ — ยืดเหยียด 5 นาที', type:'เตรียมกล้ามเนื้อ', icon:'ti-body-scan', timer:300},
-        {n:'2', main:'เวทเทรนนิ่ง 20 นาที', type:'Full body · น้ำหนักปานกลาง', icon:'ti-barbell', timer:1200},
-        {n:'3', main:'คูลดาวน์ยืดเหยียด 5 นาที', type:'ลดความตึงกล้ามเนื้อ', icon:'ti-heart', timer:300}
-      ]}
-  },
-
-  // Week 7 – Deload 2
-  { w:7, d:'จันทร์', name:'Easy Run', type:'easy', dur:'25 นาที', dist:'3–4 กม.', zone:'Zone 2', hr:'60–70%',
-    tip:'Deload ก่อน Race Week ลดภาระ ร่างกายจะถึง Supercompensation peak ในสัปดาห์หน้า',
-    coach:'Deload ครั้งสุดท้าย เพื่อ peak ในสัปดาห์ 8!',
-    blocks:[
-      { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'25 นาที',
-        steps:[{n:'1', main:'วิ่งเบา 25 นาที เบามากๆ', type:'Zone 2', icon:'ti-run', timer:1500}] }
-    ]
-  },
-  { w:7, d:'อังคาร', name:'พัก', type:'rest', dur:'—', dist:'—', zone:'—', hr:'—',
-    tip:'พักเต็มที่',
-    coach:'พักครับ',
-    blocks:[{ title:'พักเต็มที่', icon:'ti-moon', style:'dark', badge:'REST', sub:'Full Rest',
-      steps:[{n:'1', main:'พักเต็มที่', type:'Recovery', icon:'ti-moon', timer:0}] }],
-    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30 นาที',
-      steps:[
-        {n:'1', main:'วอร์มอัพ — ยืดเหยียด 5 นาที', type:'เตรียมกล้ามเนื้อ', icon:'ti-body-scan', timer:300},
-        {n:'2', main:'เวทเทรนนิ่ง 20 นาที', type:'Full body · น้ำหนักปานกลาง', icon:'ti-barbell', timer:1200},
-        {n:'3', main:'คูลดาวน์ยืดเหยียด 5 นาที', type:'ลดความตึงกล้ามเนื้อ', icon:'ti-heart', timer:300}
-      ]}
-  },
-  { w:7, d:'พุธ', name:'Interval เบา', type:'hard', dur:'35 นาที', dist:'5 กม.', zone:'Zone 5', hr:'90–95%',
-    tip:'Interval แต่ลดรอบเหลือ 5 รอบ รักษาความเร็วแต่ลดปริมาณ',
-    coach:'5 รอบพอครับ รักษา quality ไว้',
-    blocks:[
-      { title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'EASY', sub:'10 นาที',
-        steps:[{n:'1', main:'วิ่งเบา 10 นาที', type:'Zone 2', icon:'ti-run', timer:600}] },
-      { title:'Interval × 5 รอบ', icon:'ti-bolt', style:'lime', badge:'INTERVAL', sub:'10 นาที',
-        steps:[
-          {n:'2a', main:'วิ่ง 1 นาที เร็วสุด', type:'Zone 5 · 90–95%', icon:'ti-run', timer:60},
-          {n:'2b', main:'พักเดิน 2 นาที', type:'Active Rest', icon:'ti-shoe', timer:120}
-        ]},
-      { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'10 นาที',
-        steps:[{n:'3', main:'วิ่งเบา/เดิน 10 นาที', type:'Zone 1', icon:'ti-shoe', timer:600}] }
-    ]
-  },
-  { w:7, d:'พฤหัส', name:'พัก', type:'rest', dur:'—', dist:'—', zone:'—', hr:'—',
-    tip:'ยืดเหยียดเบาๆ',
-    coach:'ยืดเหยียดครับ',
-    blocks:[{ title:'Active Recovery', icon:'ti-heart', style:'dark', badge:'REST', sub:'Light',
-      steps:[{n:'1', main:'ยืดเหยียดเบา 15 นาที', type:'Stretching', icon:'ti-body-scan', timer:0}] }],
-    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30 นาที',
-      steps:[
-        {n:'1', main:'วอร์มอัพ — ยืดเหยียด 5 นาที', type:'เตรียมกล้ามเนื้อ', icon:'ti-body-scan', timer:300},
-        {n:'2', main:'เวทเทรนนิ่ง 20 นาที', type:'Full body · น้ำหนักปานกลาง', icon:'ti-barbell', timer:1200},
-        {n:'3', main:'คูลดาวน์ยืดเหยียด 5 นาที', type:'ลดความตึงกล้ามเนื้อ', icon:'ti-heart', timer:300}
-      ]}
-  },
-  { w:7, d:'ศุกร์', name:'Easy Run', type:'easy', dur:'30 นาที', dist:'4 กม.', zone:'Zone 2', hr:'65–75%',
-    tip:'เตรียมร่างกายสำหรับ Race Week สัปดาห์หน้า',
-    coach:'เกือบถึงแล้ว! สัปดาห์หน้าคือ Race Week!',
-    blocks:[
-      { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'30 นาที',
-        steps:[{n:'1', main:'วิ่งเบา 30 นาที', type:'Zone 2', icon:'ti-run', timer:1800}] }
-    ]
-  },
-  { w:7, d:'เสาร์', name:'Long Run (ปานกลาง)', type:'mod', dur:'45 นาที', dist:'7 กม.', zone:'Zone 2', hr:'65–75%',
-    tip:'Long Run ปานกลาง ไม่ต้องหักโหม เก็บแรงสำหรับ Race Week',
-    coach:'สบายๆ Long Run เพื่อเตรียมพร้อม',
-    blocks:[
-      { title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'WALK', sub:'5 นาที',
-        steps:[{n:'1', main:'เดินเร็ว 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] },
-      { title:'Long Run', icon:'ti-run', style:'dark', badge:'LONG', sub:'35–40 นาที',
-        steps:[{n:'2', main:'วิ่งเบา 35–40 นาที', type:'Zone 2', icon:'ti-run', timer:2250}] },
-      { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'5 นาที',
-        steps:[{n:'3', main:'เดินช้า 5 นาที', type:'เดิน', icon:'ti-shoe', timer:300}] }
-    ]
-  },
-  { w:7, d:'อาทิตย์', name:'พักผ่อน', type:'rest', dur:'—', dist:'—', zone:'—', hr:'—',
-    tip:'พักผ่อนเต็มที่ก่อน Race Week สัปดาห์สุดท้าย',
-    coach:'สัปดาห์ 7 เสร็จ! เหลืออีกสัปดาห์เดียว!',
-    blocks:[{ title:'พักผ่อน', icon:'ti-moon', style:'dark', badge:'REST', sub:'Full Rest',
-      steps:[{n:'1', main:'พักเต็มที่', type:'Recovery', icon:'ti-moon', timer:0}] }],
-    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30 นาที',
-      steps:[
-        {n:'1', main:'วอร์มอัพ — ยืดเหยียด 5 นาที', type:'เตรียมกล้ามเนื้อ', icon:'ti-body-scan', timer:300},
-        {n:'2', main:'เวทเทรนนิ่ง 20 นาที', type:'Full body · น้ำหนักปานกลาง', icon:'ti-barbell', timer:1200},
-        {n:'3', main:'คูลดาวน์ยืดเหยียด 5 นาที', type:'ลดความตึงกล้ามเนื้อ', icon:'ti-heart', timer:300}
-      ]}
-  },
-
-  // Week 8 – Race Week
-  { w:8, d:'จันทร์', name:'Easy Run', type:'easy', dur:'25 นาที', dist:'3–4 กม.', zone:'Zone 2', hr:'60–70%',
-    tip:'Race Week! วิ่งเบามากๆ เก็บแรงสำหรับ Time Trial วันเสาร์',
-    coach:'Race Week เริ่มแล้ว! เบาๆ ครับ เก็บแรงไว้',
-    blocks:[
-      { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'25 นาที',
-        steps:[{n:'1', main:'วิ่งเบามากๆ 25 นาที', type:'Zone 2 · เก็บแรง', icon:'ti-run', timer:1500}] }
-    ]
-  },
-  { w:8, d:'อังคาร', name:'พัก', type:'rest', dur:'—', dist:'—', zone:'—', hr:'—',
-    tip:'พักเต็มที่ก่อน Time Trial',
-    coach:'พักครับ Time Trial ใกล้แล้ว!',
-    blocks:[{ title:'พักเต็มที่', icon:'ti-moon', style:'dark', badge:'REST', sub:'Full Rest',
-      steps:[{n:'1', main:'พักเต็มที่', type:'Recovery', icon:'ti-moon', timer:0}] }],
-    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30 นาที',
-      steps:[
-        {n:'1', main:'วอร์มอัพ — ยืดเหยียด 5 นาที', type:'เตรียมกล้ามเนื้อ', icon:'ti-body-scan', timer:300},
-        {n:'2', main:'เวทเทรนนิ่ง 20 นาที', type:'Full body · น้ำหนักปานกลาง', icon:'ti-barbell', timer:1200},
-        {n:'3', main:'คูลดาวน์ยืดเหยียด 5 นาที', type:'ลดความตึงกล้ามเนื้อ', icon:'ti-heart', timer:300}
-      ]}
-  },
-  { w:8, d:'พุธ', name:'Strides', type:'hard', dur:'30 นาที', dist:'4 กม.', zone:'Zone 4–5', hr:'85–90%',
-    tip:'Strides = วิ่งเร็วสั้นๆ 20 วินาที เพื่อ "ปลุก" ขา ก่อน race',
-    coach:'Strides ช่วยให้ขาสดและพร้อมสำหรับ Time Trial!',
-    blocks:[
-      { title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'EASY', sub:'10 นาที',
-        steps:[{n:'1', main:'วิ่งเบา 10 นาที', type:'Zone 2', icon:'ti-run', timer:600}] },
-      { title:'Strides × 6 ครั้ง', icon:'ti-bolt', style:'lime', badge:'STRIDES', sub:'2 นาที',
-        steps:[
-          {n:'2a', main:'วิ่งเร็ว 20 วินาที (ไม่ใช่สุดแรง)', type:'Zone 4–5 · ประมาณ 85–90%', icon:'ti-run', timer:20},
-          {n:'2b', main:'พักเดิน 60 วินาที', type:'Rest', icon:'ti-shoe', timer:60}
-        ]},
-      { title:'คูลดาวน์', icon:'ti-snowflake', style:'dark', badge:'WALK', sub:'10 นาที',
-        steps:[{n:'3', main:'วิ่งเบา/เดิน 10 นาที', type:'Zone 1', icon:'ti-shoe', timer:600}] }
-    ]
-  },
-  { w:8, d:'พฤหัส', name:'พัก', type:'rest', dur:'—', dist:'—', zone:'—', hr:'—',
-    tip:'พักเต็มที่ก่อน Time Trial อีก 2 วัน',
-    coach:'พักดีๆ ครับ Time Trial วันเสาร์!',
-    blocks:[{ title:'พักเต็มที่', icon:'ti-moon', style:'dark', badge:'REST', sub:'Full Rest',
-      steps:[{n:'1', main:'พักและนอนหลับเยอะๆ', type:'Recovery', icon:'ti-moon', timer:0}] }],
-    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30 นาที',
-      steps:[
-        {n:'1', main:'วอร์มอัพ — ยืดเหยียด 5 นาที', type:'เตรียมกล้ามเนื้อ', icon:'ti-body-scan', timer:300},
-        {n:'2', main:'เวทเทรนนิ่ง 20 นาที', type:'Full body · น้ำหนักปานกลาง', icon:'ti-barbell', timer:1200},
-        {n:'3', main:'คูลดาวน์ยืดเหยียด 5 นาที', type:'ลดความตึงกล้ามเนื้อ', icon:'ti-heart', timer:300}
-      ]}
-  },
-  { w:8, d:'ศุกร์', name:'Easy Run สั้น', type:'easy', dur:'20 นาที', dist:'3 กม.', zone:'Zone 1', hr:'60–65%',
-    tip:'วิ่งสั้นมากๆ แค่ขยับขา ไม่ต้องเหนื่อยเลย เก็บแรงสำหรับพรุ่งนี้',
+  { w:21, d:'เสาร์', name:'Easy Run สั้น', type:'easy', dur:'15-20 นาที', dist:'2-3 กม.', zone:'HR 125-135', hr:'125-135',
+    tip:'วิ่งสั้นมากๆ แค่ขยับขา ไม่ต้องเหนื่อยเลย',
     coach:'สั้นๆ ครับ แค่ขยับขาให้ตื่นตัว',
-    blocks:[
-      { title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'20 นาที',
-        steps:[{n:'1', main:'วิ่งเบามากๆ 20 นาที', type:'Zone 1 · ช้ามาก', icon:'ti-run', timer:1200}] }
-    ]
+    realDate:'21/11/2026',
+    blocks:[{ title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'15 นาที',
+      steps:[{n:'1', main:'วิ่งเบามากๆ 15 นาที', type:'Zone 1', icon:'ti-run', timer:900}]}]
   },
-  { w:8, d:'เสาร์', name:'🏆 Time Trial 5km', type:'hard', dur:'5 กม.', dist:'5 กม.', zone:'Zone 5', hr:'100%',
-    tip:'วันนี้คือวันแห่งความภูมิใจ! วิ่ง 5km เร็วสุดที่ทำได้ เปรียบเทียบกับสัปดาห์แรก',
-    coach:'ถึงเวลาแล้ว! วิ่งสุดแรงและภาคภูมิใจในตัวเอง! คุณซ้อมมา 8 สัปดาห์แล้ว! 🔥',
-    blocks:[
-      { title:'วอร์มอัพ', icon:'ti-flame', style:'dark', badge:'EASY', sub:'10–15 นาที',
-        steps:[
-          {n:'1', main:'วิ่งเบา 10 นาที', type:'Zone 2', icon:'ti-run', timer:600},
-          {n:'2', main:'Strides 3 ครั้ง × 20 วินาที', type:'ปลุกขา', icon:'ti-bolt', timer:60}
-        ]},
-      { title:'🏆 5km Time Trial', icon:'ti-trophy', style:'lime', badge:'RACE!', sub:'5 กม. เต็มที่',
-        steps:[
-          {n:'3', main:'วิ่ง 5km เร็วสุดที่ทำได้!', type:'Zone 5 · 100% · สุดแรงตลอด', icon:'ti-run', timer:1500},
-          {n:'4', main:'จับเวลาและบันทึกผล', type:'PB Alert! 🎯', icon:'ti-clock', timer:0}
-        ]},
-      { title:'คูลดาวน์ + ฉลอง', icon:'ti-confetti', style:'dark', badge:'DONE!', sub:'ยินดีด้วย!',
-        steps:[
-          {n:'5', main:'เดินช้า 10 นาที', type:'ลด HR', icon:'ti-shoe', timer:600},
-          {n:'6', main:'ยืดเหยียด + ฉลองความสำเร็จ 🎉', type:'8 สัปดาห์เสร็จแล้ว!', icon:'ti-heart', timer:0}
-        ]}
-    ]
+  { w:21, d:'อาทิตย์', name:'พักผ่อนเต็มที่', type:'rest', dur:'—', dist:'—', zone:'—', hr:'—',
+    tip:'พักสมบูรณ์ ก่อนสัปดาห์สุดท้าย',
+    coach:'พักเต็มที่ก่อนสัปดาห์แข่งจริงครับ',
+    realDate:'22/11/2026',
+    blocks:[]
   },
-  { w:8, d:'อาทิตย์', name:'ฉลองและพัก!', type:'rest', dur:'—', dist:'—', zone:'—', hr:'—',
-    tip:'คุณทำสำเร็จแล้ว! 8 สัปดาห์ 32 เซสชั่น VO2max ของคุณพัฒนาขึ้นอย่างแน่นอน!',
-    coach:'ยินดีด้วยครับ!! คุณทำโปรแกรมสำเร็จ! 🏆🎉 VO2max ของคุณดีขึ้นแน่นอน!',
-    blocks:[{ title:'ฉลองและพัก!', icon:'ti-trophy', style:'lime', badge:'CHAMPION', sub:'8 สัปดาห์เสร็จแล้ว!',
-      steps:[
-        {n:'1', main:'ฉลองความสำเร็จ!', type:'8 สัปดาห์เสร็จสมบูรณ์', icon:'ti-trophy', timer:0},
-        {n:'2', main:'วางแผนโปรแกรมถัดไป', type:'ก้าวต่อไป', icon:'ti-arrow-right', timer:0}
-      ]}],
-    weightBlock: { title:'เวทเทรนนิ่ง', icon:'ti-barbell', style:'lime', badge:'WEIGHT', sub:'30 นาที',
-      steps:[
-        {n:'1', main:'วอร์มอัพ — ยืดเหยียด 5 นาที', type:'เตรียมกล้ามเนื้อ', icon:'ti-body-scan', timer:300},
-        {n:'2', main:'เวทเทรนนิ่ง 20 นาที', type:'Full body · น้ำหนักปานกลาง', icon:'ti-barbell', timer:1200},
-        {n:'3', main:'คูลดาวน์ยืดเหยียด 5 นาที', type:'ลดความตึงกล้ามเนื้อ', icon:'ti-heart', timer:300}
-      ]}
+  { w:21, d:'จันทร์', name:'พักผ่อน', type:'rest', dur:'—', dist:'—', zone:'—', hr:'—',
+    tip:'พักเตรียมร่างกายสำหรับสัปดาห์แข่งจริง',
+    coach:'อีก 6 วันแล้ว! เตรียมใจให้พร้อมครับ',
+    realDate:'23/11/2026',
+    blocks:[]
+  },
+  { w:22, d:'อังคาร', name:'Easy Run สั้นมาก', type:'easy', dur:'15 นาที', dist:'2 กม.', zone:'HR 120-130', hr:'120-130',
+    tip:'Race Week! วิ่งสั้นมากๆ เก็บแรงทั้งหมดสำหรับวันเสาร์',
+    coach:'Race Week มาแล้ว! เบาที่สุดเท่าที่จะทำได้ครับ',
+    realDate:'24/11/2026',
+    blocks:[{ title:'Easy Run', icon:'ti-run', style:'dark', badge:'EASY', sub:'15 นาที',
+      steps:[{n:'1', main:'วิ่งเบามากๆ 15 นาที', type:'Zone 1', icon:'ti-run', timer:900}]}]
+  },
+  { w:22, d:'พุธ', name:'พักผ่อน', type:'rest', dur:'—', dist:'—', zone:'—', hr:'—',
+    tip:'พักเต็มที่ ดื่มน้ำเยอะๆ กินคาร์บโหลด',
+    coach:'เริ่ม carb-load ได้แล้วครับ',
+    realDate:'25/11/2026',
+    blocks:[]
+  },
+  { w:22, d:'พฤหัส', name:'Shake-out Run', type:'easy', dur:'10 นาที', dist:'1-2 กม.', zone:'HR 115-125', hr:'115-125',
+    tip:'วิ่งสั้นมากๆ แค่ปลุกขา ไม่ต้องเหนื่อยเลย',
+    coach:'Shake-out run สั้นๆ ปลุกขาให้ตื่นตัว',
+    realDate:'26/11/2026',
+    blocks:[{ title:'Shake-out', icon:'ti-run', style:'dark', badge:'EASY', sub:'10 นาที',
+      steps:[{n:'1', main:'วิ่งช้ามากๆ 10 นาที', type:'Zone 1', icon:'ti-run', timer:600}]}]
+  },
+  { w:22, d:'ศุกร์', name:'พักผ่อนเต็มที่', type:'rest', dur:'—', dist:'—', zone:'—', hr:'—',
+    tip:'พักผ่อนให้เต็มที่ที่สุด นอนให้พอ เตรียมอุปกรณ์ให้พร้อม',
+    coach:'คืนนี้นอนให้เต็มที่ครับ พรุ่งนี้คือวันสำคัญ!',
+    realDate:'27/11/2026',
+    blocks:[]
+  },
+  { w:22, d:'เสาร์', name:'🏆 RACE DAY — ฮาล์ฟมาราธอน 21 กม.', type:'hard', dur:'21 กม.', dist:'21.1 กม.', zone:'Race Pace', hr:'150-175',
+    tip:'วันนี้คือวันที่คุณรอคอยมา 5 เดือน! เชื่อมั่นในการซ้อมที่ผ่านมา และสนุกกับทุกกิโลเมตร',
+    coach:'ถึงเวลาแล้วครับ! 5 เดือนแห่งความพยายามของคุณ วันนี้คือวันพิสูจน์ตัวเอง สู้ๆ ครับ! 🔥🏅',
+    realDate:'28/11/2026',
+    blocks:[{ title:'วอร์มอัพก่อนแข่ง', icon:'ti-flame', style:'dark', badge:'EASY', sub:'15-20 นาที',
+      steps:[{n:'1', main:'เดิน + วิ่งเบา 15 นาที', type:'เตรียมร่างกาย', icon:'ti-run', timer:900},
+        {n:'2', main:'Strides สั้นๆ 3 ครั้ง', type:'ปลุกกล้ามเนื้อ', icon:'ti-bolt', timer:60}]},
+    { title:'🏆 ฮาล์ฟมาราธอน 21.1 กม.', icon:'ti-trophy', style:'lime', badge:'RACE DAY!', sub:'เป้าหมายของคุณ',
+      steps:[{n:'3', main:'วิ่ง 21.1 กม. ตามจังหวะที่ซ้อมมา', type:'Race Pace · เชื่อมั่นในตัวเอง', icon:'ti-run', timer:7200},
+        {n:'4', main:'เติมน้ำ/เกลือแร่ทุกจุดบริการ', type:'Hydration Strategy', icon:'ti-droplet', timer:0},
+        {n:'5', main:'ข้ามเส้นชัย! 🎉', type:'ภูมิใจในตัวเอง', icon:'ti-flag', timer:0}]},
+    { title:'หลังเข้าเส้นชัย', icon:'ti-confetti', style:'dark', badge:'FINISHED!', sub:'ยินดีด้วย!',
+      steps:[{n:'6', main:'เดินคูลดาวน์ + ยืดเหยียด', type:'Recovery', icon:'ti-shoe', timer:600},
+        {n:'7', main:'ฉลองความสำเร็จ! คุณทำได้แล้ว 🏅', type:'5 เดือนแห่งความพยายาม', icon:'ti-trophy', timer:0}]}]
   }
 ];
 
-// Count running sessions (non-rest)
 const TOTAL_SESSIONS = PLANS.filter(p => p.type !== 'rest').length;
 
 // ══════════════════════════════════════════════
@@ -1806,7 +2576,7 @@ function renderRing() {
 
 function getCurrentWeek() {
   // find highest week with any activity or default 1
-  for(let w = 8; w >= 1; w--) {
+  for(let w = 22; w >= 1; w--) {
     const plans = PLANS.filter(p => p.w === w);
     if(plans.some(p => isDone(p))) return w;
   }
@@ -1816,7 +2586,7 @@ function getCurrentWeek() {
 function renderWeekChips() {
   const wrap = document.getElementById('weekChips');
   wrap.innerHTML = '';
-  for(let w = 1; w <= 8; w++) {
+  for(let w = 1; w <= 22; w++) {
     const plans = PLANS.filter(p => p.w === w);
     const doneCount = plans.filter(isDone).length;
     const hasProgress = doneCount > 0;
@@ -1858,8 +2628,8 @@ function renderSessions() {
           <div class="sc-name">${plan.name}</div>
           <div class="sc-meta">
             <span class="sc-pill ${ti.badgeCls}">${ti.label}</span>
-            ${isRest ? '<span class="sc-pill pill-weight"><i class="ti ti-barbell" style="font-size:10px;vertical-align:-1px"></i> เวทเทรนนิ่ง</span>' : ''}
-            ${!isRest ? `<span class="sc-dur"><i class="ti ti-clock" style="font-size:11px;vertical-align:-1px"></i> ${plan.dur}</span>` : '<span class="sc-dur"><i class="ti ti-clock" style="font-size:11px;vertical-align:-1px"></i> 30 นาที</span>'}
+            ${plan.weightBlock ? '<span class="sc-pill pill-weight"><i class="ti ti-barbell" style="font-size:10px;vertical-align:-1px"></i> เวทเทรนนิ่ง</span>' : ''}
+            ${!isRest ? `<span class="sc-dur"><i class="ti ti-clock" style="font-size:11px;vertical-align:-1px"></i> ${plan.dur}</span>` : plan.weightBlock ? '<span class="sc-dur"><i class="ti ti-clock" style="font-size:11px;vertical-align:-1px"></i> 30-40 นาที</span>' : '<span class="sc-dur"><i class="ti ti-clock" style="font-size:11px;vertical-align:-1px"></i> วันพัก</span>'}
             ${!isRest && plan.dist !== '—' ? `<span class="sc-dur"><i class="ti ti-map-pin" style="font-size:11px;vertical-align:-1px"></i> ${plan.dist}</span>` : ''}
           </div>
         </div>
@@ -1913,14 +2683,16 @@ function openWorkout(plan) {
       <div class="dot"></div>
       <span><i class="ti ti-heart" style="font-size:13px;vertical-align:-2px"></i> ${plan.zone}</span>
     `;
-  } else {
+  } else if(plan.weightBlock) {
     sub.innerHTML = `
       <span><i class="ti ti-barbell" style="font-size:13px;vertical-align:-2px;color:#C084FC"></i> <span style="color:#C084FC">เวทเทรนนิ่ง</span></span>
       <div class="dot"></div>
-      <span><i class="ti ti-clock" style="font-size:13px;vertical-align:-2px"></i> 30 นาที</span>
+      <span><i class="ti ti-clock" style="font-size:13px;vertical-align:-2px"></i> 30-40 นาที</span>
       <div class="dot"></div>
       <span style="color:rgba(255,255,255,0.35)">วันพักฟื้น</span>
     `;
+  } else {
+    sub.innerHTML = `<span style="color:rgba(255,255,255,0.4)">วันพักผ่อนเต็มที่ — สำคัญมากสำหรับการฟื้นฟูร่างกาย</span>`;
   }
 
   // meta
@@ -1933,14 +2705,16 @@ function openWorkout(plan) {
       <div class="meta-item"><div class="meta-val">${plan.dist !== '—' ? plan.dist.split('–')[0] : '—'}</div><div class="meta-lbl">กม.</div></div>
     `;
     meta.style.display = 'flex';
-  } else {
+  } else if(plan.weightBlock) {
     meta.innerHTML = `
-      <div class="meta-item"><div class="meta-val">30</div><div class="meta-lbl">นาที</div></div>
+      <div class="meta-item"><div class="meta-val">30-40</div><div class="meta-lbl">นาที</div></div>
       <div class="meta-item"><div class="meta-val">${plan.w}</div><div class="meta-lbl">สัปดาห์</div></div>
       <div class="meta-item"><div class="meta-val">3</div><div class="meta-lbl">เซต</div></div>
       <div class="meta-item"><div class="meta-val">Full</div><div class="meta-lbl">Body</div></div>
     `;
     meta.style.display = 'flex';
+  } else {
+    meta.style.display = 'none';
   }
 
   // actions
@@ -2004,15 +2778,17 @@ function openWorkout(plan) {
   });
 
   // CTA
+  const hasTimer = plan.type !== 'rest' || plan.weightBlock;
   html += `<div class="cta-wrap">
+    ${hasTimer ? `
     <button class="start-btn ${done ? 'completed' : ''}" onclick="startTimer()">
       <i class="ti ${done ? 'ti-check' : 'ti-player-play'}"></i>
       ${done ? 'เสร็จสมบูรณ์แล้ว!' : plan.type === 'rest' ? 'เริ่มเวทเทรนนิ่ง + Timer' : 'เริ่ม Workout + Timer'}
-    </button>
-    ${plan.type !== 'rest' ? `
-    <button style="width:100%;padding:13px;border-radius:14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);font-family:'Chakra Petch','Prompt',sans-serif;font-size:13px;font-weight:600;color:rgba(255,255,255,0.45);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:8px" onclick="openLogModal(currentPlan)">
-      <i class='ti ti-activity-heartbeat' style='font-size:16px'></i> บันทึกผลการวิ่ง (ไม่ใช้ GPS)
-    </button>` : ''}
+    </button>` : `
+    <button class="start-btn ${done ? 'completed' : ''}" onclick="toggleWorkoutDone()">
+      <i class="ti ${done ? 'ti-check' : 'ti-moon'}"></i>
+      ${done ? 'พักผ่อนแล้ววันนี้!' : 'ทำเครื่องหมายว่าพักแล้ว'}
+    </button>`}
     <div class="coach-card">
       <div class="coach-ava">S</div>
       <div class="coach-info">
@@ -2048,14 +2824,14 @@ function renderStats() {
   // stat grid
   document.getElementById('statsGrid').innerHTML = `
     <div class="stat-box"><div class="stat-box-val">${rDone}</div><div class="stat-box-lbl">เซสชั่นวิ่งเสร็จ</div><div class="stat-box-sub">จาก ${TOTAL_SESSIONS} ทั้งหมด</div></div>
-    <div class="stat-box"><div class="stat-box-val">${pct}%</div><div class="stat-box-lbl">ความคืบหน้า</div><div class="stat-box-sub">โปรแกรม 8 สัปดาห์</div></div>
+    <div class="stat-box"><div class="stat-box-val">${pct}%</div><div class="stat-box-lbl">ความคืบหน้า</div><div class="stat-box-sub">แผนซ้อม 22 สัปดาห์</div></div>
     <div class="stat-box"><div class="stat-box-val">${allDone}</div><div class="stat-box-lbl">วันเสร็จทั้งหมด</div><div class="stat-box-sub">รวมวันพัก</div></div>
-    <div class="stat-box"><div class="stat-box-val">${8 - Math.min(8, Math.floor(rDone / 4))}</div><div class="stat-box-lbl">สัปดาห์เหลือ</div><div class="stat-box-sub">ประมาณการ</div></div>
+    <div class="stat-box"><div class="stat-box-val">${Math.max(0, 22 - getCurrentWeek() + 1)}</div><div class="stat-box-lbl">สัปดาห์เหลือ</div><div class="stat-box-sub">ถึงวันแข่ง 28 พ.ย.</div></div>
   `;
 
   // week bars
   let barsHtml = '';
-  for(let w = 1; w <= 8; w++) {
+  for(let w = 1; w <= 22; w++) {
     const wplans = PLANS.filter(p => p.w === w);
     const wrun = wplans.filter(p => p.type !== 'rest');
     const wdone = wrun.filter(isDone).length;
